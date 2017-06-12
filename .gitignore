@@ -1,0 +1,21 @@
+# general file excludes
+~*.tmp
+~*.docx
+*~
+*.o
+~$*
+
+# ignore Python caches
+__pycache__
+
+# ignore build directories
+/docs/_build/
+
+# ignore folders
+/py/Wrapper/Hooks/*
+!/py/Wrapper/Hooks/README.md
+
+# general whitelist
+!.git*
+!.publish
+!README.md
