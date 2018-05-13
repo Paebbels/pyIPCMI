@@ -40,7 +40,7 @@ from Base.Executable        import ExecutableArgument, PathArgument, StringArgum
 from Base.Executable        import ShortFlagArgument, LongFlagArgument, CommandLineArgumentList
 from DataBase.Entity        import SimulationResult
 from ToolChain              import ToolMixIn, ToolChainException, ConfigurationException, ToolConfiguration, OutputFilteredExecutable
-from Simulator              import pyIPCMISimulationResultFilter
+from Simulator              import PoCSimulationResultFilter
 
 
 __api__ = [
@@ -491,7 +491,7 @@ class GHDLRun(GHDL):
 		self._hasErrors =    False
 		simulationResult =  CallByRefParam(SimulationResult.Error)
 		try:
-			iterator = iter(pyIPCMISimulationResultFilter(GHDLRunFilter(self.GetReader()), simulationResult))
+			iterator = iter(PoCSimulationResultFilter(GHDLRunFilter(self.GetReader()), simulationResult))
 
 			line = next(iterator)
 			line.IndentBy(self.Logger.BaseIndent + 1)

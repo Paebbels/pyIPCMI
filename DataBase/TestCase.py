@@ -200,7 +200,7 @@ class SuiteMixIn:
 
 class TestSuite(TestGroup, SuiteMixIn):
 	def __init__(self):
-		super().__init__("pyIPCMI", None)
+		super().__init__("PoC", None)
 		SuiteMixIn.__init__(self)
 
 	@property
@@ -224,7 +224,7 @@ class TestSuite(TestGroup, SuiteMixIn):
 
 class SynthesisSuite(SynthesisGroup, SuiteMixIn):
 	def __init__(self):
-		super().__init__("pyIPCMI", None)
+		super().__init__("PoC", None)
 		SuiteMixIn.__init__(self)
 
 	@property

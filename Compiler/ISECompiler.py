@@ -65,7 +65,7 @@ class Compiler(BaseCompiler):
 		dependencies =  []
 		for dependency in entity.Dependencies:
 			toolName, entityName = dependency.split(":")
-			dependencyFQN = FQN(self.Host, entityName, defaultLibrary="pyIPCMI", defaultType=EntityTypes.NetList)
+			dependencyFQN = FQN(self.Host, entityName, libraryName=None, defaultType=EntityTypes.NetList)
 			tool = Tool.Parse(toolName)
 			dependencies.append((tool, dependencyFQN))
 			self.LogVerbose("  IP core: {1!s} compile with {0!s}".format(dependencyFQN, tool))

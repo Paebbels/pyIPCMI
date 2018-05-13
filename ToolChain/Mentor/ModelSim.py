@@ -44,7 +44,7 @@ from Base.Logging                 import Severity, LogEntry
 from DataBase.Entity              import SimulationResult
 from ToolChain                    import ConfigurationException, EditionDescription, Edition, ToolConfiguration, ToolSelector, ToolMixIn, OutputFilteredExecutable
 from ToolChain.Mentor             import MentorException
-from Simulator                    import pyIPCMISimulationResultFilter, pyIPCMISimulationResultNotFoundException
+from Simulator                    import PoCSimulationResultFilter, pyIPCMISimulationResultNotFoundException
 
 
 __api__ = [
@@ -880,7 +880,7 @@ class VHDLSimulator(OutputFilteredExecutable, ToolMixIn):
 		self._hasErrors =   False
 		simulationResult =  CallByRefParam(SimulationResult.Error)
 		try:
-			iterator = iter(pyIPCMISimulationResultFilter(VSimFilter(self.GetReader()), simulationResult))
+			iterator = iter(PoCSimulationResultFilter(VSimFilter(self.GetReader()), simulationResult))
 
 			line = next(iterator)
 			line.IndentBy(self.Logger.BaseIndent + 1)

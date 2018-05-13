@@ -45,12 +45,12 @@ __all__ = __api__
 
 class Configuration(ToolConfiguration):
 	_vendor =               "VLSI-EDA"                  #: The name of the tools vendor.
-	_toolName =             "pyIPCMI"                       #: The name of the tool.
-	_section  =             "INSTALL.pyIPCMI"               #: The name of the configuration section. Pattern: ``INSTALL.Vendor.ToolName``.
+	_toolName =             "PoC"                       #: The name of the tool.
+	_section  =             "INSTALL.PoC"               #: The name of the configuration section. Pattern: ``INSTALL.Vendor.ToolName``.
 	_template =    {
 		"ALL": {
 			_section: {
-				"Version":                "1.1.1",
+				"Version":                "1.1.2",
 				"InstallationDirectory":  "",
 				"RepositoryKind":         "Public",
 				"IsGitRepository":        "True",
@@ -86,7 +86,7 @@ class Configuration(ToolConfiguration):
 				gitDescribe.DescribeParameters[gitDescribe.SwitchTags] =    "" # specify no hash
 				latestTagName = gitDescribe.Execute().strip()
 
-				self._host.LogNormal("  pyIPCMI version: {0} (found in git)".format(latestTagName))
+				self._host.LogNormal("  PoC version: {0} (found in git)".format(latestTagName))
 				self._host.Config[self._host.LibraryKey]['Version'] = latestTagName
 				success = True
 			except CalledProcessError:
@@ -95,7 +95,7 @@ class Configuration(ToolConfiguration):
 		if not success:
 			self._host.LogWarning("Can't get version information from latest Git tag.")
 			pyIPCMIVersion = self._template['ALL'][self._host.LibraryKey]['Version']
-			self._host.LogNormal("  pyIPCMI version: {0} (found in default configuration)".format(pyIPCMIVersion))
+			self._host.LogNormal("  PoC version: {0} (found in default configuration)".format(pyIPCMIVersion))
 			self._host.Config[self._host.LibraryKey]['Version'] = pyIPCMIVersion
 
 	# LOCAL = git rev-parse @

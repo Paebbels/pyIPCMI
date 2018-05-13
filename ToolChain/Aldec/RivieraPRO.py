@@ -37,7 +37,7 @@ from Base.Executable        import ExecutableArgument, PathArgument, StringArgum
 from Base.Executable        import LongFlagArgument, ShortValuedFlagArgument, ShortTupleArgument, CommandLineArgumentList
 from ToolChain              import ToolMixIn, ConfigurationException, ToolConfiguration, EditionDescription, Edition, ToolSelector, OutputFilteredExecutable
 from ToolChain.Aldec        import AldecException
-from Simulator              import pyIPCMISimulationResultFilter, pyIPCMISimulationResultNotFoundException
+from Simulator              import PoCSimulationResultFilter, pyIPCMISimulationResultNotFoundException
 from DataBase.Entity import SimulationResult
 
 
@@ -361,7 +361,7 @@ class VHDLSimulator(OutputFilteredExecutable, ToolMixIn):
 		self._hasErrors =   False
 		simulationResult =  CallByRefParam(SimulationResult.Error)
 		try:
-			iterator = iter(pyIPCMISimulationResultFilter(VSimFilter(self.GetReader()), simulationResult))
+			iterator = iter(PoCSimulationResultFilter(VSimFilter(self.GetReader()), simulationResult))
 
 			line = next(iterator)
 			line.IndentBy(self.Logger.BaseIndent + 1)

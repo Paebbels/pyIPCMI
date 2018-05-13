@@ -235,7 +235,7 @@ class IPCoreManagementInfrastructure(ILogable, ArgParseMixin):
 		# declare members
 		# --------------------------------------------------------------------------
 		self.__dryRun =       dryRun
-		self.Library =        libraryName
+		self.LibraryName =    libraryName
 		self.LibraryKey =     "INSTALL." + libraryName
 		self.__config =       None
 		self.__root =         None
@@ -778,9 +778,9 @@ class IPCoreManagementInfrastructure(ILogable, ArgParseMixin):
 		elif (force is True):           raise CommonException("Either a board name or a device name is required.")
 		else:                           return self.__SimulationDefaultBoard
 
-	def _ExtractFQNs(self, fqns, defaultLibrary="pyIPCMI", defaultType=EntityTypes.Testbench):
+	def _ExtractFQNs(self, fqns, defaultLibrary=None, defaultType=EntityTypes.Testbench):
 		if (len(fqns) == 0):            raise CommonException("No FQN given.")
-		return [FQN(self, fqn, defaultLibrary=defaultLibrary, defaultType=defaultType) for fqn in fqns]
+		return [FQN(self, fqn, libraryName=defaultLibrary, defaultType=defaultType) for fqn in fqns]
 
 	def _ExtractVHDLVersion(self, vhdlVersion, defaultVersion=None):
 		if (defaultVersion is None):    defaultVersion = self.__SimulationDefaultVHDLVersion
@@ -900,7 +900,7 @@ class IPCoreManagementInfrastructure(ILogable, ArgParseMixin):
 		self.PrintHeadline()
 		self.__PrepareForSimulation()
 
-		defaultLibrary = "pyIPCMI"
+		defaultLibrary = self.LibraryName
 
 		if (args.SolutionID is not None):
 			solutionName = args.SolutionID
@@ -928,7 +928,7 @@ class IPCoreManagementInfrastructure(ILogable, ArgParseMixin):
 				self.Config.read(str(solutionConfigFile))
 				self.Config.read(str(solutionDefaultsFile))
 
-				section =          self.Config['PROJECT.Projects']
+				section =         self.Config['PROJECT.Projects']
 				defaultLibrary =  section['DefaultLibrary']
 				print("Solution:")
 				print("  Name:            {0}".format(section['Name']))

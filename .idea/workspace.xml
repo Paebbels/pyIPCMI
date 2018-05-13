@@ -2,53 +2,19 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b1217729-6dda-4bce-a9eb-baa5346607ac" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/Base/Shared.py" beforeDir="false" afterPath="$PROJECT_DIR$/Base/Shared.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Base/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/Base/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Compiler/LSECompiler.py" beforeDir="false" afterPath="$PROJECT_DIR$/Compiler/LSECompiler.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Compiler/QuartusCompiler.py" beforeDir="false" afterPath="$PROJECT_DIR$/Compiler/QuartusCompiler.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Compiler/VivadoCompiler.py" beforeDir="false" afterPath="$PROJECT_DIR$/Compiler/VivadoCompiler.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Compiler/XCICompiler.py" beforeDir="false" afterPath="$PROJECT_DIR$/Compiler/XCICompiler.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Compiler/XCOCompiler.py" beforeDir="false" afterPath="$PROJECT_DIR$/Compiler/XCOCompiler.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Compiler/XSTCompiler.py" beforeDir="false" afterPath="$PROJECT_DIR$/Compiler/XSTCompiler.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Compiler/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/Compiler/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataBase/Config.py" beforeDir="false" afterPath="$PROJECT_DIR$/DataBase/Config.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Compiler/ISECompiler.py" beforeDir="false" afterPath="$PROJECT_DIR$/Compiler/ISECompiler.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DataBase/Entity.py" beforeDir="false" afterPath="$PROJECT_DIR$/DataBase/Entity.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DataBase/Solution.py" beforeDir="false" afterPath="$PROJECT_DIR$/DataBase/Solution.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataBase/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/DataBase/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Parser/FilesParser.py" beforeDir="false" afterPath="$PROJECT_DIR$/Parser/FilesParser.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Processor/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/Processor/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Simulator/ActiveHDLSimulator.py" beforeDir="false" afterPath="$PROJECT_DIR$/Simulator/ActiveHDLSimulator.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Simulator/CocotbSimulator.py" beforeDir="false" afterPath="$PROJECT_DIR$/Simulator/CocotbSimulator.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Simulator/GHDLSimulator.py" beforeDir="false" afterPath="$PROJECT_DIR$/Simulator/GHDLSimulator.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Simulator/ISESimulator.py" beforeDir="false" afterPath="$PROJECT_DIR$/Simulator/ISESimulator.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Simulator/ModelSimSimulator.py" beforeDir="false" afterPath="$PROJECT_DIR$/Simulator/ModelSimSimulator.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Simulator/QuestaSimulator.py" beforeDir="false" afterPath="$PROJECT_DIR$/Simulator/QuestaSimulator.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Simulator/RivieraPROSimulator.py" beforeDir="false" afterPath="$PROJECT_DIR$/Simulator/RivieraPROSimulator.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Simulator/VivadoSimulator.py" beforeDir="false" afterPath="$PROJECT_DIR$/Simulator/VivadoSimulator.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DataBase/TestCase.py" beforeDir="false" afterPath="$PROJECT_DIR$/DataBase/TestCase.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Simulator/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/Simulator/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ToolChain/Aldec/ActiveHDL.py" beforeDir="false" afterPath="$PROJECT_DIR$/ToolChain/Aldec/ActiveHDL.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ToolChain/Aldec/RivieraPRO.py" beforeDir="false" afterPath="$PROJECT_DIR$/ToolChain/Aldec/RivieraPRO.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ToolChain/Altera/ModelSim.py" beforeDir="false" afterPath="$PROJECT_DIR$/ToolChain/Altera/ModelSim.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ToolChain/Altera/Quartus.py" beforeDir="false" afterPath="$PROJECT_DIR$/ToolChain/Altera/Quartus.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ToolChain/GHDL.py" beforeDir="false" afterPath="$PROJECT_DIR$/ToolChain/GHDL.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ToolChain/GTKWave.py" beforeDir="false" afterPath="$PROJECT_DIR$/ToolChain/GTKWave.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ToolChain/Git.py" beforeDir="false" afterPath="$PROJECT_DIR$/ToolChain/Git.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ToolChain/Intel/ModelSim.py" beforeDir="false" afterPath="$PROJECT_DIR$/ToolChain/Intel/ModelSim.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ToolChain/Intel/Quartus.py" beforeDir="false" afterPath="$PROJECT_DIR$/ToolChain/Intel/Quartus.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ToolChain/Lattice/ActiveHDL.py" beforeDir="false" afterPath="$PROJECT_DIR$/ToolChain/Lattice/ActiveHDL.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ToolChain/Lattice/Diamond.py" beforeDir="false" afterPath="$PROJECT_DIR$/ToolChain/Lattice/Diamond.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ToolChain/Mentor/ModelSim.py" beforeDir="false" afterPath="$PROJECT_DIR$/ToolChain/Mentor/ModelSim.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ToolChain/Mentor/QuestaSim.py" beforeDir="false" afterPath="$PROJECT_DIR$/ToolChain/Mentor/QuestaSim.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ToolChain/PoC.py" beforeDir="false" afterPath="$PROJECT_DIR$/ToolChain/PoC.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ToolChain/Xilinx/ISE.py" beforeDir="false" afterPath="$PROJECT_DIR$/ToolChain/Xilinx/ISE.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ToolChain/Xilinx/Vivado.py" beforeDir="false" afterPath="$PROJECT_DIR$/ToolChain/Xilinx/Vivado.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ToolChain/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/ToolChain/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Wrapper/PoC.psm1" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Wrapper/Sphinx.psm1" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Wrapper/Sphinx.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Wrapper/wrapper.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/lib/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pyIPCMI.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyIPCMI.py" afterDir="false" />
     </list>
     <ignored path="py.iws" />
@@ -85,11 +51,56 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="675">
-      <file leaf-file-name="pyIPCMI.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="pyIPCMI.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pyIPCMI.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="476">
-              <caret line="262" lean-forward="true" selection-start-line="262" selection-end-line="262" />
+            <state relative-caret-position="198">
+              <caret line="781" column="50" selection-start-line="781" selection-start-column="50" selection-end-line="781" selection-end-column="50" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ISECompiler.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Compiler/ISECompiler.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="299">
+              <caret line="68" column="33" lean-forward="true" selection-start-line="68" selection-start-column="33" selection-end-line="68" selection-end-column="33" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Entity.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/DataBase/Entity.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="372">
+              <caret line="851" column="25" lean-forward="true" selection-start-line="851" selection-start-column="25" selection-end-line="851" selection-end-column="25" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="TestCase.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/DataBase/TestCase.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="198">
+              <caret line="227" column="25" selection-start-line="227" selection-start-column="25" selection-end-line="227" selection-end-column="25" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Functions.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/lib/Functions.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="246">
+              <caret line="135" column="37" lean-forward="true" selection-start-line="135" selection-start-column="37" selection-end-line="135" selection-end-column="37" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="__init__.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Simulator/__init__.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="518">
+              <caret line="370" column="47" lean-forward="true" selection-start-line="370" selection-start-column="47" selection-end-line="370" selection-end-column="47" />
             </state>
           </provider>
         </entry>
@@ -105,8 +116,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>INSTALL.Intel.Quar</find>
-      <find>INSTALL.Intel.Quart</find>
       <find>INSTALL.Intel.Quartus</find>
       <find>modelsim</find>
       <find>modelsim intel ed</find>
@@ -135,6 +144,8 @@
       <find>host.pyIPCMIConfig</find>
       <find>'INSTALL.pyIPCMI'</find>
       <find>pyIPCMIConfig</find>
+      <find>pyIPCMI&quot;</find>
+      <find>pyIPCMI TEST</find>
     </findStrings>
     <replaceStrings>
       <replace>if ((self._logger is not None) and condition):</replace>
@@ -160,9 +171,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/ToolChain/Xilinx/Vivado.py" />
-        <option value="$PROJECT_DIR$/../tools/AppVeyor/config.private.ini" />
-        <option value="$PROJECT_DIR$/../tools/Travis-CI/config.private.ini" />
         <option value="$PROJECT_DIR$/Simulator/.publish" />
         <option value="$PROJECT_DIR$/../docs/_themes/sphinx_rtd_theme/sphinx_rtd_theme/static/css/theme.css" />
         <option value="$PROJECT_DIR$/../docs/_build/html/_static/css/custom.css" />
@@ -170,7 +178,6 @@
         <option value="$PROJECT_DIR$/Base/Shared.py" />
         <option value="$PROJECT_DIR$/Compiler/XCICompiler.py" />
         <option value="$PROJECT_DIR$/Compiler/XCOCompiler.py" />
-        <option value="$PROJECT_DIR$/DataBase/TestCase.py" />
         <option value="$PROJECT_DIR$/Parser/VHDLParser.py" />
         <option value="$PROJECT_DIR$/lib/ExtendedConfigParser/__init__.py" />
         <option value="$PROJECT_DIR$/lib/CodeDOM.py" />
@@ -182,7 +189,6 @@
         <option value="$PROJECT_DIR$/config.boards.ini" />
         <option value="$PROJECT_DIR$/private.ini" />
         <option value="$PROJECT_DIR$/ToolChain/GHDL.py" />
-        <option value="$PROJECT_DIR$/Simulator/__init__.py" />
         <option value="$PROJECT_DIR$/ToolChain/GNU.py" />
         <option value="$PROJECT_DIR$/Simulator/GHDLSimulator.py" />
         <option value="$PROJECT_DIR$/ToolChain/Altera/ModelSim.py" />
@@ -210,7 +216,12 @@
         <option value="$PROJECT_DIR$/__init__.py" />
         <option value="$PROJECT_DIR$/PoC.py" />
         <option value="$PROJECT_DIR$/ToolChain/PoC.py" />
+        <option value="$PROJECT_DIR$/DataBase/Solution.py" />
+        <option value="$PROJECT_DIR$/DataBase/TestCase.py" />
+        <option value="$PROJECT_DIR$/Compiler/ISECompiler.py" />
         <option value="$PROJECT_DIR$/pyIPCMI.py" />
+        <option value="$PROJECT_DIR$/DataBase/Entity.py" />
+        <option value="$PROJECT_DIR$/Simulator/__init__.py" />
       </list>
     </option>
   </component>
@@ -243,6 +254,11 @@
               <item name="py" type="b2602c69:ProjectViewProjectNode" />
               <item name="pyIPCMI" type="462c0819:PsiDirectoryNode" />
               <item name="lib" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="py" type="b2602c69:ProjectViewProjectNode" />
+              <item name="pyIPCMI" type="462c0819:PsiDirectoryNode" />
+              <item name="ToolChain" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="py" type="b2602c69:ProjectViewProjectNode" />
@@ -558,11 +574,11 @@
       <window_info content_ui="combo" x="778" y="490" width="124" height="255" id="Project" order="0" sideWeight="0.48669624" visible="true" weight="0.121878125" />
       <window_info anchor="bottom" x="-1206" y="358" width="1898" height="296" id="TODO" order="6" sideWeight="0.49758744" weight="0.32815966" />
       <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.5063966" side_tool="true" weight="0.3257979" />
-      <window_info anchor="bottom" x="131" y="418" width="1898" height="200" id="Find" order="1" sideWeight="0.49367756" weight="0.37307298" />
+      <window_info anchor="bottom" x="131" y="418" width="1898" height="200" id="Find" order="1" sideWeight="0.49367756" weight="0.37263158" />
       <window_info anchor="bottom" id="Run" order="2" sideWeight="0.4936034" weight="0.32594234" />
       <window_info anchor="bottom" id="Version Control" order="8" sideWeight="0.49758744" weight="1.0" />
       <window_info anchor="bottom" id="Python Console" order="11" sideWeight="0.49276236" weight="0.32705098" />
-      <window_info active="true" anchor="right" x="803" y="490" width="74" height="40" id="Structure" order="3" sideWeight="0.49177632" side_tool="true" visible="true" weight="0.14985014" />
+      <window_info anchor="right" x="803" y="490" width="74" height="40" id="Structure" order="3" sideWeight="0.49177632" side_tool="true" visible="true" weight="0.14985014" />
       <window_info anchor="bottom" id="Terminal" order="10" sideWeight="0.49758744" weight="0.32815966" />
       <window_info anchor="bottom" x="-1920" y="0" width="1920" height="1018" id="Debug" order="3" weight="0.5282392" />
       <window_info id="Favorites" order="1" sideWeight="0.51330376" side_tool="true" weight="0.16965227" />
@@ -677,10 +693,6 @@
     </watches-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/ToolChain/Mentor/PrecisionRTL.py" />
-    <entry file="file://$PROJECT_DIR$/ToolChain/Mentor/.publish" />
-    <entry file="file://$PROJECT_DIR$/config.private.2017.02.11-03.07.54.ini" />
-    <entry file="file://$PROJECT_DIR$/config.private.2017.02.11-03.07.33.ini" />
     <entry file="file://$PROJECT_DIR$/private.ini" />
     <entry file="file://$PROJECT_DIR$/Simulator/ModelSimSimulator.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -775,20 +787,6 @@
     <entry file="file://$PROJECT_DIR$/config.entity.ini" />
     <entry file="file://$PROJECT_DIR$/config.defaults.ini" />
     <entry file="file://$PROJECT_DIR$/config.private.2017.06.26-11.36.39.ini" />
-    <entry file="file://$PROJECT_DIR$/Simulator/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1581">
-          <caret line="107" column="17" selection-start-line="107" selection-start-column="17" selection-end-line="107" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/lib/Functions.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2669">
-          <caret line="159" column="14" selection-start-line="159" selection-start-column="14" selection-end-line="159" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/lib/Decorators.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="850">
@@ -929,13 +927,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ToolChain/PoC.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="445">
-          <caret line="92" column="12" lean-forward="true" selection-start-line="92" selection-start-column="12" selection-end-line="92" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Base/Logging.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="598">
@@ -957,10 +948,59 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/DataBase/Solution.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-92">
+          <caret line="83" column="42" selection-start-line="83" selection-start-column="42" selection-end-line="83" selection-end-column="42" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ToolChain/PoC.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="125">
+          <caret line="62" column="5" lean-forward="true" selection-start-line="62" selection-start-column="5" selection-end-line="62" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/DataBase/TestCase.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="198">
+          <caret line="227" column="25" selection-start-line="227" selection-start-column="25" selection-end-line="227" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Compiler/ISECompiler.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="299">
+          <caret line="68" column="33" lean-forward="true" selection-start-line="68" selection-start-column="33" selection-end-line="68" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/pyIPCMI.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="476">
-          <caret line="262" lean-forward="true" selection-start-line="262" selection-end-line="262" />
+        <state relative-caret-position="198">
+          <caret line="781" column="50" selection-start-line="781" selection-start-column="50" selection-end-line="781" selection-end-column="50" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/DataBase/Entity.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="372">
+          <caret line="851" column="25" lean-forward="true" selection-start-line="851" selection-start-column="25" selection-end-line="851" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/Functions.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="246">
+          <caret line="135" column="37" lean-forward="true" selection-start-line="135" selection-start-column="37" selection-end-line="135" selection-end-column="37" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Simulator/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="518">
+          <caret line="370" column="47" lean-forward="true" selection-start-line="370" selection-start-column="47" selection-end-line="370" selection-end-column="47" />
         </state>
       </provider>
     </entry>

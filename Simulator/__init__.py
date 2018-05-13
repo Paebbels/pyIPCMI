@@ -350,13 +350,15 @@ class Simulator(Shared):
 																		status=self.__SIMULATION_REPORT_STATUS_TEXT_TABLE__[testCase.Status], **Init.Foreground))
 
 
-def pyIPCMISimulationResultFilter(gen, simulationResult):
+def PoCSimulationResultFilter(gen, simulationResult):
 	state = 0
 	for line in gen:
 		if   ((state == 0) and (line.Message == "========================================")):
 			state += 1
-		elif ((state == 1) and (line.Message == "pyIPCMI TESTBENCH REPORT")):
+		elif ((state == 1) and (line.Message == "POC TESTBENCH REPORT")):
 			state += 1
+			yield LogEntry("{COLOR}{line}{NOCOLOR}".format(COLOR=Init.Foreground['DARK_CYAN'], line=line.Message, **Init.Foreground), line.Severity, line.Indent)
+			continue
 		elif ((state == 2) and (line.Message == "========================================")):
 			state += 1
 		elif ((state == 3) and (line.Message == "========================================")):
@@ -383,4 +385,4 @@ def pyIPCMISimulationResultFilter(gen, simulationResult):
 
 		yield line
 
-	if (state != 6):    raise pyIPCMISimulationResultNotFoundException("No pyIPCMI Testbench Report in simulator output found.")
+	if (state != 6):    raise pyIPCMISimulationResultNotFoundException("No PoC Testbench Report in simulator output found.")

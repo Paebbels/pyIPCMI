@@ -104,22 +104,27 @@ class NetlistKind(BaseFlags):
 
 
 class NamespaceRoot:
-	__pyIPCMIRoot_Name =            "pyIPCMI"
-	__pyIPCMIRoot_SectionName =     "pyIPCMI"
+	__LibraryRoot_Name = ""
+	__LibraryRoot_SectionName = ""
 
 	def __init__(self, host):
-		self._host =              host
+		self._host =                      host
 
-		self.__libraries =        OrderedDict()
-		self.__libraries[self.__pyIPCMIRoot_Name.lower()] = (Library(host, self.__pyIPCMIRoot_Name, self.__pyIPCMIRoot_SectionName, self))
+		self.__LibraryRoot_Name =         host.LibraryName
+		self.__LibraryRoot_SectionName =  host.LibraryName
+
+		self.__libraries =                OrderedDict()
+		self.__libraries[self.__LibraryRoot_Name.lower()] = (Library(host, self.__LibraryRoot_Name, self.__LibraryRoot_SectionName, self))
 
 	@property
-	def Libraries(self):        return [lib for lib in self.__libraries.values()]
+	def Libraries(self):          return [lib for lib in self.__libraries.values()]
 	@property
-	def LibraryNames(self):     return [libName for libName in self.__libraries.keys()]
+	def LibraryNames(self):       return [libName for libName in self.__libraries.keys()]
+	@property
+	def DefaultLibraryName(self): return self.__LibraryRoot_Name
 
-	def GetLibraries(self):     return self.__libraries.values()
-	def GetLibraryNames(self):  return self.__libraries.keys()
+	def GetLibraries(self):       return self.__libraries.values()
+	def GetLibraryNames(self):    return self.__libraries.keys()
 
 	def __contains__(self, item):
 		return item.lower() in self.__libraries
@@ -814,13 +819,16 @@ class VivadoNetlist(Netlist):
 
 
 class FQN:
-	def __init__(self, host, fqn, defaultLibrary="pyIPCMI", defaultType=EntityTypes.Source):
+	def __init__(self, host, fqn, libraryName=None, defaultType=EntityTypes.Source):
 		self.__host =   host
 		self.__type =   None
 		self.__parts =  []
 
 		if (fqn is None):      raise ValueError("Parameter 'fqn' is None.")
 		if (fqn == ""):        raise ValueError("Parameter 'fqn' is empty.")
+
+		if (libraryName is None):
+			libraryName = self.__host.Root.DefaultLibraryName
 
 		# extract EntityType
 		splitList1 = fqn.split(":")
@@ -836,7 +844,7 @@ class FQN:
 		# extract parts
 		parts = entity.split(".")
 		if (parts[0].lower() not in self.__host.Root):
-			parts.insert(0, defaultLibrary)
+			parts.insert(0, libraryName)
 
 		# check and resolve parts
 		cur = self.__host.Root
@@ -853,7 +861,7 @@ class FQN:
 				try:
 					pe = cur[part]
 				except KeyError:
-					raise ConfigurationException("pyIPCMI entity '{GREEN}{good}{RED}.{bad}{NOCOLOR}' not found.".format(good=(".".join(parts[:pos])), bad=(".".join(parts[pos:])), **Init.Foreground))
+					raise ConfigurationException("Entity '{GREEN}{good}{RED}.{bad}{NOCOLOR}' not found.".format(good=(".".join(parts[:pos])), bad=(".".join(parts[pos:])), **Init.Foreground))
 				self.__parts.append(pe)
 				cur = pe
 

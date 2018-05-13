@@ -81,7 +81,7 @@ class Repository(Base):
 		self._solutions =  {}
 
 		kind = "Public"
-		if host.Config.has_option("INSTALL.pyIPCMI", "RepositoryKind"):
+		if host.Config.has_option("INSTALL.PoC", "RepositoryKind"):
 			kind = host.Config[host.LibraryKey]['RepositoryKind']
 		self._kind = Visibility.Parse(kind)
 

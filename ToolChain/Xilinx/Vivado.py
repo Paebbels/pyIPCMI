@@ -40,7 +40,7 @@ from ToolChain                  import ToolMixIn, ConfigurationException, ToolCo
 from ToolChain.GNU              import Bash
 from ToolChain.Windows          import Cmd
 from ToolChain.Xilinx           import XilinxException
-from Simulator                  import pyIPCMISimulationResultFilter
+from Simulator                  import PoCSimulationResultFilter
 
 
 __api__ = [
@@ -321,7 +321,7 @@ class XSim(OutputFilteredExecutable, ToolMixIn):
 		self._hasErrors = False
 		simulationResult =  CallByRefParam(SimulationResult.Error)
 		try:
-			iterator = iter(pyIPCMISimulationResultFilter(SimulatorFilter(self.GetReader()), simulationResult))
+			iterator = iter(PoCSimulationResultFilter(SimulatorFilter(self.GetReader()), simulationResult))
 
 			line = next(iterator)
 			self._hasOutput = True

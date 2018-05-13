@@ -41,7 +41,7 @@ from Base.Executable        import LongFlagArgument, ShortValuedFlagArgument, Sh
 from DataBase.Entity        import SimulationResult
 from ToolChain              import ToolMixIn, ConfigurationException, ToolConfiguration, EditionDescription, Edition, ToolSelector, OutputFilteredExecutable
 from ToolChain.Aldec        import AldecException
-from Simulator              import pyIPCMISimulationResultFilter
+from Simulator              import PoCSimulationResultFilter
 
 
 __api__ = [
@@ -420,7 +420,7 @@ class VHDLStandaloneSimulator(OutputFilteredExecutable, ToolMixIn):
 		self._hasErrors = False
 		simulationResult = CallByRefParam(SimulationResult.Error)
 		try:
-			iterator = iter(pyIPCMISimulationResultFilter(VSimFilter(self.GetReader()), simulationResult))
+			iterator = iter(PoCSimulationResultFilter(VSimFilter(self.GetReader()), simulationResult))
 			line = next(iterator)
 
 			self._hasOutput = True
