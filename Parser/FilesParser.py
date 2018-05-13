@@ -303,7 +303,7 @@ class FilesParserMixIn:
 		elif isinstance(expr, IntegerLiteral):
 			return str(expr.Value)
 		elif isinstance(expr, InterpolateLiteral):
-			config = host.PoCConfig
+			config = host.pyIPCMIConfig
 			return config.Interpolation.interpolate(config, "CONFIG.DirectoryNames", "xxxx", str(expr), {})
 		elif isinstance(expr, SubDirectoryExpression):
 			l = self._EvaluatePath(host, expr.LeftChild)

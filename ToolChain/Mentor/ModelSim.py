@@ -44,7 +44,7 @@ from Base.Logging                 import Severity, LogEntry
 from DataBase.Entity              import SimulationResult
 from ToolChain                    import ConfigurationException, EditionDescription, Edition, ToolConfiguration, ToolSelector, ToolMixIn, OutputFilteredExecutable
 from ToolChain.Mentor             import MentorException
-from Simulator                    import PoCSimulationResultFilter, PoCSimulationResultNotFoundException
+from Simulator                    import pyIPCMISimulationResultFilter, pyIPCMISimulationResultNotFoundException
 
 
 __api__ = [
@@ -99,8 +99,8 @@ class Configuration(ToolConfiguration):
 	_multiVersionSupport =  True                        #: Mentor ModelSim supports multiple versions installed on the same system.
 
 	def CheckDependency(self):
-		"""Check if general Mentor Graphics support is configured in PoC."""
-		return (len(self._host.PoCConfig['INSTALL.Mentor']) != 0)
+		"""Check if general Mentor Graphics support is configured in pyIPCMI."""
+		return (len(self._host.pyIPCMIConfig['INSTALL.Mentor']) != 0)
 
 	def ConfigureForAll(self):
 		"""Configuration routine for Mentor Graphics ModelSim on all supported platforms.
@@ -123,8 +123,8 @@ class Configuration(ToolConfiguration):
 				version = self._ConfigureVersion()
 				if self._multiVersionSupport:
 					self.PrepareVersionedSections()
-					sectionName = self._host.PoCConfig[self._section]['SectionName']
-					self._host.PoCConfig[sectionName]['Version'] = version
+					sectionName = self._host.pyIPCMIConfig[self._section]['SectionName']
+					self._host.pyIPCMIConfig[sectionName]['Version'] = version
 
 				self._ConfigureEdition()
 
@@ -163,7 +163,7 @@ class Configuration(ToolConfiguration):
 
 		print(self._section, version)
 
-		self._host.PoCConfig[self._section]['Version'] = version
+		self._host.pyIPCMIConfig[self._section]['Version'] = version
 
 	def _CheckModelSimVersion(self, binPath, version):
 		if (self._host.Platform == "Windows"):
@@ -183,10 +183,10 @@ class Configuration(ToolConfiguration):
 	# 	pass
 
 	def RunPostConfigurationTasks(self):
-		if (len(self._host.PoCConfig[self._section]) == 0): return  # exit if not configured
+		if (len(self._host.pyIPCMIConfig[self._section]) == 0): return  # exit if not configured
 
-		precompiledDirectory =  self._host.PoCConfig['CONFIG.DirectoryNames']['PrecompiledFiles']
-		vSimSimulatorFiles =    self._host.PoCConfig['CONFIG.DirectoryNames']['ModelSimFiles']
+		precompiledDirectory =  self._host.pyIPCMIConfig['CONFIG.DirectoryNames']['PrecompiledFiles']
+		vSimSimulatorFiles =    self._host.pyIPCMIConfig['CONFIG.DirectoryNames']['ModelSimFiles']
 		vsimPath =              self._host.Directories.Root / precompiledDirectory / vSimSimulatorFiles
 		modelsimIniPath =       vsimPath / "modelsim.ini"
 
@@ -238,23 +238,23 @@ class ModelSimPEConfiguration(Configuration):
 		"""Configure ModelSim PE for Mentor Graphics."""
 		sectionName = self._section
 		if self._multiVersionSupport:
-			sectionName = self._host.PoCConfig[sectionName]['SectionName']
+			sectionName = self._host.pyIPCMIConfig[sectionName]['SectionName']
 
-		configSection = self._host.PoCConfig[sectionName]
+		configSection = self._host.pyIPCMIConfig[sectionName]
 		defaultEdition = MentorModelSimPEEditions.Parse(configSection['Edition'])
 		edition = super()._ConfigureEdition(MentorModelSimPEEditions, defaultEdition)
 
 		if (edition is not defaultEdition):
 			configSection['Edition'] = edition.Name
-			self._host.PoCConfig.Interpolation.clear_cache()
+			self._host.pyIPCMIConfig.Interpolation.clear_cache()
 
 		if self._multiVersionSupport:
-			sectionName = self._host.PoCConfig[self._section]['SectionName']
+			sectionName = self._host.pyIPCMIConfig[self._section]['SectionName']
 		else:
 			sectionName = self._section
 
-		configSection =   self._host.PoCConfig[sectionName]
-		binaryDirectory = self._host.PoCConfig.get(sectionName, 'BinaryDirectory', raw=True)
+		configSection =   self._host.pyIPCMIConfig[sectionName]
+		binaryDirectory = self._host.pyIPCMIConfig.get(sectionName, 'BinaryDirectory', raw=True)
 		if (edition is MentorModelSimPEEditions.ModelSimPE):
 			toolInstallationName =  "ModelSim PE"
 			binaryDirectory =       binaryDirectory.replace("win32peedu", "win32pe")
@@ -354,11 +354,11 @@ class Selector(ToolSelector):
 
 		if (len(editions) == 0):
 			self._host.LogWarning("No ModelSim installation found.", indent=1)
-			self._host.PoCConfig['INSTALL.ModelSim'] = OrderedDict()
+			self._host.pyIPCMIConfig['INSTALL.ModelSim'] = OrderedDict()
 		elif (len(editions) == 1):
 			self._host.LogNormal("Default ModelSim installation:", indent=1)
 			self._host.LogNormal("Set to {0}".format(editions[0].Name), indent=2)
-			self._host.PoCConfig['INSTALL.ModelSim']['SectionName'] = editions[0].Section
+			self._host.pyIPCMIConfig['INSTALL.ModelSim']['SectionName'] = editions[0].Section
 		else:
 			self._host.LogNormal("Select ModelSim installation:", indent=1)
 
@@ -367,7 +367,7 @@ class Selector(ToolSelector):
 				defaultEdition = editions[0]
 
 			selectedEdition = self._AskSelection(editions, defaultEdition)
-			self._host.PoCConfig['INSTALL.ModelSim']['SectionName'] = selectedEdition.Section
+			self._host.pyIPCMIConfig['INSTALL.ModelSim']['SectionName'] = selectedEdition.Section
 
 
 class ModelSim(ToolMixIn):
@@ -880,7 +880,7 @@ class VHDLSimulator(OutputFilteredExecutable, ToolMixIn):
 		self._hasErrors =   False
 		simulationResult =  CallByRefParam(SimulationResult.Error)
 		try:
-			iterator = iter(PoCSimulationResultFilter(VSimFilter(self.GetReader()), simulationResult))
+			iterator = iter(pyIPCMISimulationResultFilter(VSimFilter(self.GetReader()), simulationResult))
 
 			line = next(iterator)
 			line.IndentBy(self.Logger.BaseIndent + 1)
@@ -899,7 +899,7 @@ class VHDLSimulator(OutputFilteredExecutable, ToolMixIn):
 
 		except DryRunException:
 			simulationResult <<= SimulationResult.DryRun
-		except PoCSimulationResultNotFoundException:
+		except pyIPCMISimulationResultNotFoundException:
 			if self.Parameters[self.FlagGuiMode]:
 				simulationResult <<= SimulationResult.GUIRun
 		except StopIteration:
@@ -936,7 +936,7 @@ def VComFilter(gen):
 
 
 def VSimFilter(gen):
-	PoCOutputFound = False
+	pyIPCMIOutputFound = False
 	for line in gen:
 		if line.startswith("# Loading "):
 			yield LogEntry(line, Severity.Debug)
@@ -948,7 +948,7 @@ def VSimFilter(gen):
 			else:
 				continue
 		elif line.startswith("# ========================================"):
-			PoCOutputFound = True
+			pyIPCMIOutputFound = True
 			yield LogEntry(line[2:], Severity.Normal)
 		elif line.startswith("# ** Warning: "):
 			yield LogEntry(line, Severity.Warning)
@@ -964,7 +964,7 @@ def VSimFilter(gen):
 			else:
 				yield LogEntry("{DARK_CYAN}{line}{NOCOLOR}".format(line=line[2:], **Init.Foreground), Severity.Normal)
 		elif line.startswith("# "):
-			if (not PoCOutputFound):
+			if (not pyIPCMIOutputFound):
 				yield LogEntry(line, Severity.Verbose)
 			else:
 				yield LogEntry(line[2:], Severity.Normal)

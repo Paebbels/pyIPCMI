@@ -88,7 +88,7 @@ class XilinxProjectExportMixIn:
 
 	def _GenerateXilinxProjectFileContent(self, tool, vhdlVersion=VHDLVersion.VHDL93):
 		projectFileContent = ""
-		for file in self.PoCProject.Files(fileType=FileTypes.VHDLSourceFile | FileTypes.VerilogSourceFile):  # self.PoCProject only available via late binding
+		for file in self.pyIPCMIProject.Files(fileType=FileTypes.VHDLSourceFile | FileTypes.VerilogSourceFile):  # self.pyIPCMIProject only available via late binding
 			if (not file.Path.exists()):                raise XilinxException("Cannot add '{0!s}' to {1} project file.".format(file.Path, tool)) from FileNotFoundError(str(file.Path))
 			if file.FileType is FileTypes.VHDLSourceFile:
 				# create one VHDL line for each VHDL file

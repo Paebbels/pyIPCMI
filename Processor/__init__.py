@@ -5,7 +5,7 @@
 # ==============================================================================
 # Authors:               Patrick Lehmann
 #
-# Python Sub Module:    Saves The PoC-Library configuration as python source code.
+# Python Sub Module:    Saves The pyIPCMI-Library configuration as python source code.
 #
 # License:
 # ==============================================================================

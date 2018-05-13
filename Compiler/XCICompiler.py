@@ -52,7 +52,7 @@ class Compiler(BaseCompiler):
 	def __init__(self, host, dryRun, noCleanUp):
 		super().__init__(host, dryRun, noCleanUp)
 
-		configSection = host.PoCConfig['CONFIG.DirectoryNames']
+		configSection = host.pyIPCMIConfig['CONFIG.DirectoryNames']
 		self.Directories.Working = host.Directories.Temp / configSection['VivadoIPCatalogFiles']
 		self.Directories.Netlist = host.Directories.Root / configSection['NetlistFiles']
 
@@ -60,7 +60,7 @@ class Compiler(BaseCompiler):
 
 	def _PrepareCompiler(self):
 		super()._PrepareCompiler()
-		vivadoSection =         self.Host.PoCConfig['INSTALL.Xilinx.Vivado']
+		vivadoSection =         self.Host.pyIPCMIConfig['INSTALL.Xilinx.Vivado']
 		version =               vivadoSection['Version']
 		installationDirectory = Path(vivadoSection['InstallationDirectory'])
 		binaryPath =            Path(vivadoSection['BinaryDirectory'])
@@ -119,10 +119,10 @@ class Compiler(BaseCompiler):
 
 	def _WriteSpecialSectionIntoConfig(self, device):
 		# add the key Device to section SPECIAL at runtime to change interpolation results
-		self.Host.PoCConfig['SPECIAL'] = {}
-		self.Host.PoCConfig['SPECIAL']['Device'] =        device.FullName
-		self.Host.PoCConfig['SPECIAL']['DeviceSeries'] =  device.Series
-		self.Host.PoCConfig['SPECIAL']['OutputDir']	=     self.Directories.Working.as_posix()
+		self.Host.pyIPCMIConfig['SPECIAL'] = {}
+		self.Host.pyIPCMIConfig['SPECIAL']['Device'] =        device.FullName
+		self.Host.pyIPCMIConfig['SPECIAL']['DeviceSeries'] =  device.Series
+		self.Host.pyIPCMIConfig['SPECIAL']['OutputDir']	=     self.Directories.Working.as_posix()
 
 	def _RunCompile(self, netlist, device):
 		self.LogVerbose("Patching coregen.cgp and .cgc files...")

@@ -182,7 +182,7 @@ class Exit:
 		print(("{RED}" + ("-" * 80) + "{NOCOLOR}").format(**Init.Foreground))
 		print_tb(ex.__traceback__)
 		print(("{RED}" + ("-" * 80) + "{NOCOLOR}").format(**Init.Foreground))
-		print(("{RED}Please report this bug at GitHub: https://github.com/VLSI-EDA/PoC/issues{NOCOLOR}").format(**Init.Foreground))
+		print(("{RED}Please report this bug at GitHub: https://github.com/VLSI-EDA/pyIPCMI/issues{NOCOLOR}").format(**Init.Foreground))
 		print(("{RED}" + ("-" * 80) + "{NOCOLOR}").format(**Init.Foreground))
 		Exit.exit(1)
 
@@ -195,7 +195,7 @@ class Exit:
 		funcName = frame.f_code.co_name
 		print("{RED}NOT IMPLEMENTED:{NOCOLOR} {function} in file '{filename}': {message!s}".format(function=funcName, filename=filename, message=ex, **Init.Foreground))
 		print(("{RED}" + ("-" * 80) + "{NOCOLOR}").format(**Init.Foreground))
-		print(("{RED}Please report this bug at GitHub: https://github.com/VLSI-EDA/PoC/issues{NOCOLOR}").format(**Init.Foreground))
+		print(("{RED}Please report this bug at GitHub: https://github.com/VLSI-EDA/pyIPCMI/issues{NOCOLOR}").format(**Init.Foreground))
 		print(("{RED}" + ("-" * 80) + "{NOCOLOR}").format(**Init.Foreground))
 		Exit.exit(1)
 
@@ -205,7 +205,7 @@ class Exit:
 		print("{RED}FATAL: A known but unhandled exception reached the topmost exception handler!{NOCOLOR}".format(**Init.Foreground))
 		print("{RED}ERROR:{NOCOLOR} {message}".format(message=ex.message, **Init.Foreground))
 		print(("{RED}" + ("-" * 80) + "{NOCOLOR}").format(**Init.Foreground))
-		print(("{RED}Please report this bug at GitHub: https://github.com/VLSI-EDA/PoC/issues{NOCOLOR}").format(**Init.Foreground))
+		print(("{RED}Please report this bug at GitHub: https://github.com/VLSI-EDA/pyIPCMI/issues{NOCOLOR}").format(**Init.Foreground))
 		print(("{RED}" + ("-" * 80) + "{NOCOLOR}").format(**Init.Foreground))
 		Exit.exit(1)
 
@@ -219,12 +219,12 @@ class Exit:
 	def printEnvironmentException(cls, ex):
 		Init.init()
 		print("{RED}ERROR:{NOCOLOR} {message}".format(message=ex.message, **Init.Foreground))
-		print("  Please run this script with it's provided wrapper ('poc.[sh/ps1]') or manually load the required environment before executing this script.")
+		print("  Please run this script with it's provided wrapper ('pyIPCMI.[sh/ps1]') or manually load the required environment before executing this script.")
 		Exit.exit(1)
 
 	@classmethod
 	def printNotConfiguredException(cls, ex):
 		Init.init()
 		print("{RED}ERROR:{NOCOLOR} {message}".format(message=ex.message, **Init.Foreground))
-		print("  Please run {YELLOW}'poc.[sh/ps1] configure'{NOCOLOR} in PoC's root directory.".format(**Init.Foreground))
+		print("  Please run {YELLOW}'pyIPCMI.[sh/ps1] configure'{NOCOLOR} in pyIPCMI's root directory.".format(**Init.Foreground))
 		Exit.exit(1)

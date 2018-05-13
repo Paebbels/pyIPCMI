@@ -87,7 +87,7 @@ class Configuration(ToolConfiguration):
 
 	def CheckDependency(self):
 		# return True if Xilinx is configured
-		return (len(self._host.PoCConfig['INSTALL.GHDL']) != 0)
+		return (len(self._host.pyIPCMIConfig['INSTALL.GHDL']) != 0)
 
 	def ConfigureForAll(self):
 		try:
@@ -98,8 +98,8 @@ class Configuration(ToolConfiguration):
 				version = "3.3.80"
 				if self._multiVersionSupport:
 					self.PrepareVersionedSections()
-					sectionName = self._host.PoCConfig[self._section]['SectionName']
-					self._host.PoCConfig[sectionName]['Version'] = version
+					sectionName = self._host.pyIPCMIConfig[self._section]['SectionName']
+					self._host.pyIPCMIConfig[sectionName]['Version'] = version
 
 				self._ConfigureInstallationDirectory()
 				binPath = self._ConfigureBinaryDirectory()
@@ -140,7 +140,7 @@ class Configuration(ToolConfiguration):
 				if match is not None:
 					version = match.group(1)
 
-		self._host.PoCConfig[self._section]['Version'] = version
+		self._host.pyIPCMIConfig[self._section]['Version'] = version
 
 
 class GTKWave(OutputFilteredExecutable):

@@ -6,7 +6,7 @@
 # Authors:          Patrick Lehmann
 #                   Martin Zabel
 #
-# Python package:   Contains PoC's configuration mechanism.
+# Python package:   Contains pyIPCMI's configuration mechanism.
 #
 # License:
 # ==============================================================================
@@ -63,7 +63,7 @@ class ToolChainException(ExceptionBase):
 
 class ConfigurationException(ExceptionBase):
 	"""``ConfigurationException`` is raise while running configuration or database
-	tasks in PoC
+	tasks in pyIPCMI
 	"""
 
 class SkipConfigurationException(ExceptionBase):
@@ -199,8 +199,8 @@ class Configuration(ILogable, AskMixIn):    #(ISubClassRegistration):
 
 	def IsConfigured(self):
 		"""Return true if the configurations section is configured"""
-		if self._host.PoCConfig.has_section(self._section):
-			optionCount = len(self._host.PoCConfig.options(self._section))
+		if self._host.pyIPCMIConfig.has_section(self._section):
+			optionCount = len(self._host.pyIPCMIConfig.options(self._section))
 			if (optionCount > 0):
 				return ConfigurationState.Configured
 
@@ -221,39 +221,39 @@ class Configuration(ILogable, AskMixIn):    #(ISubClassRegistration):
 				yield sectionName
 
 	def PrepareSections(self, warningWasWritten, writeWarnings=True):
-		pocConfig = self._host.PoCConfig
+		pyIPCMIConfig = self._host.pyIPCMIConfig
 		for platform in ["ALL", self._host.Platform]:
 			if (platform in self._template):
 				for sectionName, section in self._template[platform].items():
-					if (not pocConfig.has_section(sectionName)):
+					if (not pyIPCMIConfig.has_section(sectionName)):
 						self.LogWarning("WARNING: Adding new sections to configuration...", condition=(writeWarnings and not warningWasWritten))
 						warningWasWritten |= True
 
 						self.LogVerbose("Adding [{0}]".format(sectionName), condition=writeWarnings)
-						pocConfig[sectionName] = OrderedDict()
+						pyIPCMIConfig[sectionName] = OrderedDict()
 
 	def ClearSection(self, writeWarnings=False):
 		"""Clear the configuration section associated to this Configuration class."""
 		self.LogWarning("WARNING: Clearing section '{0}'...".format(self._section), condition=writeWarnings, indent=1)
-		self._host.PoCConfig[self._section] = OrderedDict()
+		self._host.pyIPCMIConfig[self._section] = OrderedDict()
 		if self._multiVersionSupport:
 			warningWasWritten = False
-			sectionNames = [sectionName for sectionName in self._host.PoCConfig if ((len(sectionName) > len(self._section)) and sectionName.startswith(self._section))]
+			sectionNames = [sectionName for sectionName in self._host.pyIPCMIConfig if ((len(sectionName) > len(self._section)) and sectionName.startswith(self._section))]
 			for sectionName in sectionNames:
 				self.LogWarning("WARNING: Removing versioned sections...", condition=(writeWarnings and not warningWasWritten), indent=1)
 				self.LogWarning(sectionName, condition=writeWarnings, indent=2)
-				self._host.PoCConfig.remove_section(sectionName)
+				self._host.pyIPCMIConfig.remove_section(sectionName)
 
 	def PrepareOptions(self, writeWarnings=True):
-		pocConfig = self._host.PoCConfig
+		pyIPCMIConfig = self._host.pyIPCMIConfig
 		for platform in ["ALL", self._host.Platform]:
 			if (platform in self._template):
 				for sectionName, section in self._template[platform].items():
 					warningWasWritten = False
-					pocSection =        pocConfig[sectionName]
+					pyIPCMISection =        pyIPCMIConfig[sectionName]
 
 					for optionName, optionValue in section.items():
-						if (not pocConfig.has_option(sectionName, optionName)):
+						if (not pyIPCMIConfig.has_option(sectionName, optionName)):
 							self.LogWarning("Adding new options to section '{0}'...".format(sectionName), condition=(writeWarnings and not warningWasWritten), indent=2)
 							warningWasWritten |= True
 
@@ -261,10 +261,10 @@ class Configuration(ILogable, AskMixIn):    #(ISubClassRegistration):
 								value = optionValue[0]
 								if (value is not None):
 									self.LogWarning("Adding {0} = {1}".format(optionName, value), condition=writeWarnings, indent=3)
-									pocSection[optionName] = value
+									pyIPCMISection[optionName] = value
 							else:
 								self.LogWarning("Adding {0} = {1}".format(optionName, optionValue), condition=writeWarnings, indent=3)
-								pocSection[optionName] = optionValue
+								pyIPCMISection[optionName] = optionValue
 
 	def ConfigureForDarwin(self):
 		"""Start the configuration procedure for Darwin.
@@ -312,12 +312,12 @@ class Configuration(ILogable, AskMixIn):    #(ISubClassRegistration):
 		Checks if entered directory exists and returns Path object.
 		If no installation directory was configured before, then _GetDefaultInstallationDir is called.
 		"""
-		# if self._host.PoCConfig.has_option(self._section, 'InstallationDirectory'):
-		defaultPath = Path(self._host.PoCConfig[self._section]['InstallationDirectory'])
+		# if self._host.pyIPCMIConfig.has_option(self._section, 'InstallationDirectory'):
+		defaultPath = Path(self._host.pyIPCMIConfig[self._section]['InstallationDirectory'])
 		# else:
 		# 	unresolved = self._GetDefaultInstallationDirectory() # may return an unresolved configuration string
-		# 	self._host.PoCConfig[self._section]['InstallationDirectory'] = unresolved # create entry
-		# 	defaultPath = Path(self._host.PoCConfig[self._section]['InstallationDirectory']) # resolve entry
+		# 	self._host.pyIPCMIConfig[self._section]['InstallationDirectory'] = unresolved # create entry
+		# 	defaultPath = Path(self._host.pyIPCMIConfig[self._section]['InstallationDirectory']) # resolve entry
 
 		question = "{0!s} installation directory".format(self)
 		installPath = self._Ask(question, default=defaultPath)
@@ -330,12 +330,12 @@ class Configuration(ILogable, AskMixIn):    #(ISubClassRegistration):
 
 		if installPath != defaultPath: # update only if user entered something
 			if self._multiVersionSupport:
-				sectionName = self._host.PoCConfig[self._section]['SectionName']
+				sectionName = self._host.pyIPCMIConfig[self._section]['SectionName']
 			else:
 				sectionName = self._section
 
-			self._host.PoCConfig[sectionName]['InstallationDirectory'] = installPath.as_posix()
-			self._host.PoCConfig.Interpolation.clear_cache()
+			self._host.pyIPCMIConfig[sectionName]['InstallationDirectory'] = installPath.as_posix()
+			self._host.pyIPCMIConfig.Interpolation.clear_cache()
 
 		return installPath
 
@@ -426,7 +426,7 @@ class VendorConfiguration(Configuration):
 	# Method aliases
 	IsConfigured = Configuration.IsConfigured
 	"""Return true if the vendor represented by this Configuration class is
-	configured in PoC.
+	configured in pyIPCMI.
 
 	Inherited method :py:meth:`~Configuration.IsConfigured` from class
 	:py:class:`Configuration`.
@@ -483,7 +483,7 @@ class ToolConfiguration(Configuration):
 	# Method aliases
 	IsConfigured = Configuration.IsConfigured
 	"""Return true if the tool represented by this Configuration class is
-	configured in PoC.
+	configured in pyIPCMI.
 
 	Inherited method :py:meth:`~Configuration.IsConfigured` from class
 	:py:class:`Configuration`.
@@ -494,19 +494,19 @@ class ToolConfiguration(Configuration):
 		If no version was configured before, then _GetDefaultVersion is called.
 		Asks for version and updates section. Returns version as string.
 		"""
-		# if self._host.PoCConfig.has_option(self._section, 'Version'):
-		defaultVersion = self._host.PoCConfig[self._section]['Version']
+		# if self._host.pyIPCMIConfig.has_option(self._section, 'Version'):
+		defaultVersion = self._host.pyIPCMIConfig[self._section]['Version']
 		# else:
 		# 	unresolved = self._GetDefaultVersion()  # may return an unresolved configuration string
-		# 	self._host.PoCConfig[self._section]['Version'] = unresolved  # create entry
-		# 	defaultVersion = self._host.PoCConfig[self._section]['Version']  # resolve entry
+		# 	self._host.pyIPCMIConfig[self._section]['Version'] = unresolved  # create entry
+		# 	defaultVersion = self._host.pyIPCMIConfig[self._section]['Version']  # resolve entry
 
 		question = "{0!s} version".format(defaultVersion)
 		version = self._Ask(question, default=defaultVersion, indent=1)
 
 		if (version != defaultVersion):   # update only if user entered something
-			self._host.PoCConfig[self._section]['Version'] = version
-			self._host.PoCConfig.Interpolation.clear_cache()
+			self._host.pyIPCMIConfig[self._section]['Version'] = version
+			self._host.pyIPCMIConfig.Interpolation.clear_cache()
 
 		return version
 
@@ -562,8 +562,8 @@ class ToolConfiguration(Configuration):
 		as :class:`Path <pathlib.Path>` object.
 		"""
 		# unresolved = self._template[self._host.Platform][self._section]['BinaryDirectory']
-		# self._host.PoCConfig[self._section]['BinaryDirectory'] = unresolved  # create entry
-		defaultPath = Path(self._host.PoCConfig[self._section]['BinaryDirectory'])  # resolve entry
+		# self._host.pyIPCMIConfig[self._section]['BinaryDirectory'] = unresolved  # create entry
+		defaultPath = Path(self._host.pyIPCMIConfig[self._section]['BinaryDirectory'])  # resolve entry
 
 		binPath = defaultPath  # may be more complex in the future
 
@@ -575,23 +575,23 @@ class ToolConfiguration(Configuration):
 
 	def PrepareVersionedSections(self, writeWarnings=False):
 		warningWasWritten = False
-		pocConfig = self._host.PoCConfig
+		pyIPCMIConfig = self._host.pyIPCMIConfig
 		for platform in ["ALL", self._host.Platform]:
 			if ((platform not in self._template) or (self._section not in self._template[platform])):
 				continue
 
-			sectionName = self._host.PoCConfig[self._section]['SectionName']
-			if (not pocConfig.has_section(sectionName)):
+			sectionName = self._host.pyIPCMIConfig[self._section]['SectionName']
+			if (not pyIPCMIConfig.has_section(sectionName)):
 				self.LogWarning("WARNING: Adding new sections to configuration...", condition=(writeWarnings and not warningWasWritten), indent=2)
 				warningWasWritten |= True
 
 				self.LogWarning("Adding [{0}]".format(sectionName), condition=writeWarnings, indent=2)
-				pocConfig[sectionName] = OrderedDict()
+				pyIPCMIConfig[sectionName] = OrderedDict()
 
 			section = self._template[platform][self._section]
-			pocSection = pocConfig[sectionName]
+			pyIPCMISection = pyIPCMIConfig[sectionName]
 			for optionName, optionValue in section.items():
-				if (not pocConfig.has_option(sectionName, optionName)):
+				if (not pyIPCMIConfig.has_option(sectionName, optionName)):
 					self.LogWarning("Adding new options to section '{0}'...".format(sectionName), condition=(writeWarnings and not warningWasWritten), indent=2)
 					warningWasWritten |= True
 
@@ -599,10 +599,10 @@ class ToolConfiguration(Configuration):
 						value = optionValue[1]
 						if (value is not None):
 							self.LogWarning("Adding {0} = {1}".format(optionName, value), condition=writeWarnings, indent=3)
-							pocSection[optionName] = value
+							pyIPCMISection[optionName] = value
 					else:
 						self.LogWarning("Adding {0} = {1}".format(optionName, optionValue), condition=writeWarnings, indent=3)
-						pocSection[optionName] = optionValue
+						pyIPCMISection[optionName] = optionValue
 
 	def __str__(self):
 		"""Return the tool name."""
@@ -653,7 +653,7 @@ class ToolSelector(ILogable, AskMixIn):
 		"""Return all configured editions."""
 		_editions = []
 		for edition in editions:
-			if (len(self._host.PoCConfig[edition.Section]) > 0):
+			if (len(self._host.pyIPCMIConfig[edition.Section]) > 0):
 				_editions.append(edition)
 
 		return _editions
@@ -700,7 +700,7 @@ class Configurator(ILogable, AskMixIn):
 		self._host =              host
 		self._saveConfiguration = True
 
-		from .PoC                 import Configuration as PoC_Configuration
+		from .pyIPCMI                 import Configuration as pyIPCMI_Configuration
 		from .Git                 import Configuration as Git_Configuration
 		from .Aldec               import Configuration as Aldec_Configuration
 		from .Aldec.ActiveHDL     import Configuration as ActiveHDL_Configuration
@@ -732,7 +732,7 @@ class Configurator(ILogable, AskMixIn):
 
 		#: List of all available (and thus enabled) Configuration classes.
 		Configurations = [
-			PoC_Configuration,
+			pyIPCMI_Configuration,
 			Git_Configuration,
 			# Aldec products
 			Aldec_Configuration,
@@ -789,7 +789,7 @@ class Configurator(ILogable, AskMixIn):
 
 		# Write and re-read configuration
 		if self._saveConfiguration:
-			self._host.SaveAndReloadPoCConfiguration()
+			self._host.SaveAndReloadpyIPCMIConfiguration()
 
 	def ConfigureTool(self, toolChain):
 		"""Select tool chains for configuration."""
@@ -805,10 +805,10 @@ class Configurator(ILogable, AskMixIn):
 
 		# Write and re-read configuration
 		if self._saveConfiguration:
-			self._host.SaveAndReloadPoCConfiguration()
+			self._host.SaveAndReloadpyIPCMIConfiguration()
 
 	def InitializeConfiguration(self):
-		"""Initialize PoC's configuration with empty sections.
+		"""Initialize pyIPCMI's configuration with empty sections.
 
 		The list of sections is gathered from all enabled configurators'
 		:py:data:`_template` fields.
@@ -818,7 +818,7 @@ class Configurator(ILogable, AskMixIn):
 			configurator.PrepareSections(warningWasWritten, writeWarnings=False)
 
 	def UpdateConfiguration(self):
-		"""Update an existing configuration e.g. after a PoC update."""
+		"""Update an existing configuration e.g. after a pyIPCMI update."""
 		warningWasWritten = CallByRefBoolParam(False)
 		for configurator in self._configurators:
 			configurator.PrepareSections(warningWasWritten)
@@ -827,13 +827,13 @@ class Configurator(ILogable, AskMixIn):
 			if configured:
 				configurator.PrepareOptions()
 
-		# pocSections =    set([sectionName for sectionName in self._host.PoCConfig])
+		# pyIPCMISections =    set([sectionName for sectionName in self._host.pyIPCMIConfig])
 		# configSections = set([sectionName for config in Configurations for sectionName in config.GetSections(self._host.Platform)]) # FIXME: what about the ALL platform?
-		# delSections = pocSections.difference(configSections)
+		# delSections = pyIPCMISections.difference(configSections)
 
 		# if delSections:
 		# 	for sectionName in delSections:
-		# 		self._host.PoCConfig.remove_section(sectionName)
+		# 		self._host.pyIPCMIConfig.remove_section(sectionName)
 
 	def _ConfigureTools(self, configurators):
 		"""Run the configuration routines for a list of configurators"""
@@ -866,13 +866,13 @@ class Configurator(ILogable, AskMixIn):
 			# Print the currently collected configuration if in debug mode
 			if (self.Logger.LogLevel is Severity.Debug):
 				self.LogDebug("-" * 40, indent=1)
-				for sectionName in self._host.PoCConfig.sections():
+				for sectionName in self._host.pyIPCMIConfig.sections():
 					if (not sectionName.startswith("INSTALL")):
 						continue
 					self.LogDebug("[{0}]".format(sectionName), indent=1)
-					configSection = self._host.PoCConfig[sectionName]
+					configSection = self._host.pyIPCMIConfig[sectionName]
 					for optionName in configSection:
-						optionRaw =   self._host.PoCConfig.get(sectionName, optionName, raw=True)
+						optionRaw =   self._host.pyIPCMIConfig.get(sectionName, optionName, raw=True)
 						try:
 							optionValue = configSection[optionName]
 						except Exception:
@@ -887,10 +887,10 @@ class Configurator(ILogable, AskMixIn):
 		if self._AskConfigureDefaultTools():
 			self._ConfigureDefaultTools()
 		else:
-			self.LogWarning("You can rerun this configuration step with '.\poc.ps1 select'.", indent=1)
+			self.LogWarning("You can rerun this configuration step with '.\pyIPCMI.ps1 select'.", indent=1)
 
 		# Write and re-read configuration
-		self._host.SaveAndReloadPoCConfiguration()
+		self._host.SaveAndReloadpyIPCMIConfiguration()
 
 		# Run post-configuration tasks
 		self.LogNormal("{DARK_CYAN}Running post configuration tasks{NOCOLOR}".format(**Init.Foreground))
@@ -904,7 +904,7 @@ class Configurator(ILogable, AskMixIn):
 		A :py:exec:`KeyboardInterrupt` should be handled in a calling method.
 		"""
 		while True:
-			# Copy all options for a configurator's sections from _template into PoCConfig
+			# Copy all options for a configurator's sections from _template into pyIPCMIConfig
 			configurator.PrepareOptions(writeWarnings=False)
 
 			try:
@@ -924,7 +924,7 @@ class Configurator(ILogable, AskMixIn):
 
 		# Write and re-read configuration
 		if self._saveConfiguration:
-			self._host.SaveAndReloadPoCConfiguration()
+			self._host.SaveAndReloadpyIPCMIConfiguration()
 
 	def _ConfigureDefaultTools(self):
 		self.LogNormal("{CYAN}Choosing default tools\n----------------------{NOCOLOR}".format(**Init.Foreground))
@@ -961,13 +961,13 @@ class Configurator(ILogable, AskMixIn):
 				self.LogNormal("Unsupported choice '{0}'".format(configureDefaultTools))
 
 	def Relocated(self):
-		self.LogNormal("Relocating PoC to '{0!s}'.".format(self._host.Directories.Root))
-		self.LogVerbose("Old location: {0!s}".format(Path(self._host.PoCConfig['INSTALL.PoC']['InstallationDirectory'])))
+		self.LogNormal("Relocating pyIPCMI to '{0!s}'.".format(self._host.Directories.Root))
+		self.LogVerbose("Old location: {0!s}".format(Path(self._host.pyIPCMIConfig['INSTALL.pyIPCMI']['InstallationDirectory'])))
 
-		self._host.PoCConfig['INSTALL.PoC']['InstallationDirectory'] = self._host.Directories.Root.as_posix()
+		self._host.pyIPCMIConfig['INSTALL.pyIPCMI']['InstallationDirectory'] = self._host.Directories.Root.as_posix()
 
 		# Write and re-read configuration
-		self._host.SaveAndReloadPoCConfiguration()
+		self._host.SaveAndReloadpyIPCMIConfiguration()
 
 
 class OutputFilteredExecutable(Executable):

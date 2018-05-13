@@ -54,7 +54,7 @@ class Compiler(BaseCompiler):
 
 		self._vhdlVersion = VHDLVersion.VHDL2008
 
-		configSection = host.PoCConfig['CONFIG.DirectoryNames']
+		configSection = host.pyIPCMIConfig['CONFIG.DirectoryNames']
 		self.Directories.Working = host.Directories.Temp / configSection['LatticeSynthesisFiles']
 		self.Directories.Netlist = host.Directories.Root / configSection['NetlistFiles']
 
@@ -63,7 +63,7 @@ class Compiler(BaseCompiler):
 	def _PrepareCompiler(self):
 		super()._PrepareCompiler()
 
-		diamondSection = self.Host.PoCConfig['INSTALL.Lattice.Diamond']
+		diamondSection = self.Host.pyIPCMIConfig['INSTALL.Lattice.Diamond']
 		if (self.Host.Platform == "Linux"):     binaryPath = Path(diamondSection['BinaryDirectory2'])		# ispFPGA directory
 		elif (self.Host.Platform == "Windows"): binaryPath = Path(diamondSection['BinaryDirectory2'])		# ispFPGA directory
 		else:                                   raise PlatformNotSupportedException(self.Host.Platform)
@@ -141,7 +141,7 @@ class Compiler(BaseCompiler):
 
 		argumentFile.HDLParams.update(self._GetHDLParameters(netlist.ConfigSectionName))
 
-		argumentFile.Write(self.PoCProject)
+		argumentFile.Write(self.pyIPCMIProject)
 		return argumentFile
 
 	def _RunCompile(self, netlist, lseArgumentFile):

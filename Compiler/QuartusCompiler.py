@@ -50,7 +50,7 @@ class Compiler(BaseCompiler):
 	def __init__(self, host, dryRun, noCleanUp):
 		super().__init__(host, dryRun, noCleanUp)
 
-		configSection = host.PoCConfig['CONFIG.DirectoryNames']
+		configSection = host.pyIPCMIConfig['CONFIG.DirectoryNames']
 		self.Directories.Working = host.Directories.Temp / configSection['QuartusSynthesisFiles']
 		self.Directories.Netlist = host.Directories.Root / configSection['NetlistFiles']
 
@@ -60,12 +60,12 @@ class Compiler(BaseCompiler):
 		super()._PrepareCompiler()
 
 		# XXX: check SectionName if Quartus is configured
-		# quartusSection = self.Host.PoCConfig['INSTALL.Altera.Quartus']
+		# quartusSection = self.Host.pyIPCMIConfig['INSTALL.Altera.Quartus']
 		# binaryPath = Path(quartusSection['BinaryDirectory'])
 		# version =  quartusSection['Version']
 
-		binaryPath =  Path(self.Host.PoCConfig['INSTALL.Quartus']['BinaryDirectory'])
-		version =     self.Host.PoCConfig['INSTALL.Quartus']['Version']
+		binaryPath =  Path(self.Host.pyIPCMIConfig['INSTALL.Quartus']['BinaryDirectory'])
+		version =     self.Host.pyIPCMIConfig['INSTALL.Quartus']['Version']
 		self._toolChain =    Quartus(self.Host.Platform, self.DryRun, binaryPath, version, logger=self.Logger)
 
 	def RunAll(self, fqnList, *args, **kwargs):
@@ -125,10 +125,10 @@ class Compiler(BaseCompiler):
 
 	def _WriteSpecialSectionIntoConfig(self, device):
 		# add the key Device to section SPECIAL at runtime to change interpolation results
-		self.Host.PoCConfig['SPECIAL'] = {}
-		self.Host.PoCConfig['SPECIAL']['Device'] =        device.ShortName
-		self.Host.PoCConfig['SPECIAL']['DeviceSeries'] =  device.Series
-		self.Host.PoCConfig['SPECIAL']['OutputDir']	=      self.Directories.Working.as_posix()
+		self.Host.pyIPCMIConfig['SPECIAL'] = {}
+		self.Host.pyIPCMIConfig['SPECIAL']['Device'] =        device.ShortName
+		self.Host.pyIPCMIConfig['SPECIAL']['DeviceSeries'] =  device.Series
+		self.Host.pyIPCMIConfig['SPECIAL']['OutputDir']	=      self.Directories.Working.as_posix()
 
 
 	def _WriteQuartusProjectFile(self, netlist, device):
@@ -141,8 +141,8 @@ class Compiler(BaseCompiler):
 		quartusSettings.GlobalAssignments['VHDL_INPUT_VERSION'] =  "VHDL_2008"
 		quartusSettings.Parameters.update(self._GetHDLParameters(netlist.ConfigSectionName))
 
-		# transform files from PoCProject to global assignment commands in a QSF files
-		quartusSettings.CopySourceFilesFromProject(self.PoCProject)
+		# transform files from pyIPCMIProject to global assignment commands in a QSF files
+		quartusSettings.CopySourceFilesFromProject(self.pyIPCMIProject)
 
 		quartusSettings.Write()
 

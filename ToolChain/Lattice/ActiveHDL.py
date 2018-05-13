@@ -55,8 +55,8 @@ class Configuration(ActiveHDL_Configuration):
 	}                                                   #: The template for the configuration sections represented as nested dictionaries.
 
 	def CheckDependency(self):
-		"""Check if Lattice Diamond support is configured in PoC."""
-		return (len(self._host.PoCConfig['INSTALL.Lattice.Diamond']) != 0)
+		"""Check if Lattice Diamond support is configured in pyIPCMI."""
+		return (len(self._host.pyIPCMIConfig['INSTALL.Lattice.Diamond']) != 0)
 
 	def ConfigureForAll(self):
 		try:

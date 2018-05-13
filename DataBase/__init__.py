@@ -5,7 +5,7 @@
 # ==============================================================================
 # Authors:               Patrick Lehmann
 #
-# Python Sub Module:    Saves The PoC-Library configuration as python source code.
+# Python Sub Module:    Saves The pyIPCMI-Library configuration as python source code.
 #
 # License:
 # ==============================================================================
@@ -35,14 +35,14 @@ from ToolChain            import ConfigurationException
 
 __api__ = [
 	'Query',
-	'__POC_SOLUTION_KEYWORD__',
-	'__POC_PROJECT_KEYWORD__'
+	'__pyIPCMI_SOLUTION_KEYWORD__',
+	'__pyIPCMI_PROJECT_KEYWORD__'
 ]
 __all__ = __api__
 
 
-__POC_SOLUTION_KEYWORD__ =  "Solution"
-__POC_PROJECT_KEYWORD__ =   "Project"
+__pyIPCMI_SOLUTION_KEYWORD__ =  "Solution"
+__pyIPCMI_PROJECT_KEYWORD__ =   "Project"
 
 
 class Query:
@@ -54,7 +54,7 @@ class Query:
 	@property
 	def Platform(self):    return self.__host.Platform
 	@property
-	def PoCConfig(self):  return self.__host.PoCConfig
+	def pyIPCMIConfig(self):  return self.__host.pyIPCMIConfig
 
 	def QueryConfiguration(self, query):
 		if (query == "ModelSim:InstallationDirectory"):
@@ -71,7 +71,7 @@ class Query:
 				sectionName = parts[0]
 				optionName =  parts[1]
 				try:
-					result =  self.PoCConfig[sectionName][optionName]
+					result =  self.pyIPCMIConfig[sectionName][optionName]
 				except KeyError as ex:
 					raise ConfigurationException("Requested setting '{0}:{1}' not found.".format(sectionName, optionName)) from ex
 			else:
@@ -81,24 +81,24 @@ class Query:
 		return result
 
 	def _GetModelSimInstallationDirectory(self):
-		if (len(self.PoCConfig.options('INSTALL.Mentor.QuestaSim')) != 0):
-			return Path(self.PoCConfig['INSTALL.Mentor.QuestaSim']['InstallationDirectory'])
-		elif (len(self.PoCConfig.options('INSTALL.Altera.ModelSim')) != 0):
-			return Path(self.PoCConfig['INSTALL.Altera.ModelSim']['InstallationDirectory'])
+		if (len(self.pyIPCMIConfig.options('INSTALL.Mentor.QuestaSim')) != 0):
+			return Path(self.pyIPCMIConfig['INSTALL.Mentor.QuestaSim']['InstallationDirectory'])
+		elif (len(self.pyIPCMIConfig.options('INSTALL.Altera.ModelSim')) != 0):
+			return Path(self.pyIPCMIConfig['INSTALL.Altera.ModelSim']['InstallationDirectory'])
 		else:
 			raise NotConfiguredException("ERROR: ModelSim is not configured on this system.")
 
 	def _GetModelSimBinaryDirectory(self):
-		if (len(self.PoCConfig.options('INSTALL.Mentor.QuestaSim')) != 0):
-			return Path(self.PoCConfig['INSTALL.Mentor.QuestaSim']['BinaryDirectory'])
-		elif (len(self.PoCConfig.options('INSTALL.Altera.ModelSim')) != 0):
-			return Path(self.PoCConfig['INSTALL.Altera.ModelSim']['BinaryDirectory'])
+		if (len(self.pyIPCMIConfig.options('INSTALL.Mentor.QuestaSim')) != 0):
+			return Path(self.pyIPCMIConfig['INSTALL.Mentor.QuestaSim']['BinaryDirectory'])
+		elif (len(self.pyIPCMIConfig.options('INSTALL.Altera.ModelSim')) != 0):
+			return Path(self.pyIPCMIConfig['INSTALL.Altera.ModelSim']['BinaryDirectory'])
 		else:
 			raise NotConfiguredException("ERROR: ModelSim is not configured on this system.")
 
 	def _GetXilinxISESettingsFile(self):
-		if (len(self.PoCConfig.options('INSTALL.Xilinx.ISE')) != 0):
-			iseInstallationDirectoryPath = Path(self.PoCConfig['INSTALL.Xilinx.ISE']['InstallationDirectory'])
+		if (len(self.pyIPCMIConfig.options('INSTALL.Xilinx.ISE')) != 0):
+			iseInstallationDirectoryPath = Path(self.pyIPCMIConfig['INSTALL.Xilinx.ISE']['InstallationDirectory'])
 			if (self.Platform == "Windows"):
 				return iseInstallationDirectoryPath / "settings64.bat"
 			elif (self.Platform == "Linux"):
@@ -109,8 +109,8 @@ class Query:
 			raise NotConfiguredException("ERROR: Xilinx ISE is not configured on this system.")
 
 	def _GetXilinxVivadoSettingsFile(self):
-		if (len(self.PoCConfig.options('INSTALL.Xilinx.Vivado')) != 0):
-			iseInstallationDirectoryPath = Path(self.PoCConfig['INSTALL.Xilinx.Vivado']['InstallationDirectory'])
+		if (len(self.pyIPCMIConfig.options('INSTALL.Xilinx.Vivado')) != 0):
+			iseInstallationDirectoryPath = Path(self.pyIPCMIConfig['INSTALL.Xilinx.Vivado']['InstallationDirectory'])
 			if (self.Platform == "Windows"):
 				return iseInstallationDirectoryPath / "settings64.bat"
 			elif (self.Platform == "Linux"):

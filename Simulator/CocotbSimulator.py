@@ -52,7 +52,7 @@ class Simulator(BaseSimulator):
 	def __init__(self, host, dryRun, simulationSteps):
 		super().__init__(host, dryRun, simulationSteps)
 
-		configSection =                 host.PoCConfig['CONFIG.DirectoryNames']
+		configSection =                 host.pyIPCMIConfig['CONFIG.DirectoryNames']
 		self.Directories.Working =      host.Directories.Temp / configSection['CocotbFiles']
 		self.Directories.PreCompiled =  host.Directories.PreCompiled / configSection['ModelSimFiles']
 
@@ -86,13 +86,13 @@ class Simulator(BaseSimulator):
 	def _RunSimulation(self, testbench): # mccabe:disable=MC0001
 		# select modelsim.ini from precompiled
 		precompiledModelsimIniPath = self.Directories.PreCompiled
-		device_vendor = self._pocProject.Board.Device.Vendor
+		device_vendor = self._pyIPCMIProject.Board.Device.Vendor
 		if device_vendor is Vendors.Altera:
-			precompiledModelsimIniPath /= self.Host.PoCConfig['CONFIG.DirectoryNames']['AlteraSpecificFiles']
+			precompiledModelsimIniPath /= self.Host.pyIPCMIConfig['CONFIG.DirectoryNames']['AlteraSpecificFiles']
 		elif device_vendor is Vendors.Lattice:
-			precompiledModelsimIniPath /= self.Host.PoCConfig['CONFIG.DirectoryNames']['LatticeSpecificFiles']
+			precompiledModelsimIniPath /= self.Host.pyIPCMIConfig['CONFIG.DirectoryNames']['LatticeSpecificFiles']
 		elif device_vendor is Vendors.Xilinx:
-			precompiledModelsimIniPath /= self.Host.PoCConfig['CONFIG.DirectoryNames']['XilinxSpecificFiles']
+			precompiledModelsimIniPath /= self.Host.pyIPCMIConfig['CONFIG.DirectoryNames']['XilinxSpecificFiles']
 
 		precompiledModelsimIniPath /= "modelsim.ini"
 		if not precompiledModelsimIniPath.exists():
@@ -127,13 +127,13 @@ class Simulator(BaseSimulator):
 		#
 		self.LogNormal("Running simulation...")
 		cocotbTemplateFilePath = self.Host.Directories.Root / \
-															self.Host.PoCConfig[testbench.ConfigSectionName]['CocotbMakefile'] # depends on testbench
+															self.Host.pyIPCMIConfig[testbench.ConfigSectionName]['CocotbMakefile'] # depends on testbench
 		topLevel =      testbench.TopLevel
 		cocotbModule =  testbench.ModuleName
 
 		# create one VHDL line for each VHDL file
 		vhdlSources = ""
-		for file in self._pocProject.Files(fileType=FileTypes.VHDLSourceFile):
+		for file in self._pyIPCMIProject.Files(fileType=FileTypes.VHDLSourceFile):
 			if (not file.Path.exists()):
 				raise SimulatorException("Cannot add '{0!s}' to Cocotb Makefile.".format(file.Path)) \
 					from FileNotFoundError(str(file.Path))
@@ -142,7 +142,7 @@ class Simulator(BaseSimulator):
 		# copy Cocotb (Python) files to temp directory
 		self.LogVerbose("Copying Cocotb (Python) files into temporary directory.")
 		cocotbTempDir = str(self.Directories.Working)
-		for file in self._pocProject.Files(fileType=FileTypes.CocotbSourceFile):
+		for file in self._pyIPCMIProject.Files(fileType=FileTypes.CocotbSourceFile):
 			if (not file.Path.exists()):
 				raise SimulatorException("Cannot copy '{0!s}' to Cocotb temp directory.".format(file.Path)) \
 					from FileNotFoundError(str(file.Path))
@@ -158,7 +158,7 @@ class Simulator(BaseSimulator):
 		with cocotbTemplateFilePath.open('r') as fileHandle:
 			cocotbMakefileContent = fileHandle.read()
 
-		cocotbMakefileContent = cocotbMakefileContent.format(PoCRootDirectory=str(self.Host.Directories.Root),
+		cocotbMakefileContent = cocotbMakefileContent.format(pyIPCMIRootDirectory=str(self.Host.Directories.Root),
 																													VHDLSources=vhdlSources,
 																													TopLevel=topLevel, CocotbModule=cocotbModule)
 

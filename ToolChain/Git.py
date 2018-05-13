@@ -94,7 +94,7 @@ class Configuration(ToolConfiguration):
 				self.ClearSection()
 			else:
 				# Configure Git version
-				self._host.PoCConfig[self._section]['Version'] = self._template[self._host.Platform][self._section]['Version']
+				self._host.pyIPCMIConfig[self._section]['Version'] = self._template[self._host.Platform][self._section]['Version']
 
 
 				self._ConfigureInstallationDirectory()
@@ -104,7 +104,7 @@ class Configuration(ToolConfiguration):
 			self.ClearSection()
 			raise
 
-		if (len(self._host.PoCConfig['INSTALL.Git']) == 0):
+		if (len(self._host.pyIPCMIConfig['INSTALL.Git']) == 0):
 			self._host.LogNormal("Skipping further Git setup. No Git installation found.", indent=1)
 			self._host.LogNormal("{DARK_GREEN}Git is now configured.{NOCOLOR}".format(**Init.Foreground), indent=1)
 			return
@@ -120,13 +120,13 @@ class Configuration(ToolConfiguration):
 			self._host.LogNormal("{DARK_GREEN}Git is now configured.{NOCOLOR}".format(**Init.Foreground), indent=1)
 			return
 
-		pocSection = self._host.PoCConfig[self._section]
+		pyIPCMISection = self._host.pyIPCMIConfig[self._section]
 
 		try:
-			if (not self._AskYes_NoPass("Install Git mechanisms for PoC developers?")):
+			if (not self._AskYes_NoPass("Install Git mechanisms for pyIPCMI developers?")):
 				self._changed = ChangeState.Changed
-				pocSection['HasInstalledGitFilters'] = "False"
-				pocSection['HasInstalledGitHooks'] =   "False"
+				pyIPCMISection['HasInstalledGitFilters'] = "False"
+				pyIPCMISection['HasInstalledGitHooks'] =   "False"
 				self._host.LogNormal("{DARK_GREEN}Git is now configured.{NOCOLOR}".format(**Init.Foreground), indent=1)
 				return
 		except SkipConfigurationException:
@@ -134,20 +134,20 @@ class Configuration(ToolConfiguration):
 			raise
 
 		if ((self._AskInstalled("Install Git filters?")) and
-				(pocSection['HasInstalledGitFilters'] == "False")):
+				(pyIPCMISection['HasInstalledGitFilters'] == "False")):
 			self._changed = ChangeState.Changed
-			pocSection['HasInstalledGitFilters'] = "True"
-		elif (pocSection['HasInstalledGitFilters'] == "True"):
+			pyIPCMISection['HasInstalledGitFilters'] = "True"
+		elif (pyIPCMISection['HasInstalledGitFilters'] == "True"):
 			self._changed = ChangeState.Changed
-			pocSection['HasInstalledGitFilters'] = "False"
+			pyIPCMISection['HasInstalledGitFilters'] = "False"
 
 		if ((self._AskInstalled("Install Git hooks?")) and
-				(pocSection['HasInstalledGitHooks'] == "False")):
+				(pyIPCMISection['HasInstalledGitHooks'] == "False")):
 			self._changed = ChangeState.Changed
-			pocSection['HasInstalledGitHooks'] = "True"
-		elif (pocSection['HasInstalledGitHooks'] == "True"):
+			pyIPCMISection['HasInstalledGitHooks'] = "True"
+		elif (pyIPCMISection['HasInstalledGitHooks'] == "True"):
 			self._changed = ChangeState.Changed
-			pocSection['HasInstalledGitHooks'] = "False"
+			pyIPCMISection['HasInstalledGitHooks'] = "False"
 
 		self._host.LogNormal("{DARK_GREEN}Git is now configured.{NOCOLOR}".format(**Init.Foreground), indent=1)
 
@@ -172,13 +172,13 @@ class Configuration(ToolConfiguration):
 
 	def RunPostConfigurationTasks(self):
 		if self._changed is ChangeState.Changed:
-			pocSection = self._host.PoCConfig[self._section]
-			if (pocSection['HasInstalledGitFilters'] == "True"):
+			pyIPCMISection = self._host.pyIPCMIConfig[self._section]
+			if (pyIPCMISection['HasInstalledGitFilters'] == "True"):
 				self.__InstallGitFilters()
 			else:
 				self.__UninstallGitFilters()
 
-			if (pocSection['HasInstalledGitHooks'] == "True"):
+			if (pyIPCMISection['HasInstalledGitHooks'] == "True"):
 				self.__InstallGitHooks()
 			else:
 				self.__UninstallGitHooks()
@@ -206,7 +206,7 @@ class Configuration(ToolConfiguration):
 		if (version is None):
 			raise ConfigurationException("Version number not found in '{0!s} --version' output.".format(gitPath))
 
-		self._host.PoCConfig[self._section]['Version'] = version
+		self._host.pyIPCMIConfig[self._section]['Version'] = version
 
 	def __IsUnderGitControl(self):
 		try:
@@ -237,8 +237,8 @@ class Configuration(ToolConfiguration):
 		self._host.LogNormal("  Installing Git filters...")
 
 		normalizeScript =     "tools/git/filters/normalize.pl"
-		pocInstallationPath = Path(self._host.PoCConfig['INSTALL.PoC']['InstallationDirectory'])
-		normalizeScriptPath = pocInstallationPath / normalizeScript
+		pyIPCMIInstallationPath = Path(self._host.pyIPCMIConfig['INSTALL.pyIPCMI']['InstallationDirectory'])
+		normalizeScriptPath = pyIPCMIInstallationPath / normalizeScript
 
 		if (not normalizeScriptPath.exists()):
 			raise ConfigurationException("Normalize script '{0!s}' not found.".format(normalizeScriptPath)) from FileNotFoundError(str(normalizeScriptPath))
@@ -271,8 +271,8 @@ class Configuration(ToolConfiguration):
 
 	def __UninstallGitHooks(self):
 		self._host.LogNormal("  Uninstalling Git hooks...")
-		pocInstallationPath =   Path(self._host.PoCConfig['INSTALL.PoC']['InstallationDirectory'])
-		hookRunnerPath =        pocInstallationPath / "tools/git/hooks/run-hook.sh"
+		pyIPCMIInstallationPath =   Path(self._host.pyIPCMIConfig['INSTALL.pyIPCMI']['InstallationDirectory'])
+		hookRunnerPath =        pyIPCMIInstallationPath / "tools/git/hooks/run-hook.sh"
 
 		gitDirectoryPath =      self.__GetGitDirectory()
 		gitHookDirectoryPath =  gitDirectoryPath / "hooks"
@@ -281,7 +281,7 @@ class Configuration(ToolConfiguration):
 			gitHookPath = gitHookDirectoryPath / hookName
 			if gitHookPath.exists():
 				if (gitHookPath.is_symlink() and (gitHookPath.resolve() == hookRunnerPath)):
-					self._host.LogNormal("  '{0}' hook is configured for PoC. Deleting.".format(hookName))
+					self._host.LogNormal("  '{0}' hook is configured for pyIPCMI. Deleting.".format(hookName))
 					try:
 						gitHookPath.unlink()
 					except OSError as ex:
@@ -292,8 +292,8 @@ class Configuration(ToolConfiguration):
 
 	def __InstallGitHooks(self):
 		self._host.LogNormal("  Installing Git hooks...")
-		pocInstallationPath =   Path(self._host.PoCConfig['INSTALL.PoC']['InstallationDirectory'])
-		hookRunnerPath =        pocInstallationPath / "tools/git/hooks/run-hook.sh"
+		pyIPCMIInstallationPath =   Path(self._host.pyIPCMIConfig['INSTALL.pyIPCMI']['InstallationDirectory'])
+		hookRunnerPath =        pyIPCMIInstallationPath / "tools/git/hooks/run-hook.sh"
 
 		if (not hookRunnerPath.exists()):
 			raise ConfigurationException("Runner script '{0!s}' not found.".format(hookRunnerPath)) from FileNotFoundError(str(hookRunnerPath))
@@ -305,11 +305,11 @@ class Configuration(ToolConfiguration):
 			gitHookPath = gitHookDirectoryPath / hookName
 			if gitHookPath.exists():
 				if (gitHookPath.is_symlink() and (gitHookPath.resolve() == hookRunnerPath)):
-					self._host.LogNormal("  '{0}' hook is already configured for PoC.".format(hookName))
+					self._host.LogNormal("  '{0}' hook is already configured for pyIPCMI.".format(hookName))
 				else:
 					self._host.LogWarning("  '{0}' hook is already in use by another script.".format(hookName))
 			else:
-				self._host.LogNormal("  Setting '{0}' hook for PoC...".format(hookName))
+				self._host.LogNormal("  Setting '{0}' hook for pyIPCMI...".format(hookName))
 				self._host.LogDebug("symlink '{0!s}' -> '{1!s}'.".format(gitHookPath, hookRunnerPath))
 				try:
 					gitHookPath.symlink_to(hookRunnerPath)
@@ -336,8 +336,8 @@ class Configuration(ToolConfiguration):
 		# directory is the Git top-level directory, then 'rev-parse' returns a
 		# relative path, otherwise the path is already absolute.
 		if (not gitDirectoryPath.is_absolute()):
-			pocInstallationPath = Path(self._host.PoCConfig['INSTALL.PoC']['InstallationDirectory'])
-			gitDirectoryPath =    pocInstallationPath / gitDirectoryPath
+			pyIPCMIInstallationPath = Path(self._host.pyIPCMIConfig['INSTALL.pyIPCMI']['InstallationDirectory'])
+			gitDirectoryPath =    pyIPCMIInstallationPath / gitDirectoryPath
 
 		return gitDirectoryPath
 
@@ -614,15 +614,15 @@ class GitConfig(GitSCM):
 		return output
 
 	# LOCAL = git rev-parse @
-	# PS G:\git\PoC> git rev-parse "@"
+	# PS G:\git\pyIPCMI> git rev-parse "@"
 	# 9c05494ef52c276dabec69dbf734a22f65939305
 
 	# REMOTE = git rev-parse @{u}
-	# PS G:\git\PoC> git rev-parse "@{u}"
+	# PS G:\git\pyIPCMI> git rev-parse "@{u}"
 	# 0ff166a40010c1b85a5ab655eea0148474f680c6
 
 	# MERGEBASE = git merge-base @ @{u}
-	# PS G:\git\PoC> git merge-base "@" "@{u}"
+	# PS G:\git\pyIPCMI> git merge-base "@" "@{u}"
 	# 0ff166a40010c1b85a5ab655eea0148474f680c6
 
 	# if (local == remote):   return "Up-to-date"

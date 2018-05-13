@@ -5,7 +5,7 @@
 # ==============================================================================
 # Authors:          Patrick Lehmann
 #
-# Python Module:    This module contains exception base classes and common exceptions for PoC.
+# Python Module:    This module contains exception base classes and common exceptions for pyIPCMI.
 #
 # License:
 # ==============================================================================
@@ -43,7 +43,7 @@ __all__ = __api__
 
 class ExceptionBase(Exception):
 	"""Base exception derived from :py:exc:`Exception` for all
-	custom exceptions in PoC.
+	custom exceptions in pyIPCMI.
 	"""
 	@DocumentMemberAttribute()
 	def __init__(self, message=""):
@@ -70,17 +70,17 @@ class ExceptionBase(Exception):
 
 class EnvironmentException(ExceptionBase):
 	"""``EnvironmentException`` is raised when an expected environment variable is
-	missing for PoC.
+	missing for pyIPCMI.
 	"""
 
 class PlatformNotSupportedException(ExceptionBase):
 	"""``PlatformNotSupportedException`` is raise if the platform is not supported
-	by PoC, or the selected tool flow is not supported on the host system by PoC.
+	by pyIPCMI, or the selected tool flow is not supported on the host system by pyIPCMI.
 	"""
 
 class NotConfiguredException(ExceptionBase):
-	"""``NotConfiguredException`` is raise if PoC or the requested tool chain
-	setting is not configured in PoC.
+	"""``NotConfiguredException`` is raise if pyIPCMI or the requested tool chain
+	setting is not configured in pyIPCMI.
 	"""
 
 class SkipableException(ExceptionBase):

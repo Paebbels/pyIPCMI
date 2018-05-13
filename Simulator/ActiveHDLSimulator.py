@@ -49,7 +49,7 @@ class Simulator(BaseSimulator):
 	def __init__(self, host, dryRun, simulationSteps):
 		super().__init__(host, dryRun, simulationSteps)
 
-		activeHDLFilesDirectoryName =   host.PoCConfig['CONFIG.DirectoryNames']['ActiveHDLFiles']
+		activeHDLFilesDirectoryName =   host.pyIPCMIConfig['CONFIG.DirectoryNames']['ActiveHDLFiles']
 		self.Directories.Working =      host.Directories.Temp / activeHDLFilesDirectoryName
 		self.Directories.PreCompiled =  host.Directories.PreCompiled / activeHDLFilesDirectoryName
 
@@ -60,22 +60,22 @@ class Simulator(BaseSimulator):
 		"""Create the Active-HDL executable factory."""
 		self.LogVerbose("Preparing Active-HDL simulator.")
 		# for sectionName in ['INSTALL.Aldec.ActiveHDL', 'INSTALL.Lattice.ActiveHDL']:
-		# 	if (len(self.Host.PoCConfig.options(sectionName)) != 0):
+		# 	if (len(self.Host.pyIPCMIConfig.options(sectionName)) != 0):
 		# 		break
 		# else:
 		# XXX: check SectionName if ActiveHDL is configured
 		# 	raise NotConfiguredException(
 		# 		"Neither Aldec's Active-HDL nor Active-HDL Lattice Edition are configured on this system.")
 
-		binaryPath =      Path(self.Host.PoCConfig['INSTALL.ActiveHDL']['BinaryDirectory'])
-		version =         self.Host.PoCConfig['INSTALL.ActiveHDL']['Version']
+		binaryPath =      Path(self.Host.pyIPCMIConfig['INSTALL.ActiveHDL']['BinaryDirectory'])
+		version =         self.Host.pyIPCMIConfig['INSTALL.ActiveHDL']['Version']
 		self._toolChain = ActiveHDL(self.Host.Platform, self.DryRun, binaryPath, version, logger=self.Logger)
 
 	def _RunAnalysis(self, _):
 		# create a ActiveHDLVHDLCompiler instance
 		alib = self._toolChain.GetVHDLLibraryTool()
 
-		for lib in self._pocProject.VHDLLibraries:
+		for lib in self._pyIPCMIProject.VHDLLibraries:
 			alib.Parameters[alib.SwitchLibraryName] = lib.Name
 			try:
 				alib.CreateLibrary()
@@ -91,7 +91,7 @@ class Simulator(BaseSimulator):
 		acom.Parameters[acom.SwitchVHDLVersion] = repr(self._vhdlVersion)
 
 		# run acom compile for each VHDL file
-		for file in self._pocProject.Files(fileType=FileTypes.VHDLSourceFile):
+		for file in self._pyIPCMIProject.Files(fileType=FileTypes.VHDLSourceFile):
 			if (not file.Path.exists()):                  raise SimulatorException("Cannot analyse '{0!s}'.".format(file.Path)) from FileNotFoundError(str(file.Path))
 			acom.Parameters[acom.SwitchVHDLLibrary] =  file.LibraryName
 			acom.Parameters[acom.ArgSourceFile] =      file.Path
@@ -109,7 +109,7 @@ class Simulator(BaseSimulator):
 		if (SimulationSteps.ShowWaveform in self._simulationSteps):
 			return self._RunSimulationWithGUI(testbench)
 
-		# tclBatchFilePath =    self.Host.Directories.Root / self.Host.PoCConfig[testbench.ConfigSectionName]['aSimBatchScript']
+		# tclBatchFilePath =    self.Host.Directories.Root / self.Host.pyIPCMIConfig[testbench.ConfigSectionName]['aSimBatchScript']
 
 		# create a ActiveHDLSimulator instance
 		asim = self._toolChain.GetSimulator()
@@ -132,8 +132,8 @@ class Simulator(BaseSimulator):
 	def _RunSimulationWithGUI(self, testbench):
 		raise SimulatorException("GUI mode is not supported for Active-HDL.")
 
-		# tclGUIFilePath =      self.Host.Directories.Root / self.Host.PoCConfig[testbench.ConfigSectionName]['aSimGUIScript']
-		# tclWaveFilePath =      self.Host.Directories.Root / self.Host.PoCConfig[testbench.ConfigSectionName]['aSimWaveScript']
+		# tclGUIFilePath =      self.Host.Directories.Root / self.Host.pyIPCMIConfig[testbench.ConfigSectionName]['aSimGUIScript']
+		# tclWaveFilePath =      self.Host.Directories.Root / self.Host.pyIPCMIConfig[testbench.ConfigSectionName]['aSimWaveScript']
 		#
 		# # create a ActiveHDLSimulator instance
 		# aSim = self._toolChain.GetSimulator()

@@ -46,7 +46,7 @@ class Simulator(BaseSimulator):
 		simulationSteps &= ~SimulationSteps.Elaborate
 		super().__init__(host, dryRun, simulationSteps)
 
-		vSimSimulatorFiles =            host.PoCConfig['CONFIG.DirectoryNames']['RivieraPROFiles']
+		vSimSimulatorFiles =            host.pyIPCMIConfig['CONFIG.DirectoryNames']['RivieraPROFiles']
 		self.Directories.Working =      host.Directories.Temp / vSimSimulatorFiles
 		self.Directories.PreCompiled =  host.Directories.PreCompiled / vSimSimulatorFiles
 
@@ -61,19 +61,19 @@ class Simulator(BaseSimulator):
 		# create the RivieraPRO executable factory
 		self.LogVerbose("Preparing Aldec simulator.")
 		# for sectionName in ['INSTALL.Aldec.QuestaSim', 'INSTALL.Aldec.RivieraPRO', 'INSTALL.Altera.RivieraPRO']:
-		# 	if (len(self.Host.PoCConfig.options(sectionName)) != 0):
+		# 	if (len(self.Host.pyIPCMIConfig.options(sectionName)) != 0):
 		# 		break
 		# else:
 		# XXX: check SectionName if RivieraPRO is configured
 		# 	raise NotConfiguredException(
 		# 		"Neither Aldec Graphics RivieraPRO, RivieraPRO PE nor RivieraPRO Altera-Edition are configured on this system.")
 
-		# questaSection = self.Host.PoCConfig[sectionName]
+		# questaSection = self.Host.pyIPCMIConfig[sectionName]
 		# binaryPath = Path(questaSection['BinaryDirectory'])
 		# version = questaSection['Version']
 
-		binaryPath = Path(self.Host.PoCConfig['INSTALL.Aldec.RivieraPRO']['BinaryDirectory'])
-		version = self.Host.PoCConfig['INSTALL.Aldec.RivieraPRO']['Version']
+		binaryPath = Path(self.Host.pyIPCMIConfig['INSTALL.Aldec.RivieraPRO']['BinaryDirectory'])
+		version = self.Host.pyIPCMIConfig['INSTALL.Aldec.RivieraPRO']['Version']
 		self._toolChain = RivieraPRO(self.Host.Platform, self.DryRun, binaryPath, version, logger=self.Logger)
 
 	def Run(self, testbench, board, vhdlVersion, vhdlGenerics=None):
@@ -81,11 +81,11 @@ class Simulator(BaseSimulator):
 		# select RivieraPRO.ini
 		# self._RivieraPROIniPath = self.Directories.PreCompiled
 		# if board.Device.Vendor is Vendors.Altera:
-		# 	self._RivieraPROIniPath /= self.Host.PoCConfig['CONFIG.DirectoryNames']['AlteraSpecificFiles']
+		# 	self._RivieraPROIniPath /= self.Host.pyIPCMIConfig['CONFIG.DirectoryNames']['AlteraSpecificFiles']
 		# elif board.Device.Vendor is Vendors.Lattice:
-		# 	self._RivieraPROIniPath /= self.Host.PoCConfig['CONFIG.DirectoryNames']['LatticeSpecificFiles']
+		# 	self._RivieraPROIniPath /= self.Host.pyIPCMIConfig['CONFIG.DirectoryNames']['LatticeSpecificFiles']
 		# elif board.Device.Vendor is Vendors.Xilinx:
-		# 	self._RivieraPROIniPath /= self.Host.PoCConfig['CONFIG.DirectoryNames']['XilinxSpecificFiles']
+		# 	self._RivieraPROIniPath /= self.Host.pyIPCMIConfig['CONFIG.DirectoryNames']['XilinxSpecificFiles']
 
 		# self._RivieraPROIniPath /= "RivieraPRO.ini"
 		# if not self._RivieraPROIniPath.exists():
@@ -97,7 +97,7 @@ class Simulator(BaseSimulator):
 	def _RunAnalysis(self, _):
 		# create a RivieraPROVHDLCompiler instance
 		vlib = self._toolChain.GetVHDLLibraryTool()
-		for lib in self._pocProject.VHDLLibraries:
+		for lib in self._pyIPCMIProject.VHDLLibraries:
 			vlib.Parameters[vlib.SwitchLibraryName] = lib.Name
 			try:
 				vlib.CreateLibrary()
@@ -109,7 +109,7 @@ class Simulator(BaseSimulator):
 		vcom.Parameters[vcom.SwitchVHDLVersion] =       repr(self._vhdlVersion)
 
 		# run vcom compile for each VHDL file
-		for file in self._pocProject.Files(fileType=FileTypes.VHDLSourceFile):
+		for file in self._pyIPCMIProject.Files(fileType=FileTypes.VHDLSourceFile):
 			if (not file.Path.exists()):              raise SimulatorException("Cannot analyse '{0!s}'.".format(file.Path)) from FileNotFoundError(str(file.Path))
 
 			vcomLogFile = self.Directories.Working / (file.Path.stem + ".vcom.log")
@@ -129,8 +129,8 @@ class Simulator(BaseSimulator):
 		if (SimulationSteps.ShowWaveform in self._simulationSteps):
 			return self._RunSimulationWithGUI(testbench)
 
-		tclBatchFilePath =        self.Host.Directories.Root / self.Host.PoCConfig[testbench.ConfigSectionName]['vSimBatchScript']
-		tclDefaultBatchFilePath = self.Host.Directories.Root / self.Host.PoCConfig[testbench.ConfigSectionName]['vSimDefaultBatchScript']
+		tclBatchFilePath =        self.Host.Directories.Root / self.Host.pyIPCMIConfig[testbench.ConfigSectionName]['vSimBatchScript']
+		tclDefaultBatchFilePath = self.Host.Directories.Root / self.Host.pyIPCMIConfig[testbench.ConfigSectionName]['vSimDefaultBatchScript']
 
 		# create a RivieraPROSimulator instance
 		vsim = self._toolChain.GetSimulator()
@@ -158,10 +158,10 @@ class Simulator(BaseSimulator):
 			pass
 
 	def _RunSimulationWithGUI(self, testbench):
-		tclGUIFilePath = self.Host.Directories.Root / self.Host.PoCConfig[testbench.ConfigSectionName]['vSimGUIScript']
-		tclWaveFilePath = self.Host.Directories.Root / self.Host.PoCConfig[testbench.ConfigSectionName]['vSimWaveScript']
-		tclDefaultGUIFilePath = self.Host.Directories.Root / self.Host.PoCConfig[testbench.ConfigSectionName]['vSimDefaultGUIScript']
-		tclDefaultWaveFilePath = self.Host.Directories.Root / self.Host.PoCConfig[testbench.ConfigSectionName]['vSimDefaultWaveScript']
+		tclGUIFilePath = self.Host.Directories.Root / self.Host.pyIPCMIConfig[testbench.ConfigSectionName]['vSimGUIScript']
+		tclWaveFilePath = self.Host.Directories.Root / self.Host.pyIPCMIConfig[testbench.ConfigSectionName]['vSimWaveScript']
+		tclDefaultGUIFilePath = self.Host.Directories.Root / self.Host.pyIPCMIConfig[testbench.ConfigSectionName]['vSimDefaultGUIScript']
+		tclDefaultWaveFilePath = self.Host.Directories.Root / self.Host.pyIPCMIConfig[testbench.ConfigSectionName]['vSimDefaultWaveScript']
 
 		# create a RivieraPROSimulator instance
 		vsim = self._toolChain.GetSimulator()

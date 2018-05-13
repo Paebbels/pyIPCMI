@@ -540,7 +540,7 @@ class Environment:
 
 class Executable(ILogable):
 	"""Represent an executable."""
-	_POC_BOUNDARY = "====== POC BOUNDARY ======"
+	_pyIPCMI_BOUNDARY = "====== pyIPCMI BOUNDARY ======"
 
 	def __init__(self, platform : str, dryrun : bool, executablePath : Path, environment : Environment = None, logger : Logger =None):
 		super().__init__(logger)
@@ -593,7 +593,7 @@ class Executable(ILogable):
 		self._process.stdin.flush()
 
 	def SendBoundary(self):
-		self.Send("puts \"{0}\"".format(self._POC_BOUNDARY))
+		self.Send("puts \"{0}\"".format(self._pyIPCMI_BOUNDARY))
 
 	def Terminate(self):
 		self._process.terminate()
@@ -617,6 +617,6 @@ class Executable(ILogable):
 
 		for line in self._iterator:
 			print(__indent + line)
-			if (self._POC_BOUNDARY in line):
+			if (self._pyIPCMI_BOUNDARY in line):
 				break
 		self.LogDebug("Quartus II is ready")

@@ -5,7 +5,7 @@
 # ==============================================================================
 # Authors:          Patrick Lehmann
 #
-# Python Package:   Saves The PoC-Library configuration as python source code.
+# Python Package:   Saves The pyIPCMI-Library configuration as python source code.
 #
 # License:
 # ==============================================================================
@@ -40,16 +40,16 @@ __all__ = __api__
 class IHost(ILogable):
 	"""This is a type hint class (interface description) for a host instance.
 
-	It's needed until PoC requires Python 3.6.
+	It's needed until pyIPCMI requires Python 3.6.
 	"""
 
 	# instance fields
 	Platform =    "string"
-	PoCConfig =   ExtendedConfigParser()
+	pyIPCMIConfig =   ExtendedConfigParser()
 
 	# methods
-	def SaveAndReloadPoCConfiguration(self): pass
+	def SaveAndReloadpyIPCMIConfiguration(self): pass
 
 	# Syntax not supported by Python 3.5 -> requires 3.6
 	# Platform :  str =                  None
-	# PoCConfig : ExtendedConfigParser = None
+	# pyIPCMIConfig : ExtendedConfigParser = None

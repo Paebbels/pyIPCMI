@@ -34,11 +34,11 @@
 # Module parameters
 [CmdletBinding()]
 param(
-	[Parameter(Mandatory=$true)][string]	$PoC_RootDir
+	[Parameter(Mandatory=$true)][string]	$pyIPCMI_RootDir
 )
 #
 # ==============================================================================
-# find suitable python version for PoC
+# find suitable python version for pyIPCMI
 $PythonVersion_Major, $PythonVersion_Minor =	(3, 4)
 
 $Py_exe =		"py.exe"
@@ -58,26 +58,26 @@ Export-ModuleMember -Variable "Python_Interpreter"
 Export-ModuleMember -Variable "Python_Parameters"
 
 # ==============================================================================
-$PoC_PythonPath =		"py"
-$PoC_FrontEndPy =		"PoC.py"
-$PoC_ModulePath =		"py\Wrapper"
-$PoC_HookPath =			"$PoC_ModulePath\Hooks"
-$PoC_FrontEnd =			"poc.ps1"
+$pyIPCMI_PythonPath =		"py"
+$pyIPCMI_FrontEndPy =		"pyIPCMI.py"
+$pyIPCMI_ModulePath =		"py\Wrapper"
+$pyIPCMI_HookPath =			"$pyIPCMI_ModulePath\Hooks"
+$pyIPCMI_FrontEnd =			"pyIPCMI.ps1"
 
-$PoC_PythonDir =		"$PoC_RootDir\$PoC_PythonPath"
-$PoC_ModuleDir =		"$PoC_RootDir\$PoC_ModulePath"
-$PoC_HookDir =			"$PoC_RootDir\$PoC_HookPath"
+$pyIPCMI_PythonDir =		"$pyIPCMI_RootDir\$pyIPCMI_PythonPath"
+$pyIPCMI_ModuleDir =		"$pyIPCMI_RootDir\$pyIPCMI_ModulePath"
+$pyIPCMI_HookDir =			"$pyIPCMI_RootDir\$pyIPCMI_HookPath"
 
-$env:PoCRootDirectory = $PoC_RootDir
+$env:pyIPCMIRootDirectory = $pyIPCMI_RootDir
 
-Export-ModuleMember -Variable "PoC_RootDir"
-Export-ModuleMember -Variable "PoC_PythonDir"
-Export-ModuleMember -Variable "PoC_FrontEndPy"
-Export-ModuleMember -Variable "PoC_ModuleDir"
-Export-ModuleMember -Variable "PoC_FrontEnd"
+Export-ModuleMember -Variable "pyIPCMI_RootDir"
+Export-ModuleMember -Variable "pyIPCMI_PythonDir"
+Export-ModuleMember -Variable "pyIPCMI_FrontEndPy"
+Export-ModuleMember -Variable "pyIPCMI_ModuleDir"
+Export-ModuleMember -Variable "pyIPCMI_FrontEnd"
 
 # ==============================================================================
-$PoC_Environments =	@{
+$pyIPCMI_Environments =	@{
 	"Aldec" =							@{
 		"PreHookFile" =			"Aldec.pre.ps1";
 		"PostHookFile" =		"Aldec.post.ps1";
@@ -228,7 +228,7 @@ function Invoke-BatchFile
 }
 
 # ==============================================================================
-function Get-PoCEnvironmentArray
+function Get-pyIPCMIEnvironmentArray
 {	<#
 		.SYNOPSIS
 		undocumented
@@ -242,7 +242,7 @@ function Get-PoCEnvironmentArray
 
 	# set default values
 	$Debug =		$false
-	$PoCEnv =		$PoC_Environments
+	$pyIPCMIEnv =		$pyIPCMI_Environments
 
 	# search parameters for specific options like '-D' to enable batch script debug mode
 	# TODO: restrict to first n=2? parameters
@@ -251,22 +251,22 @@ function Get-PoCEnvironmentArray
 		{	$Debug = $true; continue	}
 
 		$breakIt = $false
-		foreach ($VendorName in $PoCEnv.Keys)
-		{	foreach ($ToolName in $PoCEnv[$VendorName]['Tools'].Keys)
-			{	foreach ($Command in $PoCEnv[$VendorName]['Tools'][$ToolName]['Commands'])
+		foreach ($VendorName in $pyIPCMIEnv.Keys)
+		{	foreach ($ToolName in $pyIPCMIEnv[$VendorName]['Tools'].Keys)
+			{	foreach ($Command in $pyIPCMIEnv[$VendorName]['Tools'][$ToolName]['Commands'])
 				{	if ($param -ceq $Command)
-					{	$PoCEnv[$VendorName]['Tools'][$ToolName]['Load']	= $true
-						return $Debug, $PoCEnv
+					{	$pyIPCMIEnv[$VendorName]['Tools'][$ToolName]['Load']	= $true
+						return $Debug, $pyIPCMIEnv
 					}
 				}	# Command
 			}	# ToolName
 		}	# VendorName
 	}	# param
-	return $Debug, $PoCEnv
+	return $Debug, $pyIPCMIEnv
 }
 
-# TODO: build an overload of Get-PoCEnvironmentArray
-function Set-PoCEnvironmentArray
+# TODO: build an overload of Get-pyIPCMIEnvironmentArray
+function Set-pyIPCMIEnvironmentArray
 {	<#
 		.SYNOPSIS
 		undocumented
@@ -278,14 +278,14 @@ function Set-PoCEnvironmentArray
 		[Parameter(Mandatory=$true)]	$Value
 	)
 	# copy the array and set load to true
-	$PoCEnv =		$PoC_Environments
+	$pyIPCMIEnv =		$pyIPCMI_Environments
 	$VendorName, $ToolName = $Value.Split(".")
-	$PoCEnv[$VendorName]['Tools'][$ToolName]['Load'] = $true
-	return $PoCEnv
+	$pyIPCMIEnv[$VendorName]['Tools'][$ToolName]['Load'] = $true
+	return $pyIPCMIEnv
 }
 
-Export-ModuleMember -Function "Get-PoCEnvironmentArray"
-Export-ModuleMember -Function "Set-PoCEnvironmentArray"
+Export-ModuleMember -Function "Get-pyIPCMIEnvironmentArray"
+Export-ModuleMember -Function "Set-pyIPCMIEnvironmentArray"
 
 # ==============================================================================
 function Invoke-OpenEnvironment
@@ -308,20 +308,20 @@ function Invoke-OpenEnvironment
 			{	if ($Debug -eq $true) {	Write-Host "Loading $VendorName.$ToolName environment..." -ForegroundColor Yellow		}
 
 				# if exists, source the vendor pre-hook file
-				$VendorPreHookFile = "$PoC_HookDir\$($LoadEnv[$VendorName]['PreHookFile'])"
+				$VendorPreHookFile = "$pyIPCMI_HookDir\$($LoadEnv[$VendorName]['PreHookFile'])"
 				if (Test-Path $VendorPreHookFile -PathType Leaf)
 				{	if ($Debug -eq $true) {	Write-Host "  Loading Vendor pre-hook file: $VendorPreHookFile" -ForegroundColor Yellow	}
 					. ($VendorPreHookFile)
 				}
 
 				# if exists, source the tool pre-hook file
-				$ToolPreHookFile = "$PoC_HookDir\$($LoadEnv[$VendorName]['Tools'][$ToolName]['PreHookFile'])"
+				$ToolPreHookFile = "$pyIPCMI_HookDir\$($LoadEnv[$VendorName]['Tools'][$ToolName]['PreHookFile'])"
 				if (Test-Path $ToolPreHookFile -PathType Leaf)
 				{	if ($Debug -eq $true) {	Write-Host "  Loading Tool pre-hook file: $ToolPreHookFile" -ForegroundColor Yellow	}
 					. ($ToolPreHookFile)
 				}
 
-				$ModuleFile = "$PoC_ModuleDir\$($LoadEnv[$VendorName]['Tools'][$ToolName]['PSModule'])"
+				$ModuleFile = "$pyIPCMI_ModuleDir\$($LoadEnv[$VendorName]['Tools'][$ToolName]['PSModule'])"
 				if (Test-Path $ModuleFile -PathType Leaf)
 				{	$ModuleName = (Get-Item $ModuleFile).BaseName
 					# unload module if still loaded
@@ -332,7 +332,7 @@ function Invoke-OpenEnvironment
 
 					# load module
 					if ($Debug -eq $true) {	Write-Host "  Loading module: $ModuleFile" -ForegroundColor Yellow	}
-					Import-Module $ModuleFile -ArgumentList @($Python_Interpreter, $Python_Parameters, $PoC_FrontEndPy)
+					Import-Module $ModuleFile -ArgumentList @($Python_Interpreter, $Python_Parameters, $pyIPCMI_FrontEndPy)
 					# invoke Open-Environment hook
 					return Open-Environment
 				}
@@ -364,16 +364,16 @@ function Invoke-CloseEnvironment
 	{	foreach ($ToolName in $LoadEnv[$VendorName]['Tools'].Keys)
 		{	if ($LoadEnv[$VendorName]['Tools'][$ToolName]['Load'])
 			{	# if exists, source the tool pre-hook file
-				$ToolPostHookFile = "$PoC_HookDir\$($LoadEnv[$VendorName]['Tools'][$ToolName]['PostHookFile'])"
+				$ToolPostHookFile = "$pyIPCMI_HookDir\$($LoadEnv[$VendorName]['Tools'][$ToolName]['PostHookFile'])"
 				if (Test-Path $ToolPostHookFile -PathType Leaf)
 				{	. ($ToolPostHookFile)		}
 
 				# if exists, source the vendor pre-hook file
-				$VendorPostHookFile = "$PoC_HookDir\$($LoadEnv[$VendorName]['PostHookFile'])"
+				$VendorPostHookFile = "$pyIPCMI_HookDir\$($LoadEnv[$VendorName]['PostHookFile'])"
 				if (Test-Path $VendorPostHookFile -PathType Leaf)
 				{	. ($VendorPostHookFile)	}
 
-				$ModuleFile = "$PoC_ModuleDir\$($LoadEnv[$VendorName]['Tools'][$ToolName]['PSModule'])"
+				$ModuleFile = "$pyIPCMI_ModuleDir\$($LoadEnv[$VendorName]['Tools'][$ToolName]['PSModule'])"
 				if (Test-Path $ModuleFile -PathType Leaf)
 				{	$ModuleName = (Get-Item $ModuleFile).BaseName
 					if (Get-Module $ModuleName)
@@ -389,10 +389,10 @@ function Invoke-CloseEnvironment
 Export-ModuleMember -Function "Invoke-OpenEnvironment"
 Export-ModuleMember -Function "Invoke-CloseEnvironment"
 
-function PoCQuery
+function pyIPCMIQuery
 {	<#
 		.SYNOPSIS
-		PoC front-end function
+		pyIPCMI front-end function
 		.DESCRIPTION
 		undocumented
 	#>
@@ -400,23 +400,23 @@ function PoCQuery
 	param(
 		[Parameter(Mandatory=$true)][string]	$Query
 	)
-	return Invoke-Expression "$Python_Interpreter $Python_Parameters $PoC_PythonDir\$PoC_FrontEndPy query $Query"
+	return Invoke-Expression "$Python_Interpreter $Python_Parameters $pyIPCMI_PythonDir\$pyIPCMI_FrontEndPy query $Query"
 }
 
-Export-ModuleMember -Function "PoCQuery"
+Export-ModuleMember -Function "pyIPCMIQuery"
 
-function poc
+function pyIPCMI
 {	<#
 		.SYNOPSIS
-		PoC front-end function
+		pyIPCMI front-end function
 		.DESCRIPTION
 		undocumented
 	#>
-	# $env:PoCRootDirectory =			$PoC_RootDir
+	# $env:pyIPCMIRootDirectory =			$pyIPCMI_RootDir
 
-	$Expr = "$Python_Interpreter $Python_Parameters $PoC_FrontEndPy $args"
+	$Expr = "$Python_Interpreter $Python_Parameters $pyIPCMI_FrontEndPy $args"
 	Invoke-Expression $Expr
 	return $LastExitCode
 }
 
-Export-ModuleMember -Function "poc"
+Export-ModuleMember -Function "pyIPCMI"

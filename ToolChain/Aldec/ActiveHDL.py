@@ -41,7 +41,7 @@ from Base.Executable        import LongFlagArgument, ShortValuedFlagArgument, Sh
 from DataBase.Entity        import SimulationResult
 from ToolChain              import ToolMixIn, ConfigurationException, ToolConfiguration, EditionDescription, Edition, ToolSelector, OutputFilteredExecutable
 from ToolChain.Aldec        import AldecException
-from Simulator              import PoCSimulationResultFilter
+from Simulator              import pyIPCMISimulationResultFilter
 
 
 __api__ = [
@@ -99,8 +99,8 @@ class Configuration(ToolConfiguration):
 	}                                                   #: The template for the configuration sections represented as nested dictionaries.
 
 	def CheckDependency(self):
-		"""Check if general Aldec support is configured in PoC."""
-		return (len(self._host.PoCConfig['INSTALL.Aldec']) != 0)
+		"""Check if general Aldec support is configured in pyIPCMI."""
+		return (len(self._host.pyIPCMIConfig['INSTALL.Aldec']) != 0)
 
 	def ConfigureForAll(self):
 		"""Configuration routine for Aldec Active-HDL on all supported platforms.
@@ -123,19 +123,19 @@ class Configuration(ToolConfiguration):
 				version = self._ConfigureVersion()
 				if self._multiVersionSupport:
 					self.PrepareVersionedSections()
-					sectionName = self._host.PoCConfig[self._section]['SectionName']
-					self._host.PoCConfig[sectionName]['Version'] = version
+					sectionName = self._host.pyIPCMIConfig[self._section]['SectionName']
+					self._host.pyIPCMIConfig[sectionName]['Version'] = version
 
 				# Configure Active-HDL edition
 				changed,edition = self._ConfigureEdition()
 				if changed:
 					if (edition is AldecActiveHDLEditions.StudentEdition):
 						if self._multiVersionSupport:
-							sectionName = self._host.PoCConfig[self._section]['SectionName']
+							sectionName = self._host.pyIPCMIConfig[self._section]['SectionName']
 						else:
 							sectionName = self._section
-						self._host.PoCConfig[sectionName]['InstallationDirectory'] = self._host.PoCConfig.get(sectionName, 'InstallationDirectory', raw=True) + "-Student-Edition"
-						self._host.PoCConfig.Interpolation.clear_cache()
+						self._host.pyIPCMIConfig[sectionName]['InstallationDirectory'] = self._host.pyIPCMIConfig.get(sectionName, 'InstallationDirectory', raw=True) + "-Student-Edition"
+						self._host.pyIPCMIConfig.Interpolation.clear_cache()
 				# Configure installation directory
 				self._ConfigureInstallationDirectory()
 				# Configure binary directory
@@ -152,15 +152,15 @@ class Configuration(ToolConfiguration):
 		"""Configure Active-HDL for Aldec."""
 		sectionName =     self._section
 		if self._multiVersionSupport:
-			sectionName =   self._host.PoCConfig[sectionName]['SectionName']
+			sectionName =   self._host.pyIPCMIConfig[sectionName]['SectionName']
 
-		configSection =   self._host.PoCConfig[sectionName]
+		configSection =   self._host.pyIPCMIConfig[sectionName]
 		defaultEdition =  AldecActiveHDLEditions.Parse(configSection['Edition'])
 		edition =         super()._ConfigureEdition(AldecActiveHDLEditions, defaultEdition)
 
 		if (edition is not defaultEdition):
 			configSection['Edition'] = edition.Name
-			self._host.PoCConfig.Interpolation.clear_cache()
+			self._host.pyIPCMIConfig.Interpolation.clear_cache()
 			return (True, edition)
 		else:
 			return (False, edition)
@@ -190,11 +190,11 @@ class Selector(ToolSelector):
 
 		if (len(editions) == 0):
 			self._host.LogWarning("No Active-HDL installation found.", indent=1)
-			self._host.PoCConfig['INSTALL.ActiveHDL'] = OrderedDict()
+			self._host.pyIPCMIConfig['INSTALL.ActiveHDL'] = OrderedDict()
 		elif (len(editions) == 1):
 			self._host.LogNormal("Default Active-HDL installation:", indent=1)
 			self._host.LogNormal("Set to {0}".format(editions[0].Name), indent=2)
-			self._host.PoCConfig['INSTALL.ActiveHDL']['SectionName'] = editions[0].Section
+			self._host.pyIPCMIConfig['INSTALL.ActiveHDL']['SectionName'] = editions[0].Section
 		else:
 			self._host.LogNormal("Select Active-HDL installation:", indent=1)
 
@@ -203,7 +203,7 @@ class Selector(ToolSelector):
 				defaultEdition = editions[0]
 
 			selectedEdition = self._AskSelection(editions, defaultEdition)
-			self._host.PoCConfig['INSTALL.ActiveHDL']['SectionName'] = selectedEdition.Section
+			self._host.pyIPCMIConfig['INSTALL.ActiveHDL']['SectionName'] = selectedEdition.Section
 
 
 class ActiveHDL(ToolMixIn):
@@ -420,7 +420,7 @@ class VHDLStandaloneSimulator(OutputFilteredExecutable, ToolMixIn):
 		self._hasErrors = False
 		simulationResult = CallByRefParam(SimulationResult.Error)
 		try:
-			iterator = iter(PoCSimulationResultFilter(VSimFilter(self.GetReader()), simulationResult))
+			iterator = iter(pyIPCMISimulationResultFilter(VSimFilter(self.GetReader()), simulationResult))
 			line = next(iterator)
 
 			self._hasOutput = True
@@ -492,7 +492,7 @@ def VComFilter(gen): # mccabe:disable=MC0001
 
 def VSimFilter(gen):
 	"""A line based output stream filter for Active-HDL's VHDL simulator."""
-	PoCOutputFound = False
+	pyIPCMIOutputFound = False
 	for line in gen:
 		if line.startswith("asim"):
 			yield LogEntry(line, Severity.Verbose)
@@ -511,10 +511,10 @@ def VSimFilter(gen):
 		elif line.startswith("Allocation: "):
 			yield LogEntry(line, Severity.Verbose)
 		elif line.startswith("KERNEL: ========================================"):
-			PoCOutputFound = True
+			pyIPCMIOutputFound = True
 			yield LogEntry(line[8:], Severity.Normal)
 		elif line.startswith("KERNEL: "):
-			if (not PoCOutputFound):
+			if (not pyIPCMIOutputFound):
 				yield LogEntry(line, Severity.Verbose)
 			else:
 				yield LogEntry(line[8:], Severity.Normal)

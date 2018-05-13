@@ -39,7 +39,7 @@ from ToolChain            import ConfigurationException
 
 __api__ = [
 	'EntityTypes',
-	'_PoCEntityTypes_parser',
+	'_pyIPCMIEntityTypes_parser',
 	'BaseFlags',
 	'TestbenchKind', 'NetlistKind',
 	'NamespaceRoot',
@@ -70,7 +70,7 @@ class EntityTypes(Enum):
 		elif (self is EntityTypes.Testbench):  return "tb"
 		elif (self is EntityTypes.NetList):    return "nl"
 
-def _PoCEntityTypes_parser(cls, value):
+def _pyIPCMIEntityTypes_parser(cls, value):
 	if not isinstance(value, str):
 		return Enum.__new__(cls, value)
 	else:
@@ -81,8 +81,8 @@ def _PoCEntityTypes_parser(cls, value):
 			'nl':        EntityTypes.NetList
 		}.get(value,	EntityTypes.Unknown)
 
-# override __new__ method in EntityTypes with _PoCEntityTypes_parser
-setattr(EntityTypes, '__new__', _PoCEntityTypes_parser)
+# override __new__ method in EntityTypes with _pyIPCMIEntityTypes_parser
+setattr(EntityTypes, '__new__', _pyIPCMIEntityTypes_parser)
 
 
 class BaseFlags(Flags):
@@ -104,14 +104,14 @@ class NetlistKind(BaseFlags):
 
 
 class NamespaceRoot:
-	__POCRoot_Name =            "PoC"
-	__POCRoot_SectionName =     "PoC"
+	__pyIPCMIRoot_Name =            "pyIPCMI"
+	__pyIPCMIRoot_SectionName =     "pyIPCMI"
 
 	def __init__(self, host):
 		self._host =              host
 
 		self.__libraries =        OrderedDict()
-		self.__libraries[self.__POCRoot_Name.lower()] = (Library(host, self.__POCRoot_Name, self.__POCRoot_SectionName, self))
+		self.__libraries[self.__pyIPCMIRoot_Name.lower()] = (Library(host, self.__pyIPCMIRoot_Name, self.__pyIPCMIRoot_SectionName, self))
 
 	@property
 	def Libraries(self):        return [lib for lib in self.__libraries.values()]
@@ -169,7 +169,7 @@ class PathElement:
 	@property
 	def ConfigSectionName(self):  return self._configSectionName
 	@property
-	def ConfigSection(self):      return self._host.PoCConfig[self._configSectionName]
+	def ConfigSection(self):      return self._host.pyIPCMIConfig[self._configSectionName]
 	@property
 	def Level(self):              return self._parent.Level + 1
 	@property
@@ -814,7 +814,7 @@ class VivadoNetlist(Netlist):
 
 
 class FQN:
-	def __init__(self, host, fqn, defaultLibrary="PoC", defaultType=EntityTypes.Source):
+	def __init__(self, host, fqn, defaultLibrary="pyIPCMI", defaultType=EntityTypes.Source):
 		self.__host =   host
 		self.__type =   None
 		self.__parts =  []
@@ -853,7 +853,7 @@ class FQN:
 				try:
 					pe = cur[part]
 				except KeyError:
-					raise ConfigurationException("PoC entity '{GREEN}{good}{RED}.{bad}{NOCOLOR}' not found.".format(good=(".".join(parts[:pos])), bad=(".".join(parts[pos:])), **Init.Foreground))
+					raise ConfigurationException("pyIPCMI entity '{GREEN}{good}{RED}.{bad}{NOCOLOR}' not found.".format(good=(".".join(parts[:pos])), bad=(".".join(parts[pos:])), **Init.Foreground))
 				self.__parts.append(pe)
 				cur = pe
 

@@ -40,7 +40,7 @@ from Base.Executable        import ExecutableArgument, PathArgument, StringArgum
 from Base.Executable        import ShortFlagArgument, LongFlagArgument, CommandLineArgumentList
 from DataBase.Entity        import SimulationResult
 from ToolChain              import ToolMixIn, ToolChainException, ConfigurationException, ToolConfiguration, OutputFilteredExecutable
-from Simulator              import PoCSimulationResultFilter
+from Simulator              import pyIPCMISimulationResultFilter
 
 
 __api__ = [
@@ -141,8 +141,8 @@ class Configuration(ToolConfiguration):
 	def _ConfigureScriptDirectory(self):
 		"""Updates section with value from _template and returns directory as Path object."""
 		# unresolved = self._template[self._host.Platform][self._section]['ScriptDirectory']
-		# self._host.PoCConfig[self._section]['ScriptDirectory'] = unresolved  # create entry
-		scriptPath = Path(self._host.PoCConfig[self._section]['ScriptDirectory'])  # resolve entry
+		# self._host.pyIPCMIConfig[self._section]['ScriptDirectory'] = unresolved  # create entry
+		scriptPath = Path(self._host.pyIPCMIConfig[self._section]['ScriptDirectory'])  # resolve entry
 
 		if (not scriptPath.exists()):
 			raise ConfigurationException("{0!s} script directory '{1!s}' does not exist.".format(self, scriptPath)) \
@@ -180,8 +180,8 @@ class Configuration(ToolConfiguration):
 		if ((version is None) or (backend is None)):
 			raise ConfigurationException("Version number or back-end name not found in '{0!s} -v' output.".format(ghdlPath))
 
-		self._host.PoCConfig[self._section]['Version'] = version
-		self._host.PoCConfig[self._section]['Backend'] = backend
+		self._host.pyIPCMIConfig[self._section]['Version'] = version
+		self._host.pyIPCMIConfig[self._section]['Backend'] = backend
 
 
 class GHDL(OutputFilteredExecutable, ToolMixIn):
@@ -491,7 +491,7 @@ class GHDLRun(GHDL):
 		self._hasErrors =    False
 		simulationResult =  CallByRefParam(SimulationResult.Error)
 		try:
-			iterator = iter(PoCSimulationResultFilter(GHDLRunFilter(self.GetReader()), simulationResult))
+			iterator = iter(pyIPCMISimulationResultFilter(GHDLRunFilter(self.GetReader()), simulationResult))
 
 			line = next(iterator)
 			line.IndentBy(self.Logger.BaseIndent + 1)

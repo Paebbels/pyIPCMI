@@ -34,8 +34,8 @@
 function Open-Environment
 {	$Debug = $false
 
-	Write-Host "Loading module PoC..."
-	Import-Module "${env:PoCRootDirectory}\py\Wrapper\PoC.psm1" -Scope Global -ArgumentList @($Py_Interpreter, $Py_Parameters, $PoC_Query)
+	Write-Host "Loading module pyIPCMI..."
+	Import-Module "${env:pyIPCMIRootDirectory}\py\Wrapper\pyIPCMI.psm1" -Scope Global -ArgumentList @($Py_Interpreter, $Py_Parameters, $pyIPCMI_Query)
 
 	return 1
 }

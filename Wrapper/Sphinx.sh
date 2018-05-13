@@ -35,7 +35,7 @@ OpenEnvironment() {
 	Debug=0
 	Py_Interpreter=$1
 	# Py_Parameters=$2
-	PoC_Query=$2
+	pyIPCMI_Query=$2
 
 	DocumentationDirectory="docs"
 	BuildDirectory="_build"

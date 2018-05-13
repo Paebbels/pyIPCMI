@@ -51,7 +51,7 @@ class Simulator(BaseSimulator, XilinxProjectExportMixIn):
 		super().__init__(host, dryRun, simulationSteps)
 		XilinxProjectExportMixIn.__init__(self)
 
-		iseFilesDirectoryName =         host.PoCConfig['CONFIG.DirectoryNames']['ISESimulatorFiles']
+		iseFilesDirectoryName =         host.pyIPCMIConfig['CONFIG.DirectoryNames']['ISESimulatorFiles']
 		self.Directories.Working =      host.Directories.Temp / iseFilesDirectoryName
 		self.Directories.PreCompiled =  host.Directories.PreCompiled / iseFilesDirectoryName
 
@@ -61,7 +61,7 @@ class Simulator(BaseSimulator, XilinxProjectExportMixIn):
 	def _PrepareSimulator(self):
 		# create the Xilinx ISE executable factory
 		self.LogVerbose("Preparing ISE simulator.")
-		iseSection =            self.Host.PoCConfig['INSTALL.Xilinx.ISE']
+		iseSection =            self.Host.pyIPCMIConfig['INSTALL.Xilinx.ISE']
 		version =               iseSection['Version']
 		installationDirectory = Path(iseSection['InstallationDirectory'])
 		binaryPath =            Path(iseSection['BinaryDirectory'])
@@ -95,9 +95,9 @@ class Simulator(BaseSimulator, XilinxProjectExportMixIn):
 	def _RunSimulation(self, testbench):
 		iSimLogFilePath =   self.Directories.Working / (testbench.ModuleName + ".iSim.log")
 		exeFilePath =       self.Directories.Working / (testbench.ModuleName + ".exe")
-		tclBatchFilePath =  self.Host.Directories.Root / self.Host.PoCConfig[testbench.ConfigSectionName]['iSimBatchScript']
-		tclGUIFilePath =    self.Host.Directories.Root / self.Host.PoCConfig[testbench.ConfigSectionName]['iSimGUIScript']
-		wcfgFilePath =      self.Host.Directories.Root / self.Host.PoCConfig[testbench.ConfigSectionName]['iSimWaveformConfigFile']
+		tclBatchFilePath =  self.Host.Directories.Root / self.Host.pyIPCMIConfig[testbench.ConfigSectionName]['iSimBatchScript']
+		tclGUIFilePath =    self.Host.Directories.Root / self.Host.pyIPCMIConfig[testbench.ConfigSectionName]['iSimGUIScript']
+		wcfgFilePath =      self.Host.Directories.Root / self.Host.pyIPCMIConfig[testbench.ConfigSectionName]['iSimWaveformConfigFile']
 
 		# create a ISESimulator instance
 		iSim = ISESimulator(self._host.Platform, self._host.DryRun, exeFilePath, self._toolChain._environment, logger=self.Logger)

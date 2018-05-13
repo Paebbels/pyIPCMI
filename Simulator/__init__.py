@@ -47,12 +47,12 @@ from lib.SphinxExtensions import DocumentMemberAttribute
 __api__ = [
 	'SimulatorException',
 	'SkipableSimulatorException',
-	'PoCSimulationResultNotFoundException',
+	'pyIPCMISimulationResultNotFoundException',
 	'SimulationSteps',
 	'SimulationState',
 	'SimulationResult',
 	'Simulator',
-	'PoCSimulationResultFilter'
+	'pyIPCMISimulationResultFilter'
 ]
 __all__ = __api__
 
@@ -62,7 +62,7 @@ VHDL_TESTBENCH_LIBRARY_NAME = "test"
 
 class SimulatorException(ExceptionBase):
 	"""Base class for all SimulatorException classes. It is raised while running
-	simulation tasks in PoC.
+	simulation tasks in pyIPCMI.
 	"""
 
 class SkipableSimulatorException(SimulatorException, SkipableException):
@@ -70,8 +70,8 @@ class SkipableSimulatorException(SimulatorException, SkipableException):
 	can be skipped.
 	"""
 
-class PoCSimulationResultNotFoundException(SkipableSimulatorException):
-	"""This exception is raised if the expected PoC simulation result string was
+class pyIPCMISimulationResultNotFoundException(SkipableSimulatorException):
+	"""This exception is raised if the expected pyIPCMI simulation result string was
 	not found in the simulator's output.
 	"""
 
@@ -223,14 +223,14 @@ class Simulator(Shared):
 			testCase.StopTimer()
 
 	def Run(self, testbench, board, vhdlVersion, vhdlGenerics=None):
-		"""Write the Testbench message line, create a PoCProject and add the first *.files file to it."""
+		"""Write the Testbench message line, create a pyIPCMIProject and add the first *.files file to it."""
 		self.LogQuiet("{CYAN}Testbench: {0!s}{NOCOLOR}".format(testbench.Parent, **Init.Foreground))
 
 		self._vhdlVersion =  vhdlVersion
 		self._vhdlGenerics = vhdlGenerics
 
 		# setup all needed paths to execute fuse
-		self._CreatePoCProject(testbench.ModuleName, board)
+		self._CreatepyIPCMIProject(testbench.ModuleName, board)
 		self._AddFileListFile(testbench.FilesFile)
 
 		self._prepareTime = self._GetTimeDeltaSinceLastEvent()
@@ -350,12 +350,12 @@ class Simulator(Shared):
 																		status=self.__SIMULATION_REPORT_STATUS_TEXT_TABLE__[testCase.Status], **Init.Foreground))
 
 
-def PoCSimulationResultFilter(gen, simulationResult):
+def pyIPCMISimulationResultFilter(gen, simulationResult):
 	state = 0
 	for line in gen:
 		if   ((state == 0) and (line.Message == "========================================")):
 			state += 1
-		elif ((state == 1) and (line.Message == "POC TESTBENCH REPORT")):
+		elif ((state == 1) and (line.Message == "pyIPCMI TESTBENCH REPORT")):
 			state += 1
 		elif ((state == 2) and (line.Message == "========================================")):
 			state += 1
@@ -383,4 +383,4 @@ def PoCSimulationResultFilter(gen, simulationResult):
 
 		yield line
 
-	if (state != 6):    raise PoCSimulationResultNotFoundException("No PoC Testbench Report in simulator output found.")
+	if (state != 6):    raise pyIPCMISimulationResultNotFoundException("No pyIPCMI Testbench Report in simulator output found.")

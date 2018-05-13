@@ -6,7 +6,7 @@
 # Authors:          Patrick Lehmann
 #                   Martin Zabel
 #
-# Python Class:     PoC specific classes
+# Python Class:     pyIPCMI specific classes
 #
 # License:
 # ==============================================================================
@@ -45,8 +45,8 @@ __all__ = __api__
 
 class Configuration(ToolConfiguration):
 	_vendor =               "VLSI-EDA"                  #: The name of the tools vendor.
-	_toolName =             "PoC"                       #: The name of the tool.
-	_section  =             "INSTALL.PoC"               #: The name of the configuration section. Pattern: ``INSTALL.Vendor.ToolName``.
+	_toolName =             "pyIPCMI"                       #: The name of the tool.
+	_section  =             "INSTALL.pyIPCMI"               #: The name of the configuration section. Pattern: ``INSTALL.Vendor.ToolName``.
 	_template =    {
 		"ALL": {
 			_section: {
@@ -64,21 +64,21 @@ class Configuration(ToolConfiguration):
 	}                                                   #: The template for the configuration sections represented as nested dictionaries.
 
 	def ConfigureForAll(self):
-		pocInstallationDirectory = Path(environ.get('PoCRootDirectory'))
-		if (not pocInstallationDirectory.exists()):
-			raise EnvironmentException("Path '{0!s}' in environment variable 'PoCRootDirectory' does not exist.".format(pocInstallationDirectory))
-		elif (not pocInstallationDirectory.is_dir()):
-			raise EnvironmentException("Path '{0!s}' in environment variable 'PoCRootDirectory' is not a directory.".format(pocInstallationDirectory)) \
-				from NotADirectoryError(str(pocInstallationDirectory))
+		pyIPCMIInstallationDirectory = Path(environ.get('pyIPCMIRootDirectory'))
+		if (not pyIPCMIInstallationDirectory.exists()):
+			raise EnvironmentException("Path '{0!s}' in environment variable 'pyIPCMIRootDirectory' does not exist.".format(pyIPCMIInstallationDirectory))
+		elif (not pyIPCMIInstallationDirectory.is_dir()):
+			raise EnvironmentException("Path '{0!s}' in environment variable 'pyIPCMIRootDirectory' is not a directory.".format(pyIPCMIInstallationDirectory)) \
+				from NotADirectoryError(str(pyIPCMIInstallationDirectory))
 
-		self._host.LogNormal("  Installation directory: {0!s} (found in environment variable)".format(pocInstallationDirectory))
-		self._host.PoCConfig['INSTALL.PoC']['InstallationDirectory'] = pocInstallationDirectory.as_posix()
+		self._host.LogNormal("  Installation directory: {0!s} (found in environment variable)".format(pyIPCMIInstallationDirectory))
+		self._host.pyIPCMIConfig['INSTALL.pyIPCMI']['InstallationDirectory'] = pyIPCMIInstallationDirectory.as_posix()
 
 	def RunPostConfigurationTasks(self):
 		success = False
-		if (len(self._host.PoCConfig['INSTALL.Git']) != 0):
+		if (len(self._host.pyIPCMIConfig['INSTALL.Git']) != 0):
 			try:
-				binaryDirectoryPath = Path(self._host.PoCConfig['INSTALL.Git']['BinaryDirectory'])
+				binaryDirectoryPath = Path(self._host.pyIPCMIConfig['INSTALL.Git']['BinaryDirectory'])
 				git = Git(self._host.Platform, self._host.DryRun, binaryDirectoryPath, "", logger=self._host.Logger)
 
 				gitDescribe =   git.GetGitDescribe()
@@ -86,28 +86,28 @@ class Configuration(ToolConfiguration):
 				gitDescribe.DescribeParameters[gitDescribe.SwitchTags] =    "" # specify no hash
 				latestTagName = gitDescribe.Execute().strip()
 
-				self._host.LogNormal("  PoC version: {0} (found in git)".format(latestTagName))
-				self._host.PoCConfig['INSTALL.PoC']['Version'] = latestTagName
+				self._host.LogNormal("  pyIPCMI version: {0} (found in git)".format(latestTagName))
+				self._host.pyIPCMIConfig['INSTALL.pyIPCMI']['Version'] = latestTagName
 				success = True
 			except CalledProcessError:
 				pass
 
 		if not success:
 			self._host.LogWarning("Can't get version information from latest Git tag.")
-			pocVersion = self._template['ALL']['INSTALL.PoC']['Version']
-			self._host.LogNormal("  PoC version: {0} (found in default configuration)".format(pocVersion))
-			self._host.PoCConfig['INSTALL.PoC']['Version'] = pocVersion
+			pyIPCMIVersion = self._template['ALL']['INSTALL.pyIPCMI']['Version']
+			self._host.LogNormal("  pyIPCMI version: {0} (found in default configuration)".format(pyIPCMIVersion))
+			self._host.pyIPCMIConfig['INSTALL.pyIPCMI']['Version'] = pyIPCMIVersion
 
 	# LOCAL = git rev-parse @
-	# PS G:\git\PoC> git rev-parse "@"
+	# PS G:\git\pyIPCMI> git rev-parse "@"
 	# 9c05494ef52c276dabec69dbf734a22f65939305
 
 	# REMOTE = git rev-parse @{u}
-	# PS G:\git\PoC> git rev-parse "@{u}"
+	# PS G:\git\pyIPCMI> git rev-parse "@{u}"
 	# 0ff166a40010c1b85a5ab655eea0148474f680c6
 
 	# MERGEBASE = git merge-base @ @{u}
-	# PS G:\git\PoC> git merge-base "@" "@{u}"
+	# PS G:\git\pyIPCMI> git merge-base "@" "@{u}"
 	# 0ff166a40010c1b85a5ab655eea0148474f680c6
 
 	# if (local == remote):   return "Up-to-date"

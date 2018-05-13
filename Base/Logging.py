@@ -5,7 +5,7 @@
 # ==============================================================================
 # Authors:          Patrick Lehmann
 #
-# Python Class:     Contains PoC's logging (console output) mechanism.
+# Python Class:     Contains pyIPCMI's logging (console output) mechanism.
 #
 # License:
 # ==============================================================================

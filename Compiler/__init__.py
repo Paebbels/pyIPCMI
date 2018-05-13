@@ -63,7 +63,7 @@ __all__ = __api__
 
 class CompilerException(ExceptionBase):
 	"""Base class for all CompilerException classes. It is raised while running
-	compiler (synthesis) tasks in PoC.
+	compiler (synthesis) tasks in pyIPCMI.
 	"""
 
 
@@ -238,7 +238,7 @@ class Compiler(Shared):
 		self._PrepareCompilerEnvironment(board.Device)
 		self._WriteSpecialSectionIntoConfig(board.Device)
 
-		self._CreatePoCProject(netlist.ModuleName, board)
+		self._CreatepyIPCMIProject(netlist.ModuleName, board)
 		if netlist.FilesFile is not None:   self._AddFileListFile(netlist.FilesFile)
 		if (netlist.RulesFile is not None): self._AddRulesFiles(netlist.RulesFile)
 
@@ -259,16 +259,16 @@ class Compiler(Shared):
 
 	def _WriteSpecialSectionIntoConfig(self, device):
 		# add the key Device to section SPECIAL at runtime to change interpolation results
-		self.Host.PoCConfig['SPECIAL'] = {}
-		self.Host.PoCConfig['SPECIAL']['Device'] =        device.ShortName
-		self.Host.PoCConfig['SPECIAL']['DeviceSeries'] =  device.Series
-		self.Host.PoCConfig['SPECIAL']['OutputDir']	=     self.Directories.Working.as_posix()
+		self.Host.pyIPCMIConfig['SPECIAL'] = {}
+		self.Host.pyIPCMIConfig['SPECIAL']['Device'] =        device.ShortName
+		self.Host.pyIPCMIConfig['SPECIAL']['DeviceSeries'] =  device.Series
+		self.Host.pyIPCMIConfig['SPECIAL']['OutputDir']	=     self.Directories.Working.as_posix()
 
 	def _AddRulesFiles(self, rulesFilePath):
 		self.LogVerbose("Reading rules from '{0!s}'".format(rulesFilePath))
 		# add the *.rules file, parse and evaluate it
 		try:
-			rulesFile = self._pocProject.AddFile(RulesFile(rulesFilePath))
+			rulesFile = self._pyIPCMIProject.AddFile(RulesFile(rulesFilePath))
 			rulesFile.Parse()
 		except ParserException as ex:
 			raise SkipableCompilerException("Error while parsing '{0!s}'.".format(rulesFilePath)) from ex
@@ -282,17 +282,17 @@ class Compiler(Shared):
 
 	def _RunPreCopy(self, netlist):
 		self.LogVerbose("Copy further input files into temporary directory...")
-		rulesFiles = [file for file in self.PoCProject.Files(fileType=FileTypes.RulesFile)]		# FIXME: get rulefile from netlist object as a rulefile object instead of a path
+		rulesFiles = [file for file in self.pyIPCMIProject.Files(fileType=FileTypes.RulesFile)]		# FIXME: get rulefile from netlist object as a rulefile object instead of a path
 		preCopyTasks = []
 		if (rulesFiles):
 			for rule in rulesFiles[0].PreProcessRules:
 				if isinstance(rule, CopyRuleMixIn):
-					sourcePath =      self.Host.PoCConfig.Interpolation.interpolate(self.Host.PoCConfig, netlist.ConfigSectionName, "RulesFile", rule.SourcePath, {})
-					destinationPath =  self.Host.PoCConfig.Interpolation.interpolate(self.Host.PoCConfig, netlist.ConfigSectionName, "RulesFile", rule.DestinationPath, {})
+					sourcePath =      self.Host.pyIPCMIConfig.Interpolation.interpolate(self.Host.pyIPCMIConfig, netlist.ConfigSectionName, "RulesFile", rule.SourcePath, {})
+					destinationPath =  self.Host.pyIPCMIConfig.Interpolation.interpolate(self.Host.pyIPCMIConfig, netlist.ConfigSectionName, "RulesFile", rule.DestinationPath, {})
 					task = CopyTask(Path(sourcePath), Path(destinationPath))
 					preCopyTasks.append(task)
 		else:
-			preCopyRules = self.Host.PoCConfig[netlist.ConfigSectionName]['PreCopyRules']
+			preCopyRules = self.Host.pyIPCMIConfig[netlist.ConfigSectionName]['PreCopyRules']
 			self._ParseCopyRules(preCopyRules, preCopyTasks, "pre")
 
 		if (len(preCopyTasks) != 0):
@@ -302,17 +302,17 @@ class Compiler(Shared):
 
 	def _RunPostCopy(self, netlist):
 		self.LogVerbose("copy generated files into netlist directory...")
-		rulesFiles = [file for file in self.PoCProject.Files(fileType=FileTypes.RulesFile)]		# FIXME: get rulefile from netlist object as a rulefile object instead of a path
+		rulesFiles = [file for file in self.pyIPCMIProject.Files(fileType=FileTypes.RulesFile)]		# FIXME: get rulefile from netlist object as a rulefile object instead of a path
 		postCopyTasks = []
 		if (rulesFiles):
 			for rule in rulesFiles[0].PostProcessRules:
 				if isinstance(rule, CopyRuleMixIn):
-					sourcePath =      self.Host.PoCConfig.Interpolation.interpolate(self.Host.PoCConfig, netlist.ConfigSectionName, "RulesFile", rule.SourcePath, {})
-					destinationPath =  self.Host.PoCConfig.Interpolation.interpolate(self.Host.PoCConfig, netlist.ConfigSectionName, "RulesFile", rule.DestinationPath, {})
+					sourcePath =      self.Host.pyIPCMIConfig.Interpolation.interpolate(self.Host.pyIPCMIConfig, netlist.ConfigSectionName, "RulesFile", rule.SourcePath, {})
+					destinationPath =  self.Host.pyIPCMIConfig.Interpolation.interpolate(self.Host.pyIPCMIConfig, netlist.ConfigSectionName, "RulesFile", rule.DestinationPath, {})
 					task = CopyTask(Path(sourcePath), Path(destinationPath))
 					postCopyTasks.append(task)
 		else:
-			postCopyRules = self.Host.PoCConfig[netlist.ConfigSectionName]['PostCopyRules']
+			postCopyRules = self.Host.pyIPCMIConfig[netlist.ConfigSectionName]['PostCopyRules']
 			self._ParseCopyRules(postCopyRules, postCopyTasks, "post")
 
 		if (len(postCopyTasks) != 0):
@@ -370,16 +370,16 @@ class Compiler(Shared):
 
 	def _RunPostDelete(self, netlist):
 		self.LogVerbose("copy generated files into netlist directory...")
-		rulesFiles = [file for file in self.PoCProject.Files(fileType=FileTypes.RulesFile)]  # FIXME: get rulefile from netlist object as a rulefile object instead of a path
+		rulesFiles = [file for file in self.pyIPCMIProject.Files(fileType=FileTypes.RulesFile)]  # FIXME: get rulefile from netlist object as a rulefile object instead of a path
 		postDeleteTasks = []
 		if (rulesFiles):
 			for rule in rulesFiles[0].PostProcessRules:
 				if isinstance(rule, DeleteRuleMixIn):
-					filePath = self.Host.PoCConfig.Interpolation.interpolate(self.Host.PoCConfig, netlist.ConfigSectionName, "RulesFile", rule.FilePath, {})
+					filePath = self.Host.pyIPCMIConfig.Interpolation.interpolate(self.Host.pyIPCMIConfig, netlist.ConfigSectionName, "RulesFile", rule.FilePath, {})
 					task = DeleteTask(Path(filePath))
 					postDeleteTasks.append(task)
 		else:
-			postDeleteRules = self.Host.PoCConfig[netlist.ConfigSectionName]['PostDeleteRules']
+			postDeleteRules = self.Host.pyIPCMIConfig[netlist.ConfigSectionName]['PostDeleteRules']
 			self._ParseDeleteRules(postDeleteRules, postDeleteTasks, "post")
 
 		if self.NoCleanUp:
@@ -425,19 +425,19 @@ class Compiler(Shared):
 
 	def _RunPreReplace(self, netlist):
 		self.LogVerbose("Patching files in temporary directory...")
-		rulesFiles = [file for file in self.PoCProject.Files(fileType=FileTypes.RulesFile)]		# FIXME: get rulefile from netlist object as a rulefile object instead of a path
+		rulesFiles = [file for file in self.pyIPCMIProject.Files(fileType=FileTypes.RulesFile)]		# FIXME: get rulefile from netlist object as a rulefile object instead of a path
 		preReplaceTasks = []
 		if (rulesFiles):
 			for rule in rulesFiles[0].PreProcessRules:
 				if isinstance(rule, ReplaceRuleMixIn):
-					filePath =        self.Host.PoCConfig.Interpolation.interpolate(self.Host.PoCConfig, netlist.ConfigSectionName, "RulesFile", rule.FilePath, {})
-					searchPattern =   self.Host.PoCConfig.Interpolation.interpolate(self.Host.PoCConfig, netlist.ConfigSectionName, "RulesFile", rule.SearchPattern, {})
-					replacePattern =  self.Host.PoCConfig.Interpolation.interpolate(self.Host.PoCConfig, netlist.ConfigSectionName, "RulesFile", rule.ReplacePattern, {})
+					filePath =        self.Host.pyIPCMIConfig.Interpolation.interpolate(self.Host.pyIPCMIConfig, netlist.ConfigSectionName, "RulesFile", rule.FilePath, {})
+					searchPattern =   self.Host.pyIPCMIConfig.Interpolation.interpolate(self.Host.pyIPCMIConfig, netlist.ConfigSectionName, "RulesFile", rule.SearchPattern, {})
+					replacePattern =  self.Host.pyIPCMIConfig.Interpolation.interpolate(self.Host.pyIPCMIConfig, netlist.ConfigSectionName, "RulesFile", rule.ReplacePattern, {})
 					task = ReplaceTask(Path(filePath), searchPattern, replacePattern, rule.RegExpOption_MultiLine, rule.RegExpOption_DotAll, rule.RegExpOption_CaseInsensitive)
 					preReplaceTasks.append(task)
 				elif isinstance(rule, AppendLineRuleMixIn):
-					filePath =        self.Host.PoCConfig.Interpolation.interpolate(self.Host.PoCConfig, netlist.ConfigSectionName, "RulesFile", rule.FilePath, {})
-					appendPattern =   self.Host.PoCConfig.Interpolation.interpolate(self.Host.PoCConfig, netlist.ConfigSectionName, "RulesFile", rule.AppendPattern, {})
+					filePath =        self.Host.pyIPCMIConfig.Interpolation.interpolate(self.Host.pyIPCMIConfig, netlist.ConfigSectionName, "RulesFile", rule.FilePath, {})
+					appendPattern =   self.Host.pyIPCMIConfig.Interpolation.interpolate(self.Host.pyIPCMIConfig, netlist.ConfigSectionName, "RulesFile", rule.AppendPattern, {})
 					task = AppendLineTask(Path(filePath), appendPattern)
 					preReplaceTasks.append(task)
 				elif isinstance(rule, CopyRuleMixIn):
@@ -445,7 +445,7 @@ class Compiler(Shared):
 				else:
 					raise CompilerException("Unknown pre-process rule '{0!s}'.".format(rule))
 		else:
-			preReplaceRules = self.Host.PoCConfig[netlist.ConfigSectionName]['PreReplaceRules']
+			preReplaceRules = self.Host.pyIPCMIConfig[netlist.ConfigSectionName]['PreReplaceRules']
 			self._ParseReplaceRules(preReplaceRules, preReplaceTasks, "pre")
 
 		if (len(preReplaceTasks) != 0):
@@ -455,19 +455,19 @@ class Compiler(Shared):
 
 	def _RunPostReplace(self, netlist):
 		self.LogVerbose("Patching files in netlist directory...")
-		rulesFiles = [file for file in self.PoCProject.Files(fileType=FileTypes.RulesFile)]  # FIXME: get rulefile from netlist object as a rulefile object instead of a path
+		rulesFiles = [file for file in self.pyIPCMIProject.Files(fileType=FileTypes.RulesFile)]  # FIXME: get rulefile from netlist object as a rulefile object instead of a path
 		postReplaceTasks = []
 		if (rulesFiles):
 			for rule in rulesFiles[0].PostProcessRules:
 				if isinstance(rule, ReplaceRuleMixIn):
-					filePath =        self.Host.PoCConfig.Interpolation.interpolate(self.Host.PoCConfig, netlist.ConfigSectionName, "RulesFile", rule.FilePath, {})
-					searchPattern =   self.Host.PoCConfig.Interpolation.interpolate(self.Host.PoCConfig, netlist.ConfigSectionName, "RulesFile", rule.SearchPattern, {})
-					replacePattern =  self.Host.PoCConfig.Interpolation.interpolate(self.Host.PoCConfig, netlist.ConfigSectionName, "RulesFile", rule.ReplacePattern, {})
+					filePath =        self.Host.pyIPCMIConfig.Interpolation.interpolate(self.Host.pyIPCMIConfig, netlist.ConfigSectionName, "RulesFile", rule.FilePath, {})
+					searchPattern =   self.Host.pyIPCMIConfig.Interpolation.interpolate(self.Host.pyIPCMIConfig, netlist.ConfigSectionName, "RulesFile", rule.SearchPattern, {})
+					replacePattern =  self.Host.pyIPCMIConfig.Interpolation.interpolate(self.Host.pyIPCMIConfig, netlist.ConfigSectionName, "RulesFile", rule.ReplacePattern, {})
 					task = ReplaceTask(Path(filePath), searchPattern, replacePattern, rule.RegExpOption_MultiLine, rule.RegExpOption_DotAll, rule.RegExpOption_CaseInsensitive)
 					postReplaceTasks.append(task)
 				elif isinstance(rule, AppendLineRuleMixIn):
-					filePath =        self.Host.PoCConfig.Interpolation.interpolate(self.Host.PoCConfig, netlist.ConfigSectionName, "RulesFile", rule.FilePath, {})
-					appendPattern =   self.Host.PoCConfig.Interpolation.interpolate(self.Host.PoCConfig, netlist.ConfigSectionName, "RulesFile", rule.AppendPattern, {})
+					filePath =        self.Host.pyIPCMIConfig.Interpolation.interpolate(self.Host.pyIPCMIConfig, netlist.ConfigSectionName, "RulesFile", rule.FilePath, {})
+					appendPattern =   self.Host.pyIPCMIConfig.Interpolation.interpolate(self.Host.pyIPCMIConfig, netlist.ConfigSectionName, "RulesFile", rule.AppendPattern, {})
 					task = AppendLineTask(Path(filePath), appendPattern)
 					postReplaceTasks.append(task)
 				elif isinstance(rule, (CopyRuleMixIn, DeleteRuleMixIn)):
@@ -475,7 +475,7 @@ class Compiler(Shared):
 				else:
 					raise CompilerException("Unknown post-process rule '{0!s}'.".format(rule))
 		else:
-			postReplaceRules = self.Host.PoCConfig[netlist.ConfigSectionName]['PostReplaceRules']
+			postReplaceRules = self.Host.pyIPCMIConfig[netlist.ConfigSectionName]['PostReplaceRules']
 			self._ParseReplaceRules(postReplaceRules, postReplaceTasks, "post")
 
 		if (len(postReplaceTasks) != 0):

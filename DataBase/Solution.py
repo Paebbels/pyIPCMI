@@ -35,7 +35,7 @@ from Base.Exceptions    import CommonException
 from Base.Project       import Project as BaseProject, File, FileTypes, VHDLSourceFile, VerilogSourceFile, CocotbSourceFile  #, ProjectFile
 from Parser.FilesParser import FilesParserMixIn
 from Parser.RulesParser import RulesParserMixIn
-from DataBase           import __POC_SOLUTION_KEYWORD__
+from DataBase           import __pyIPCMI_SOLUTION_KEYWORD__
 from DataBase.Entity    import Visibility
 from ToolChain          import ConfigurationException
 
@@ -81,8 +81,8 @@ class Repository(Base):
 		self._solutions =  {}
 
 		kind = "Public"
-		if host.PoCConfig.has_option("INSTALL.PoC", "RepositoryKind"):
-			kind = host.PoCConfig['INSTALL.PoC']['RepositoryKind']
+		if host.pyIPCMIConfig.has_option("INSTALL.pyIPCMI", "RepositoryKind"):
+			kind = host.pyIPCMIConfig['INSTALL.pyIPCMI']['RepositoryKind']
 		self._kind = Visibility.Parse(kind)
 
 		super().__init__(host, "SOLUTION", "Solutions", None)
@@ -103,8 +103,8 @@ class Repository(Base):
 	def _LazyLoadable_Load(self):
 		super()._LazyLoadable_Load()
 		# load solutions
-		for slnID in self._host.PoCConfig[self._configSection]:
-			if (self._host.PoCConfig[self._configSection][slnID] == __POC_SOLUTION_KEYWORD__):
+		for slnID in self._host.pyIPCMIConfig[self._configSection]:
+			if (self._host.pyIPCMIConfig[self._configSection][slnID] == __pyIPCMI_SOLUTION_KEYWORD__):
 				self._solutions[slnID.lower()] = Solution(self._host, slnID, self)
 
 	def AddSolution(self, solutionID, solutionName, solutionRootPath):
@@ -112,7 +112,7 @@ class Repository(Base):
 		solution.Name = solutionName
 		solution.Path = solutionRootPath
 
-		self._host.PoCConfig[self._configSection][solutionID] = __POC_SOLUTION_KEYWORD__
+		self._host.pyIPCMIConfig[self._configSection][solutionID] = __pyIPCMI_SOLUTION_KEYWORD__
 
 		self._solutions[solutionID] = solution
 		solution.Register()
@@ -126,7 +126,7 @@ class Repository(Base):
 			raise ValueError("Parameter solution is not of type str or Solution.")
 
 		solution.Unregister()
-		self._host.PoCConfig.remove_option(self._configSection, solution.ID)
+		self._host.pyIPCMIConfig.remove_option(self._configSection, solution.ID)
 
 	@property
 	@LazyLoadTrigger
@@ -153,15 +153,15 @@ class Solution(Base):
 		self._projects =  {}
 
 	def Register(self):
-		self._host.PoCConfig[self._configSection] = OrderedDict()
-		self._host.PoCConfig[self._configSection]['Name'] = self._name
-		self._host.PoCConfig[self._configSection]['Path'] = self._path.as_posix()
+		self._host.pyIPCMIConfig[self._configSection] = OrderedDict()
+		self._host.pyIPCMIConfig[self._configSection]['Name'] = self._name
+		self._host.pyIPCMIConfig[self._configSection]['Path'] = self._path.as_posix()
 
 	def Unregister(self):
-		self._host.PoCConfig.remove_section(self._configSection)
+		self._host.pyIPCMIConfig.remove_section(self._configSection)
 
 	def CreateFiles(self):
-		solutionConfigPath = self._path / ".poc"
+		solutionConfigPath = self._path / ".pyIPCMI"
 		if (not self._path.is_absolute()):
 			solutionConfigPath = self._host.Directories.Root / solutionConfigPath
 		try:
@@ -186,10 +186,10 @@ class Solution(Base):
 
 	def _LazyLoadable_Load(self):
 		super()._LazyLoadable_Load()
-		self._name = self._host.PoCConfig[self._configSection]['Name']
-		self._path = self._host.Directories.Root / self._host.PoCConfig[self._configSection]['Path']
+		self._name = self._host.pyIPCMIConfig[self._configSection]['Name']
+		self._path = self._host.Directories.Root / self._host.pyIPCMIConfig[self._configSection]['Path']
 
-		solutionConfigPath = self._path / ".poc"
+		solutionConfigPath = self._path / ".pyIPCMI"
 		if (not self._path.is_absolute()):
 			solutionConfigPath = self._host.Directories.Root / solutionConfigPath
 
@@ -202,18 +202,18 @@ class Solution(Base):
 			if (not configFile.exists()):
 				raise ConfigurationException("Solution configuration file '{0!s}' not found.".format(configFile)) from FileNotFoundError(str(configFile))
 
-			self._host.PoCConfig.read(str(configFile))
+			self._host.pyIPCMIConfig.read(str(configFile))
 
 		# load projects
-		for option in self._host.PoCConfig[self._configSection]:
+		for option in self._host.pyIPCMIConfig[self._configSection]:
 			project = None
-			if (self._host.PoCConfig[self._configSection][option] == "ISEProject"):
+			if (self._host.pyIPCMIConfig[self._configSection][option] == "ISEProject"):
 				project = ISEProject(self._host, option, self)
-			elif (self._host.PoCConfig[self._configSection][option] == "VivadoProject"):
+			elif (self._host.pyIPCMIConfig[self._configSection][option] == "VivadoProject"):
 				project = VivadoProject(self._host, option, self)
-			elif (self._host.PoCConfig[self._configSection][option] == "QuartusProject"):
+			elif (self._host.pyIPCMIConfig[self._configSection][option] == "QuartusProject"):
 				project = QuartusProject(self._host, option, self)
-			elif (self._host.PoCConfig[self._configSection][option] == "LatticeProject"):
+			elif (self._host.pyIPCMIConfig[self._configSection][option] == "LatticeProject"):
 				project = LatticeProject(self._host, option, self)
 
 			if (project is not None):

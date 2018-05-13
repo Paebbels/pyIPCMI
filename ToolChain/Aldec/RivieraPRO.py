@@ -37,7 +37,7 @@ from Base.Executable        import ExecutableArgument, PathArgument, StringArgum
 from Base.Executable        import LongFlagArgument, ShortValuedFlagArgument, ShortTupleArgument, CommandLineArgumentList
 from ToolChain              import ToolMixIn, ConfigurationException, ToolConfiguration, EditionDescription, Edition, ToolSelector, OutputFilteredExecutable
 from ToolChain.Aldec        import AldecException
-from Simulator              import PoCSimulationResultFilter, PoCSimulationResultNotFoundException
+from Simulator              import pyIPCMISimulationResultFilter, pyIPCMISimulationResultNotFoundException
 from DataBase.Entity import SimulationResult
 
 
@@ -86,8 +86,8 @@ class Configuration(ToolConfiguration):
 	}                                                   #: The template for the configuration sections represented as nested dictionaries.
 
 	def CheckDependency(self):
-		"""Check if general Aldec support is configured in PoC."""
-		return (len(self._host.PoCConfig['INSTALL.Aldec']) != 0)
+		"""Check if general Aldec support is configured in pyIPCMI."""
+		return (len(self._host.pyIPCMIConfig['INSTALL.Aldec']) != 0)
 
 	def ConfigureForAll(self):
 		"""Configuration routine for Aldec Riviera-PRO on all supported platforms.
@@ -110,8 +110,8 @@ class Configuration(ToolConfiguration):
 				version = self._ConfigureVersion()
 				if self._multiVersionSupport:
 					self.PrepareVersionedSections()
-					sectionName = self._host.PoCConfig[self._section]['SectionName']
-					self._host.PoCConfig[sectionName]['Version'] = version
+					sectionName = self._host.pyIPCMIConfig[self._section]['SectionName']
+					self._host.pyIPCMIConfig[sectionName]['Version'] = version
 
 				self._ConfigureInstallationDirectory()
 				# Configure binary directory
@@ -361,7 +361,7 @@ class VHDLSimulator(OutputFilteredExecutable, ToolMixIn):
 		self._hasErrors =   False
 		simulationResult =  CallByRefParam(SimulationResult.Error)
 		try:
-			iterator = iter(PoCSimulationResultFilter(VSimFilter(self.GetReader()), simulationResult))
+			iterator = iter(pyIPCMISimulationResultFilter(VSimFilter(self.GetReader()), simulationResult))
 
 			line = next(iterator)
 			line.IndentBy(self.Logger.BaseIndent + 1)
@@ -433,7 +433,7 @@ def VComFilter(gen): # mccabe:disable=MC0001
 
 def VSimFilter(gen):
 	"""A line based output stream filter for Riviera-PRO's VHDL simulator."""
-	PoCOutputFound = False
+	pyIPCMIOutputFound = False
 	for line in gen:
 		if line.startswith("asim"):
 			yield LogEntry(line, Severity.Verbose)
@@ -454,10 +454,10 @@ def VSimFilter(gen):
 		elif line.startswith("# Allocation: "):
 			yield LogEntry(line, Severity.Verbose)
 		elif line.startswith("# KERNEL: ========================================"):
-			PoCOutputFound = True
+			pyIPCMIOutputFound = True
 			yield LogEntry(line[10:], Severity.Normal)
 		elif line.startswith("# KERNEL: "):
-			if (not PoCOutputFound):
+			if (not pyIPCMIOutputFound):
 				yield LogEntry(line, Severity.Verbose)
 			else:
 				yield LogEntry(line[10:], Severity.Normal)

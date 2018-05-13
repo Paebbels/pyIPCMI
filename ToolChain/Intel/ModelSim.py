@@ -63,8 +63,8 @@ class Configuration(Mentor_ModelSim_Configuration):
 	_multiVersionSupport =  False                       #: Intel ModelSim Edition doesn't support multiple versions.
 
 	def CheckDependency(self):
-		"""Check if general Intel support is configured in PoC."""
-		return (len(self._host.PoCConfig['INSTALL.Intel']) != 0)
+		"""Check if general Intel support is configured in pyIPCMI."""
+		return (len(self._host.pyIPCMIConfig['INSTALL.Intel']) != 0)
 
 	def ConfigureForAll(self):
 		try:
@@ -75,11 +75,11 @@ class Configuration(Mentor_ModelSim_Configuration):
 				edition = self._ConfigureEdition()
 
 
-				configSection = self._host.PoCConfig[self._section]
+				configSection = self._host.pyIPCMIConfig[self._section]
 				if (edition is IntelModelSimEditions.ModelSimIntelEdition):
-					configSection['InstallationDirectory'] = self._host.PoCConfig.get(self._section, 'InstallationDirectory', raw=True).replace("_ase", "_ae")
+					configSection['InstallationDirectory'] = self._host.pyIPCMIConfig.get(self._section, 'InstallationDirectory', raw=True).replace("_ase", "_ae")
 				elif (edition is IntelModelSimEditions.ModelSimIntelStarterEdition):
-					configSection['InstallationDirectory'] = self._host.PoCConfig.get(self._section, 'InstallationDirectory', raw=True).replace("_ase", "_ase")
+					configSection['InstallationDirectory'] = self._host.pyIPCMIConfig.get(self._section, 'InstallationDirectory', raw=True).replace("_ase", "_ase")
 
 				self._ConfigureInstallationDirectory()
 				binPath = self._ConfigureBinaryDirectory()
@@ -91,13 +91,13 @@ class Configuration(Mentor_ModelSim_Configuration):
 
 	def _ConfigureEdition(self):
 		"""Configure ModelSim for Intel."""
-		configSection =   self._host.PoCConfig[self._section]
+		configSection =   self._host.pyIPCMIConfig[self._section]
 		defaultEdition =  IntelModelSimEditions.Parse(configSection['Edition'])
 		edition =         super()._ConfigureEdition(IntelModelSimEditions, defaultEdition)
 
 		if (edition is not defaultEdition):
 			configSection['Edition'] = edition.Name
-			self._host.PoCConfig.Interpolation.clear_cache()
+			self._host.pyIPCMIConfig.Interpolation.clear_cache()
 			return (True, edition)
 		else:
 			return (False, edition)
@@ -127,7 +127,7 @@ class Configuration(Mentor_ModelSim_Configuration):
 				if match is not None:
 					version = match.group(1)
 
-		self._host.PoCConfig[self._section]['Version'] = version
+		self._host.pyIPCMIConfig[self._section]['Version'] = version
 
 
 class IntelEditionConfiguration(Configuration):

@@ -59,7 +59,7 @@ class Simulator(BaseSimulator):
 		"""Constructor"""
 		super().__init__(host, dryRun, simulationSteps)
 
-		ghdlFilesDirectoryName =        host.PoCConfig['CONFIG.DirectoryNames']['GHDLFiles']
+		ghdlFilesDirectoryName =        host.pyIPCMIConfig['CONFIG.DirectoryNames']['GHDLFiles']
 		self.Directories.Working =      host.Directories.Temp / ghdlFilesDirectoryName
 		self.Directories.PreCompiled =  host.Directories.PreCompiled / ghdlFilesDirectoryName
 
@@ -75,15 +75,15 @@ class Simulator(BaseSimulator):
 		if (SimulationSteps.ShowWaveform in self._simulationSteps):
 			# prepare paths for GTKWave, if configured
 			sectionName = 'INSTALL.GTKWave'
-			if (len(host.PoCConfig.options(sectionName)) != 0):
-				self.Directories.GTKWBinary = Path(host.PoCConfig[sectionName]['BinaryDirectory'])
+			if (len(host.pyIPCMIConfig.options(sectionName)) != 0):
+				self.Directories.GTKWBinary = Path(host.pyIPCMIConfig[sectionName]['BinaryDirectory'])
 			else:
 				raise NotConfiguredException("No GHDL compatible waveform viewer is configured on this system.")
 
 	def _PrepareSimulator(self):
 		"""Create the GHDL executable factory instance."""
 		self.LogVerbose("Preparing GHDL simulator.")
-		ghdlSection =     self.Host.PoCConfig['INSTALL.GHDL']
+		ghdlSection =     self.Host.pyIPCMIConfig['INSTALL.GHDL']
 		binaryPath =      Path(ghdlSection['BinaryDirectory'])
 		version =         ghdlSection['Version']
 		backend =         ghdlSection['Backend']
@@ -117,7 +117,7 @@ class Simulator(BaseSimulator):
 		self._SetExternalLibraryReferences(ghdl)
 
 		# run GHDL analysis for each VHDL file
-		for file in self._pocProject.Files(fileType=FileTypes.VHDLSourceFile):
+		for file in self._pyIPCMIProject.Files(fileType=FileTypes.VHDLSourceFile):
 			if (not file.Path.exists()):                  raise SkipableSimulatorException("Cannot analyse '{0!s}'.".format(file.Path)) from FileNotFoundError(str(file.Path))
 
 			ghdl.Parameters[ghdl.SwitchVHDLLibrary] =     file.LibraryName
@@ -148,7 +148,7 @@ class Simulator(BaseSimulator):
 
 		# add external library references
 		externalLibraryReferences = []
-		for extLibrary in self._pocProject.ExternalVHDLLibraries:
+		for extLibrary in self._pyIPCMIProject.ExternalVHDLLibraries:
 			path = str(extLibrary.Path)
 			if (path not in externalLibraryReferences):
 				externalLibraryReferences.append(path)
@@ -208,7 +208,7 @@ class Simulator(BaseSimulator):
 
 		# set dump format to save simulation results to *.vcd file
 		if (SimulationSteps.ShowWaveform in self._simulationSteps):
-			configSection = self.Host.PoCConfig[testbench.ConfigSectionName]
+			configSection = self.Host.pyIPCMIConfig[testbench.ConfigSectionName]
 			testbench.WaveformOptionFile = Path(configSection['ghdlWaveformOptionFile'])
 			testbench.WaveformFileFormat = configSection['ghdlWaveformFileFormat']
 
@@ -243,12 +243,12 @@ class Simulator(BaseSimulator):
 				from FileNotFoundError(str(testbench.WaveformFile))
 
 		gtkwBinaryPath =    self.Directories.GTKWBinary
-		gtkwVersion =       self.Host.PoCConfig['INSTALL.GTKWave']['Version']
+		gtkwVersion =       self.Host.pyIPCMIConfig['INSTALL.GTKWave']['Version']
 		gtkw = GTKWave(self.Host.Platform, self.DryRun, gtkwBinaryPath, gtkwVersion, logger=self.Logger)
 		gtkw.Parameters[gtkw.SwitchDumpFile] = str(testbench.WaveformFile)
 
 		# if GTKWave savefile exists, load it's settings
-		configSection =     self.Host.PoCConfig[testbench.ConfigSectionName]
+		configSection =     self.Host.pyIPCMIConfig[testbench.ConfigSectionName]
 		gtkwSaveFilePath =  self.Host.Directories.Root / configSection['gtkwSaveFile']
 		if gtkwSaveFilePath.exists():
 			self.LogDebug("Found waveform save file: '{0!s}'".format(gtkwSaveFilePath))

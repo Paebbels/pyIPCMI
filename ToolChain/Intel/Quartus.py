@@ -65,8 +65,8 @@ class Configuration(Altera_Quartus_Configuration):
 	_multiVersionSupport =  True                        #: Intel Quartus supports multiple versions installed on the same system.
 
 	def CheckDependency(self):
-		"""Check if general Intel support is configured in PoC."""
-		return (len(self._host.PoCConfig['INSTALL.Intel']) != 0)
+		"""Check if general Intel support is configured in pyIPCMI."""
+		return (len(self._host.pyIPCMIConfig['INSTALL.Intel']) != 0)
 
 	def ConfigureForAll(self):
 		try:
@@ -77,8 +77,8 @@ class Configuration(Altera_Quartus_Configuration):
 				version = self._ConfigureVersion()
 				if self._multiVersionSupport:
 					self.PrepareVersionedSections()
-					sectionName = self._host.PoCConfig[self._section]['SectionName']
-					self._host.PoCConfig[sectionName]['Version'] = version
+					sectionName = self._host.pyIPCMIConfig[self._section]['SectionName']
+					self._host.pyIPCMIConfig[sectionName]['Version'] = version
 
 				self._ConfigureInstallationDirectory()
 				binPath = self._ConfigureBinaryDirectory()
@@ -132,23 +132,23 @@ class QuartusPrimeConfiguration(Configuration):
 		"""Configure ModelSim PE for Mentor Graphics."""
 		sectionName = self._section
 		if self._multiVersionSupport:
-			sectionName = self._host.PoCConfig[sectionName]['SectionName']
+			sectionName = self._host.pyIPCMIConfig[sectionName]['SectionName']
 
-		configSection = self._host.PoCConfig[sectionName]
+		configSection = self._host.pyIPCMIConfig[sectionName]
 		defaultEdition = MentorModelSimPEEditions.Parse(configSection['Edition'])
 		edition = super()._ConfigureEdition(MentorModelSimPEEditions, defaultEdition)
 
 		if (edition is not defaultEdition):
 			configSection['Edition'] = edition.Name
-			self._host.PoCConfig.Interpolation.clear_cache()
+			self._host.pyIPCMIConfig.Interpolation.clear_cache()
 
 		if self._multiVersionSupport:
-			sectionName = self._host.PoCConfig[self._section]['SectionName']
+			sectionName = self._host.pyIPCMIConfig[self._section]['SectionName']
 		else:
 			sectionName = self._section
 
-		configSection =   self._host.PoCConfig[sectionName]
-		binaryDirectory = self._host.PoCConfig.get(sectionName, 'BinaryDirectory', raw=True)
+		configSection =   self._host.pyIPCMIConfig[sectionName]
+		binaryDirectory = self._host.pyIPCMIConfig.get(sectionName, 'BinaryDirectory', raw=True)
 		if (edition is MentorModelSimPEEditions.ModelSimPE):
 			toolInstallationName =  "ModelSim PE"
 			binaryDirectory =       binaryDirectory.replace("win32peedu", "win32pe")
@@ -188,23 +188,23 @@ class QuartusPrimeLiteConfiguration(Configuration):
 		"""Configure ModelSim PE for Mentor Graphics."""
 		sectionName = self._section
 		if self._multiVersionSupport:
-			sectionName = self._host.PoCConfig[sectionName]['SectionName']
+			sectionName = self._host.pyIPCMIConfig[sectionName]['SectionName']
 
-		configSection = self._host.PoCConfig[sectionName]
+		configSection = self._host.pyIPCMIConfig[sectionName]
 		defaultEdition = MentorModelSimPEEditions.Parse(configSection['Edition'])
 		edition = super()._ConfigureEdition(MentorModelSimPEEditions, defaultEdition)
 
 		if (edition is not defaultEdition):
 			configSection['Edition'] = edition.Name
-			self._host.PoCConfig.Interpolation.clear_cache()
+			self._host.pyIPCMIConfig.Interpolation.clear_cache()
 
 		if self._multiVersionSupport:
-			sectionName = self._host.PoCConfig[self._section]['SectionName']
+			sectionName = self._host.pyIPCMIConfig[self._section]['SectionName']
 		else:
 			sectionName = self._section
 
-		configSection =   self._host.PoCConfig[sectionName]
-		binaryDirectory = self._host.PoCConfig.get(sectionName, 'BinaryDirectory', raw=True)
+		configSection =   self._host.pyIPCMIConfig[sectionName]
+		binaryDirectory = self._host.pyIPCMIConfig.get(sectionName, 'BinaryDirectory', raw=True)
 		if (edition is MentorModelSimPEEditions.ModelSimPE):
 			toolInstallationName =  "ModelSim PE"
 			binaryDirectory =       binaryDirectory.replace("win32peedu", "win32pe")
@@ -226,11 +226,11 @@ class Selector(ToolSelector):
 
 		if (len(editions) == 0):
 			self._host.LogWarning("No Quartus installation found.", indent=1)
-			self._host.PoCConfig['INSTALL.Quartus'] = OrderedDict()
+			self._host.pyIPCMIConfig['INSTALL.Quartus'] = OrderedDict()
 		elif (len(editions) == 1):
 			self._host.LogNormal("Default Quartus installation:", indent=1)
 			self._host.LogNormal("Set to {0}".format(editions[0].Name), indent=2)
-			self._host.PoCConfig['INSTALL.Quartus']['SectionName'] = editions[0].Section
+			self._host.pyIPCMIConfig['INSTALL.Quartus']['SectionName'] = editions[0].Section
 		else:
 			self._host.LogNormal("Select Quartus installation:", indent=1)
 
@@ -239,7 +239,7 @@ class Selector(ToolSelector):
 				defaultEdition = editions[0]
 
 			selectedEdition = self._AskSelection(editions, defaultEdition)
-			self._host.PoCConfig['INSTALL.Quartus']['SectionName'] = selectedEdition.Section
+			self._host.pyIPCMIConfig['INSTALL.Quartus']['SectionName'] = selectedEdition.Section
 
 
 class Quartus(Altera_Quartus):

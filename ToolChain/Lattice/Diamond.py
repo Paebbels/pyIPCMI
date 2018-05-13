@@ -87,8 +87,8 @@ class Configuration(ToolConfiguration):
 	}                                                   #: The template for the configuration sections represented as nested dictionaries.
 
 	def CheckDependency(self):
-		"""Check if general Lattice support is configured in PoC."""
-		return (len(self._host.PoCConfig['INSTALL.Lattice']) != 0)
+		"""Check if general Lattice support is configured in pyIPCMI."""
+		return (len(self._host.pyIPCMIConfig['INSTALL.Lattice']) != 0)
 
 	def ConfigureForAll(self):
 		try:
@@ -99,8 +99,8 @@ class Configuration(ToolConfiguration):
 				version = self._ConfigureVersion()
 				if self._multiVersionSupport:
 					self.PrepareVersionedSections()
-					sectionName = self._host.PoCConfig[self._section]['SectionName']
-					self._host.PoCConfig[sectionName]['Version'] = version
+					sectionName = self._host.pyIPCMIConfig[self._section]['SectionName']
+					self._host.pyIPCMIConfig[sectionName]['Version'] = version
 
 				self._ConfigureInstallationDirectory()
 				binPath = self._ConfigureBinaryDirectory()
@@ -129,14 +129,14 @@ class Configuration(ToolConfiguration):
 		else:
 			raise ConfigurationException("Diamond version mismatch. Expected version {0}.".format(version))
 
-		self._host.PoCConfig[self._section]['Version'] = version
+		self._host.pyIPCMIConfig[self._section]['Version'] = version
 
 	def _ConfigureBinaryDirectory(self):
 		"""Updates section with value from _template and returns directory as Path object."""
 		binPath = super()._ConfigureBinaryDirectory()
 		# unresolved = self._template[self._host.Platform][self._section]['BinaryDirectory2']
-		# self._host.PoCConfig[self._section]['BinaryDirectory2'] = unresolved  # create entry
-		defaultPath = Path(self._host.PoCConfig[self._section]['BinaryDirectory2'])  # resolve entry
+		# self._host.pyIPCMIConfig[self._section]['BinaryDirectory2'] = unresolved  # create entry
+		defaultPath = Path(self._host.pyIPCMIConfig[self._section]['BinaryDirectory2'])  # resolve entry
 
 		binPath2 = defaultPath  # may be more complex in the future
 

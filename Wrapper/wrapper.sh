@@ -33,12 +33,12 @@
 # ==============================================================================
 
 # script settings
-PoC_ExitCode=0
-PoC_WorkingDir=$(pwd)
-PoC_PythonScriptDir="py"
-PoC_FrontEnd="$PoC_RootDir/$PoC_PythonScriptDir/pyIPCMI.py"
-PoC_WrapperDirectory="$PoC_PythonScriptDir/Wrapper"
-PoC_HookDirectory="$PoC_WrapperDirectory/Hooks"
+pyIPCMI_ExitCode=0
+pyIPCMI_WorkingDir=$(pwd)
+pyIPCMI_PythonScriptDir="py"
+pyIPCMI_FrontEnd="$pyIPCMI_RootDir/$pyIPCMI_PythonScriptDir/pyIPCMI.py"
+pyIPCMI_WrapperDirectory="$pyIPCMI_PythonScriptDir/Wrapper"
+pyIPCMI_HookDirectory="$pyIPCMI_WrapperDirectory/Hooks"
 
 # define color escape codes
 ANSI_RED='\e[0;31m'       # Red
@@ -227,16 +227,16 @@ for param in $PyWrapper_Parameters; do
 done  # Parameters
 
 
-# publish PoC directories as environment variables
-export PoCRootDirectory=$PoC_RootDir
-export PoCWorkingDirectory=$PoC_WorkingDir
+# publish pyIPCMI directories as environment variables
+export pyIPCMIRootDirectory=$pyIPCMI_RootDir
+export pyIPCMIWorkingDirectory=$pyIPCMI_WorkingDir
 
 if [ $PyWrapper_Debug -eq 1 ]; then
-	echo -e "${ANSI_YELLOW}This is the PoC Library script wrapper operating in debug mode.${ANSI_NOCOLOR}"
+	echo -e "${ANSI_YELLOW}This is the pyIPCMI Library script wrapper operating in debug mode.${ANSI_NOCOLOR}"
 	echo
 	echo -e "${ANSI_YELLOW}Directories:${ANSI_NOCOLOR}"
-	echo -e "${ANSI_YELLOW}  PoC root:        $PoC_RootDir${ANSI_NOCOLOR}"
-	echo -e "${ANSI_YELLOW}  working:         $PoC_WorkingDir${ANSI_NOCOLOR}"
+	echo -e "${ANSI_YELLOW}  pyIPCMI root:        $pyIPCMI_RootDir${ANSI_NOCOLOR}"
+	echo -e "${ANSI_YELLOW}  working:         $pyIPCMI_WorkingDir${ANSI_NOCOLOR}"
 	echo -e "${ANSI_YELLOW}Script:${ANSI_NOCOLOR}"
 	echo -e "${ANSI_YELLOW}  Filename:        $PyWrapper_Script${ANSI_NOCOLOR}"
 	echo -e "${ANSI_YELLOW}  Solution:        $PyWrapper_Solution${ANSI_NOCOLOR}"
@@ -271,7 +271,7 @@ fi
 if [ -z "$Python_Interpreter" ]; then
 	echo 1>&2 -e "${ANSI_RED}No suitable Python interpreter found.${ANSI_NOCOLOR}"
 	echo 1>&2 -e "${ANSI_RED}The script requires Python >= $PyWrapper_MinVersion${ANSI_NOCOLOR}"
-	PoC_ExitCode=1
+	pyIPCMI_ExitCode=1
 fi
 
 
@@ -282,19 +282,19 @@ for VendorName in $Env_Vendors; do
 		declare -n ToolIndex="Env_${VendorName}_${ToolName}"
 		if [ ${ToolIndex["Load"]} -eq 1 ]; then
 			# if exists, source the vendor pre-hook file
-			VendorPreHookFile=$PoC_RootDir/$PoC_HookDirectory/${VendorIndex["PreHookFile"]}
+			VendorPreHookFile=$pyIPCMI_RootDir/$pyIPCMI_HookDirectory/${VendorIndex["PreHookFile"]}
 			test -f $VendorPreHookFile && source $VendorPreHookFile
 
 			# if exists, source the tool pre-hook file
-			ToolPreHookFile=$PoC_RootDir/$PoC_HookDirectory/${ToolIndex["PreHookFile"]}
+			ToolPreHookFile=$pyIPCMI_RootDir/$pyIPCMI_HookDirectory/${ToolIndex["PreHookFile"]}
 			test -f $ToolPreHookFile && source $ToolPreHookFile
 
 			# if exists, source the BashModule file
-			ModuleFile=$PoC_RootDir/$PoC_WrapperDirectory/${ToolIndex["BashModule"]}
+			ModuleFile=$pyIPCMI_RootDir/$pyIPCMI_WrapperDirectory/${ToolIndex["BashModule"]}
 			if [ -f $ModuleFile ]; then
 				source $ModuleFile
-				OpenEnvironment $Python_Interpreter $PoC_FrontEnd
-				PoC_ExitCode=$?
+				OpenEnvironment $Python_Interpreter $pyIPCMI_FrontEnd
+				pyIPCMI_ExitCode=$?
 			fi
 
 			break 2
@@ -304,8 +304,8 @@ done  # VendorNames
 
 
 # execute script with appropriate python interpreter and all given parameters
-if [ $PoC_ExitCode -eq 0 ]; then
-	Python_Script="$PoC_RootDir/$PoC_PythonScriptDir/$PyWrapper_Script"
+if [ $pyIPCMI_ExitCode -eq 0 ]; then
+	Python_Script="$pyIPCMI_RootDir/$pyIPCMI_PythonScriptDir/$PyWrapper_Script"
 
 	if [ -z $PyWrapper_Solution ]; then
 		Python_ScriptParameters=$PyWrapper_Parameters
@@ -321,7 +321,7 @@ if [ $PoC_ExitCode -eq 0 ]; then
 	# launching python script
 	set -f
 	"$Python_Interpreter" $Python_Script $Python_ScriptParameters
-	PoC_ExitCode=$?
+	pyIPCMI_ExitCode=$?
 fi
 
 # execute vendor and tool post-hook files if present
@@ -331,19 +331,19 @@ for VendorName in $Env_Vendors; do
 		declare -n ToolIndex="Env_${VendorName}_${ToolName}"
 		if [ ${ToolIndex["Load"]} -eq 1 ]; then
 			# if exists, source the tool Post-hook file
-			ToolPostHookFile=$PoC_RootDir/$PoC_HookDirectory/${ToolIndex["PostHookFile"]}
+			ToolPostHookFile=$pyIPCMI_RootDir/$pyIPCMI_HookDirectory/${ToolIndex["PostHookFile"]}
 			test -f $ToolPostHookFile && source $ToolPostHookFile
 
 			# if exists, source the vendor post-hook file
-			VendorPostHookFile=$PoC_RootDir/$PoC_HookDirectory/${VendorIndex["PostHookFile"]}
+			VendorPostHookFile=$pyIPCMI_RootDir/$pyIPCMI_HookDirectory/${VendorIndex["PostHookFile"]}
 			test -f $VendorPostHookFile && source $VendorPostHookFile
 
 			# if exists, source the BashModule file
-			ModuleFile=$PoC_RootDir/$PoC_WrapperDirectory/${ToolIndex["BashModule"]}
+			ModuleFile=$pyIPCMI_RootDir/$pyIPCMI_WrapperDirectory/${ToolIndex["BashModule"]}
 			if [ -f $ModuleFile ]; then
 				# source $ModuleFile
-				CloseEnvironment $Python_Interpreter $PoC_FrontEnd
-				PoC_ExitCode=$?
+				CloseEnvironment $Python_Interpreter $pyIPCMI_FrontEnd
+				pyIPCMI_ExitCode=$?
 			fi
 			break 2
 		fi
@@ -351,5 +351,5 @@ for VendorName in $Env_Vendors; do
 done  # VendorNames
 
 # clean up environment variables
-unset PoCRootDirectory
-unset PoCWorkingDirectory
+unset pyIPCMIRootDirectory
+unset pyIPCMIWorkingDirectory

@@ -6,12 +6,14 @@
 # Authors:              Patrick Lehmann
 #                       Martin Zabel
 #
-# Python Main Module:   Entry point to the testbench tools in PoC repository.
+# Python Main Module:   Entry point to IP Core Management Infrastructure (pyIPCMI).
 #
 # Description:
 # ------------------------------------
 #    This is a python main module (executable) which:
 #    - runs automated testbenches,
+#    - runs automated synthesis,
+#    - runs automated regression tests,
 #    - ...
 #
 # License:
@@ -98,7 +100,7 @@ __status__ =      "Production"
 __license__ =     "Apache License 2.0"
 
 __api__ = [
-	'PoCEntityAttribute',
+	'pyIPCMIEntityAttribute',
 	'BoardDeviceAttributeGroup',
 	'VHDLVersionAttribute',
 	'SimulationStepsAttributeGroup',
@@ -109,9 +111,9 @@ __api__ = [
 __all__ = __api__
 
 
-class PoCEntityAttribute(Attribute):
+class pyIPCMIEntityAttribute(Attribute):
 	def __call__(self, func):
-		self._AppendAttribute(func, ArgumentAttribute(metavar="PoC Entity", dest="FQN", type=str, nargs='+', help="A space separated list of PoC entities."))
+		self._AppendAttribute(func, ArgumentAttribute(metavar="pyIPCMI Entity", dest="FQN", type=str, nargs='+', help="A space separated list of pyIPCMI entities."))
 		return func
 
 class BoardDeviceAttributeGroup(Attribute):
@@ -155,7 +157,7 @@ class CompileStepsAttributeGroup(Attribute):
 
 
 class PileOfCores(ILogable, ArgParseMixin):
-	HeadLine =                "The PoC-Library - Service Tool"
+	HeadLine =                "The pyIPCMI-Library - Service Tool"
 
 	# configure hard coded variables here
 	__CONFIGFILE_DIRECTORY =  "py"
@@ -215,7 +217,7 @@ class PileOfCores(ILogable, ArgParseMixin):
 		# Call the constructor of the ArgParseMixin
 		# --------------------------------------------------------------------------
 		description = dedent("""\
-			This is the PoC-Library Service Tool.
+			This is the pyIPCMI-Library Service Tool.
 			""")
 		epilog = "Pile-of-Cores"
 
@@ -233,7 +235,7 @@ class PileOfCores(ILogable, ArgParseMixin):
 		# declare members
 		# --------------------------------------------------------------------------
 		self.__dryRun =       dryRun
-		self.__pocConfig =    None
+		self.__pyIPCMIConfig =    None
 		self.__root =         None
 		self.__repo =         None
 		self.__directories =  {}
@@ -243,7 +245,7 @@ class PileOfCores(ILogable, ArgParseMixin):
 
 		self._directories =             self.__Directories__()
 		self._directories.Working =     Path.cwd()
-		self._directories.Root =        Path(environ.get('PoCRootDirectory'))
+		self._directories.Root =        Path(environ.get('pyIPCMIRootDirectory'))
 		self._directories.ConfigFiles = self.Directories.Root / self.__CONFIGFILE_DIRECTORY
 
 		self._configFiles =             self.__ConfigFiles__()
@@ -253,8 +255,8 @@ class PileOfCores(ILogable, ArgParseMixin):
 		self._configFiles.Structure =   self.Directories.ConfigFiles / self.__CONFIGFILE_STRUCTURE
 		self._configFiles.IPCores =     self.Directories.ConfigFiles / self.__CONFIGFILE_IPCORES
 
-		self.__pocConfig =              ExtendedConfigParser()
-		self.__pocConfig.optionxform =  str
+		self.__pyIPCMIConfig =              ExtendedConfigParser()
+		self.__pyIPCMIConfig.optionxform =  str
 
 	# class properties
 	# ============================================================================
@@ -269,7 +271,7 @@ class PileOfCores(ILogable, ArgParseMixin):
 	def ConfigFiles(self):        return self._configFiles
 
 	@property
-	def PoCConfig(self):          return self.__pocConfig
+	def pyIPCMIConfig(self):          return self.__pyIPCMIConfig
 	@property
 	def Root(self):               return self.__root
 	@property
@@ -277,11 +279,11 @@ class PileOfCores(ILogable, ArgParseMixin):
 
 	def __CheckEnvironment(self):
 		if (self.Platform not in ["Windows", "Linux", "Darwin"]):  raise PlatformNotSupportedException(self.Platform)
-		if (environ.get('PoCRootDirectory') is None):              raise EnvironmentException("Shell environment does not provide 'PoCRootDirectory' variable.")
+		if (environ.get('pyIPCMIRootDirectory') is None):              raise EnvironmentException("Shell environment does not provide 'pyIPCMIRootDirectory' variable.")
 
-	# read PoC configuration
+	# read pyIPCMI configuration
 	# ============================================================================
-	def __ReadPoCConfiguration(self):
+	def __ReadpyIPCMIConfiguration(self):
 		self.LogVerbose("Reading configuration files...")
 
 		configFiles = [
@@ -293,28 +295,28 @@ class PileOfCores(ILogable, ArgParseMixin):
 		]
 
 		# create parser instance
-		self.LogDebug("Reading PoC configuration from:")
+		self.LogDebug("Reading pyIPCMI configuration from:")
 
 		try:
 			# process first file (private)
 			file, name = configFiles[0]
 			self.LogDebug("  {0!s}".format(file))
-			if not file.exists():  raise NotConfiguredException("PoC's {0} configuration file '{1!s}' does not exist.".format(name, file))  from FileNotFoundError(str(file))
-			self.__pocConfig.read(str(file))
+			if not file.exists():  raise NotConfiguredException("pyIPCMI's {0} configuration file '{1!s}' does not exist.".format(name, file))  from FileNotFoundError(str(file))
+			self.__pyIPCMIConfig.read(str(file))
 
 			for file, name in configFiles[1:]:
 				self.LogDebug("  {0!s}".format(file))
-				if not file.exists():  raise ConfigurationException("PoC's {0} configuration file '{1!s}' does not exist.".format(name, file))  from FileNotFoundError(str(file))
-				self.__pocConfig.read(str(file))
+				if not file.exists():  raise ConfigurationException("pyIPCMI's {0} configuration file '{1!s}' does not exist.".format(name, file))  from FileNotFoundError(str(file))
+				self.__pyIPCMIConfig.read(str(file))
 		except DuplicateOptionError as ex:
 			raise ConfigurationException("Error in configuration file '{0!s}'.".format(file)) from ex
 
-		# check PoC installation directory
-		if (self.Directories.Root != Path(self.PoCConfig['INSTALL.PoC']['InstallationDirectory'])):
-			raise NotConfiguredException("There is a mismatch between PoCRoot and PoC's installation directory.")
+		# check pyIPCMI installation directory
+		if (self.Directories.Root != Path(self.pyIPCMIConfig['INSTALL.pyIPCMI']['InstallationDirectory'])):
+			raise NotConfiguredException("There is a mismatch between pyIPCMIRoot and pyIPCMI's installation directory.")
 
 		# parsing values into class fields
-		configSection =                 self.__pocConfig['CONFIG.DirectoryNames']
+		configSection =                 self.__pyIPCMIConfig['CONFIG.DirectoryNames']
 		self.Directories.Source =       self.Directories.Root / configSection['HDLSourceFiles']
 		self.Directories.Testbench =    self.Directories.Root / configSection['TestbenchFiles']
 		self.Directories.NetList =      self.Directories.Root / configSection['NetlistFiles']
@@ -324,11 +326,11 @@ class PileOfCores(ILogable, ArgParseMixin):
 		# Initialize the default board (GENERIC)
 		self.__SimulationDefaultBoard = Board(self)
 
-		# Initialize PoC's namespace structure
+		# Initialize pyIPCMI's namespace structure
 		self.__root = NamespaceRoot(self)
 		self.__repo = Repository(self)
 
-	def __BackupPoCConfiguration(self):
+	def __BackuppyIPCMIConfiguration(self):
 		now = datetime.now()
 		backupFile = self._configFiles.Private.with_suffix(".{datetime}.ini".format(datetime=now.strftime("%Y.%m.%d-%H.%M.%S")))
 		self.LogVerbose("Copying old configuration file to '{0!s}'.".format(backupFile, **Init.Foreground))
@@ -338,39 +340,39 @@ class PileOfCores(ILogable, ArgParseMixin):
 		except OSError as ex:
 			raise ConfigurationException("Error while copying '{0!s}'.".format(self._configFiles.Private)) from ex
 
-	def __WritePoCConfiguration(self):
-		for sectionName in [sectionName for sectionName in self.__pocConfig if not (sectionName.startswith("INSTALL") or sectionName.startswith("SOLUTION"))]:
-			self.__pocConfig.remove_section(sectionName)
+	def __WritepyIPCMIConfiguration(self):
+		for sectionName in [sectionName for sectionName in self.__pyIPCMIConfig if not (sectionName.startswith("INSTALL") or sectionName.startswith("SOLUTION"))]:
+			self.__pyIPCMIConfig.remove_section(sectionName)
 
-		self.__pocConfig.remove_section("SOLUTION.DEFAULTS")
+		self.__pyIPCMIConfig.remove_section("SOLUTION.DEFAULTS")
 
 		# Writing configuration to disc
 		self.LogNormal("{GREEN}Writing configuration file to '{0!s}'.{NOCOLOR}".format(self._configFiles.Private, **Init.Foreground))
 		with self._configFiles.Private.open('w') as configFileHandle:
-			self.PoCConfig.write(configFileHandle)
+			self.pyIPCMIConfig.write(configFileHandle)
 
-	def SaveAndReloadPoCConfiguration(self):
-		self.__WritePoCConfiguration()
-		self.__pocConfig.clear()
-		self.__ReadPoCConfiguration()
+	def SaveAndReloadpyIPCMIConfiguration(self):
+		self.__WritepyIPCMIConfiguration()
+		self.__pyIPCMIConfig.clear()
+		self.__ReadpyIPCMIConfiguration()
 
 	def __PrepareForConfiguration(self):
-		self.__ReadPoCConfiguration()
+		self.__ReadpyIPCMIConfiguration()
 
 	def __PrepareForSimulation(self):
-		self.LogNormal("Initializing PoC-Library Service Tool for simulations")
-		self.__ReadPoCConfiguration()
+		self.LogNormal("Initializing pyIPCMI-Library Service Tool for simulations")
+		self.__ReadpyIPCMIConfiguration()
 
 	def __PrepareForSynthesis(self):
-		self.LogNormal("Initializing PoC-Library Service Tool for synthesis")
-		self.__ReadPoCConfiguration()
+		self.LogNormal("Initializing pyIPCMI-Library Service Tool for synthesis")
+		self.__ReadpyIPCMIConfiguration()
 
 	# ============================================================================
 	# Common commands
 	# ============================================================================
 	# common arguments valid for all commands
 	# ----------------------------------------------------------------------------
-	@CommonSwitchArgumentAttribute("-D",              dest="DEBUG",   help="Enable script wrapper debug mode. See also :option:`poc.ps1 -D`.")
+	@CommonSwitchArgumentAttribute("-D",              dest="DEBUG",   help="Enable script wrapper debug mode. See also :option:`pyIPCMI.ps1 -D`.")
 	@CommonSwitchArgumentAttribute(      "--dryrun",  dest="DryRun",  help="Don't execute external programs.")
 	@CommonSwitchArgumentAttribute("-d", "--debug",   dest="debug",   help="Enable debug mode.")
 	@CommonSwitchArgumentAttribute("-v", "--verbose", dest="verbose", help="Print out detailed messages.")
@@ -446,9 +448,9 @@ class PileOfCores(ILogable, ArgParseMixin):
 	# create the sub-parser for the "configure" command
 	# ----------------------------------------------------------------------------
 	@CommandGroupAttribute("Configuration commands") # mccabe:disable=MC0001
-	@CommandAttribute("configure", help="Configure vendor tools for PoC.")
+	@CommandAttribute("configure", help="Configure vendor tools for pyIPCMI.")
 	@ArgumentAttribute(metavar="ToolChain",         dest="ToolChain", type=str, nargs="?", help="Specify a tool chain to be configured.")
-	@SwitchArgumentAttribute("--relocated",         dest="Relocated",                      help="Consistency check after PoC was relocated.")
+	@SwitchArgumentAttribute("--relocated",         dest="Relocated",                      help="Consistency check after pyIPCMI was relocated.")
 	def HandleConfiguration(self, args):
 		"""Handle 'configure' command."""
 		self.PrintHeadline()
@@ -459,13 +461,13 @@ class PileOfCores(ILogable, ArgParseMixin):
 
 		# load existing configuration or create a new one
 		try:
-			self.__ReadPoCConfiguration()
-			self.__BackupPoCConfiguration()
+			self.__ReadpyIPCMIConfiguration()
+			self.__BackuppyIPCMIConfiguration()
 			configurator = Configurator(self)
 			configurator.UpdateConfiguration()
 		except NotConfiguredException as ex:
 			if (toolChain is None):
-				self.LogWarning("No private configuration found. Generating an empty PoC configuration...")
+				self.LogWarning("No private configuration found. Generating an empty pyIPCMI configuration...")
 				configurator = Configurator(self)
 				configurator.InitializeConfiguration()
 			else:
@@ -480,13 +482,13 @@ class PileOfCores(ILogable, ArgParseMixin):
 				configurator.ConfigureTool(toolChain)
 
 		if (self.Logger.LogLevel is Severity.Debug):
-			self.LogDebug("Dumping PoCConfig...")
+			self.LogDebug("Dumping pyIPCMIConfig...")
 			self.LogDebug("-" * 40)
-			for sectionName in self.__pocConfig.sections():
+			for sectionName in self.__pyIPCMIConfig.sections():
 				if (not sectionName.startswith("INSTALL")):
 					continue
 				self.LogDebug("[{0}]".format(sectionName))
-				configSection = self.__pocConfig[sectionName]
+				configSection = self.__pyIPCMIConfig[sectionName]
 				for optionName in configSection:
 					try:
 						optionValue = configSection[optionName]
@@ -508,8 +510,8 @@ class PileOfCores(ILogable, ArgParseMixin):
 
 		# load existing configuration or create a new one
 		try:
-			self.__ReadPoCConfiguration()
-			self.__BackupPoCConfiguration()
+			self.__ReadpyIPCMIConfiguration()
+			self.__BackuppyIPCMIConfiguration()
 			configurator = Configurator(self)
 			configurator.UpdateConfiguration()
 		except NotConfiguredException as ex:
@@ -518,13 +520,13 @@ class PileOfCores(ILogable, ArgParseMixin):
 		configurator.ConfigureDefaultTools()
 
 		if (self.Logger.LogLevel is Severity.Debug):
-			self.LogDebug("Dumping PoCConfig...")
+			self.LogDebug("Dumping pyIPCMIConfig...")
 			self.LogDebug("-" * 40)
-			for sectionName in self.__pocConfig.sections():
+			for sectionName in self.__pyIPCMIConfig.sections():
 				if (not sectionName.startswith("INSTALL")):
 					continue
 				self.LogDebug("[{0}]".format(sectionName))
-				configSection = self.__pocConfig[sectionName]
+				configSection = self.__pyIPCMIConfig[sectionName]
 				for optionName in configSection:
 					try:
 						optionValue = configSection[optionName]
@@ -537,14 +539,14 @@ class PileOfCores(ILogable, ArgParseMixin):
 	# create the sub-parser for the "add-solution" command
 	# ----------------------------------------------------------------------------
 	@CommandGroupAttribute("Configuration commands")
-	@CommandAttribute("add-solution", help="Add a solution to PoC.", description=dedent("""\
-		Add a solution to PoC.
+	@CommandAttribute("add-solution", help="Add a solution to pyIPCMI.", description=dedent("""\
+		Add a solution to pyIPCMI.
 		"""))
 	def HandleAddSolution(self, _): #args
 		self.PrintHeadline()
 		self.__PrepareForConfiguration()
 
-		self.LogNormal("Register a new solutions in PoC")
+		self.LogNormal("Register a new solutions in pyIPCMI")
 		self.LogNormal("Solution name: ", indent=1)
 		solutionName = input()
 		if (solutionName == ""):        raise ConfigurationException("Empty input. Aborting!")
@@ -574,7 +576,7 @@ class PileOfCores(ILogable, ArgParseMixin):
 				raise ConfigurationException("Error while creating '{0!s}'.".format(solutionRootPath)) from ex
 
 			self.__repo.AddSolution(solutionID, solutionName, solutionRootPath)
-		self.__WritePoCConfiguration()
+		self.__WritepyIPCMIConfiguration()
 		self.LogNormal("Solution {GREEN}successfully{NOCOLOR} created.".format(**Init.Foreground))
 
 
@@ -582,14 +584,14 @@ class PileOfCores(ILogable, ArgParseMixin):
 	# create the sub-parser for the "list-solution" command
 	# ----------------------------------------------------------------------------
 	@CommandGroupAttribute("Configuration commands")
-	@CommandAttribute("list-solution", help="List all solutions registered in PoC.", description=dedent("""\
-		List all solutions registered in PoC.
+	@CommandAttribute("list-solution", help="List all solutions registered in pyIPCMI.", description=dedent("""\
+		List all solutions registered in pyIPCMI.
 		"""))
 	def HandleListSolution(self, _): #args
 		self.PrintHeadline()
 		self.__PrepareForConfiguration()
 
-		self.LogNormal("Registered solutions in PoC:")
+		self.LogNormal("Registered solutions in pyIPCMI:")
 		if self.__repo.Solutions:
 			for solution in self.__repo.Solutions:
 				self.LogNormal("  {id: <10}{name}".format(id=solution.ID, name=solution.Name))
@@ -605,8 +607,8 @@ class PileOfCores(ILogable, ArgParseMixin):
 	# create the sub-parser for the "remove-solution" command
 	# ----------------------------------------------------------------------------
 	@CommandGroupAttribute("Configuration commands")
-	@CommandAttribute("remove-solution", help="Remove a solution from PoC.", description=dedent("""\
-		Remove a solution from PoC.
+	@CommandAttribute("remove-solution", help="Remove a solution from pyIPCMI.", description=dedent("""\
+		Remove a solution from pyIPCMI.
 		"""))
 	@ArgumentAttribute(metavar="SolutionID", dest="SolutionID", type=str, help="Solution name.")
 	def HandleRemoveSolution(self, args):
@@ -625,7 +627,7 @@ class PileOfCores(ILogable, ArgParseMixin):
 
 		self.__repo.RemoveSolution(solution)
 
-		self.__WritePoCConfiguration()
+		self.__WritepyIPCMIConfiguration()
 		self.LogNormal("Solution {GREEN}successfully{NOCOLOR} removed.".format(**Init.Foreground))
 
 
@@ -633,7 +635,7 @@ class PileOfCores(ILogable, ArgParseMixin):
 	# create the sub-parser for the "add-project" command
 	# ----------------------------------------------------------------------------
 	# @CommandGroupAttribute("Configuration commands")
-	# @CommandAttribute("add-project", help="Add a project to PoC.")
+	# @CommandAttribute("add-project", help="Add a project to pyIPCMI.")
 	# def HandleAddProject(self, args):
 	# 	self.PrintHeadline()
 	# 	self.__PrepareForConfiguration()
@@ -642,8 +644,8 @@ class PileOfCores(ILogable, ArgParseMixin):
 	# create the sub-parser for the "list-project" command
 	# ----------------------------------------------------------------------------
 	@CommandGroupAttribute("Configuration commands")
-	@CommandAttribute("list-project", help="List all projects registered in PoC.", description=dedent("""\
-		List all projects registered in PoC.
+	@CommandAttribute("list-project", help="List all projects registered in pyIPCMI.", description=dedent("""\
+		List all projects registered in pyIPCMI.
 		"""))
 	def HandleListProject(self, args):
 		self.PrintHeadline()
@@ -653,7 +655,7 @@ class PileOfCores(ILogable, ArgParseMixin):
 		try:
 			solution =  self.__repo[args.SolutionID]
 		except KeyError as ex:
-			raise ConfigurationException("Solution ID '{0}' is not registered in PoC.".format(args.SolutionID)) from ex
+			raise ConfigurationException("Solution ID '{0}' is not registered in pyIPCMI.".format(args.SolutionID)) from ex
 
 		self.LogNormal("Registered projects for solution '{0}':".format(solution.ID))
 		if solution.Projects:
@@ -666,7 +668,7 @@ class PileOfCores(ILogable, ArgParseMixin):
 	# create the sub-parser for the "remove-project" command
 	# ----------------------------------------------------------------------------
 	# @CommandGroupAttribute("Configuration commands")
-	# @CommandAttribute("remove-project", help="Add a project to PoC.")
+	# @CommandAttribute("remove-project", help="Add a project to pyIPCMI.")
 	# @ArgumentAttribute(metavar="Project", dest="Project", type=str, help="Project name.")
 	# def HandleRemoveProject(self, args):
 	# 	self.PrintHeadline()
@@ -676,7 +678,7 @@ class PileOfCores(ILogable, ArgParseMixin):
 	# create the sub-parser for the "add-ipcore" command
 	# ----------------------------------------------------------------------------
 	# @CommandGroupAttribute("Configuration commands")
-	# @CommandAttribute("add-ipcore", help="Add a ipcore to PoC.")
+	# @CommandAttribute("add-ipcore", help="Add a ipcore to pyIPCMI.")
 	# def HandleAddIPCore(self, args):
 	# 	self.PrintHeadline()
 	# 	self.__PrepareForConfiguration()
@@ -685,14 +687,14 @@ class PileOfCores(ILogable, ArgParseMixin):
 	# create the sub-parser for the "list-ipcore" command
 	# ----------------------------------------------------------------------------
 	# @CommandGroupAttribute("Configuration commands")
-	# @CommandAttribute("list-ipcore", help="List all ipcores registered in PoC.")
+	# @CommandAttribute("list-ipcore", help="List all ipcores registered in pyIPCMI.")
 	# def HandleListIPCore(self, args):
 	# 	self.PrintHeadline()
 	# 	self.__PrepareForConfiguration()
 	#
 	# 	ipcore = Solution(self)
 	#
-	# 	self.LogNormal("Registered ipcores in PoC:")
+	# 	self.LogNormal("Registered ipcores in pyIPCMI:")
 	# 	for ipcoreName in ipcore.GetIPCoreNames():
 	# 		print("  {0}".format(ipcoreName))
 
@@ -700,7 +702,7 @@ class PileOfCores(ILogable, ArgParseMixin):
 	# create the sub-parser for the "remove-ipcore" command
 	# ----------------------------------------------------------------------------
 	# @CommandGroupAttribute("Configuration commands")
-	# @CommandAttribute("remove-ipcore", help="Add a ipcore to PoC.")
+	# @CommandAttribute("remove-ipcore", help="Add a ipcore to pyIPCMI.")
 	# @ArgumentAttribute(metavar="IPCore", dest="IPCore", type=str, help="IPCore name.")
 	# def HandleRemoveIPCore(self, args):
 	# 	self.PrintHeadline()
@@ -710,7 +712,7 @@ class PileOfCores(ILogable, ArgParseMixin):
 	# create the sub-parser for the "add-testbench" command
 	# ----------------------------------------------------------------------------
 	# @CommandGroupAttribute("Configuration commands")
-	# @CommandAttribute("add-testbench", help="Add a testbench to PoC.")
+	# @CommandAttribute("add-testbench", help="Add a testbench to pyIPCMI.")
 	# def HandleAddTestbench(self, args):
 	# 	self.PrintHeadline()
 	# 	self.__PrepareForConfiguration()
@@ -719,7 +721,7 @@ class PileOfCores(ILogable, ArgParseMixin):
 	# create the sub-parser for the "remove-testbench" command
 	# ----------------------------------------------------------------------------
 	# @CommandGroupAttribute("Configuration commands")
-	# @CommandAttribute("remove-testbench", help="Add a testbench to PoC.")
+	# @CommandAttribute("remove-testbench", help="Add a testbench to pyIPCMI.")
 	# @ArgumentAttribute(metavar="Testbench", dest="Testbench", type=str, help="Testbench name.")
 	# def HandleRemoveTestbench(self, args):
 	# 	self.PrintHeadline()
@@ -729,8 +731,8 @@ class PileOfCores(ILogable, ArgParseMixin):
 	# create the sub-parser for the "query" command
 	# ----------------------------------------------------------------------------
 	@CommandGroupAttribute("Configuration commands")
-	@CommandAttribute("query", help="Query PoC's database.", description=dedent("""\
-		Query PoC's database.
+	@CommandAttribute("query", help="Query pyIPCMI's database.", description=dedent("""\
+		Query pyIPCMI's database.
 		"""))
 	@ArgumentAttribute(metavar="Query", dest="Query", type=str, help="todo help")
 	def HandleQueryConfiguration(self, args):
@@ -750,13 +752,13 @@ class PileOfCores(ILogable, ArgParseMixin):
 	# TODO: Maybe required to self-compile libraries again or in the future
 	# def __PrepareVendorLibraryPaths(self):
 	# 	# prepare vendor library path for Altera
-	# 	if (len(self.PoCConfig.options("INSTALL.Altera.Quartus")) != 0):
-	# 		self.Directories["AlteraPrimitiveSource"] = Path(self.PoCConfig['INSTALL.Altera.Quartus']['InstallationDirectory']) / "eda/sim_lib"
+	# 	if (len(self.pyIPCMIConfig.options("INSTALL.Altera.Quartus")) != 0):
+	# 		self.Directories["AlteraPrimitiveSource"] = Path(self.pyIPCMIConfig['INSTALL.Altera.Quartus']['InstallationDirectory']) / "eda/sim_lib"
 	# 	# prepare vendor library path for Xilinx
-	# 	if (len(self.PoCConfig.options("INSTALL.Xilinx.ISE")) != 0):
-	# 		self.Directories["XilinxPrimitiveSource"] = Path(self.PoCConfig['INSTALL.Xilinx.ISE']['InstallationDirectory']) / "ISE/vhdl/src"
-	# 	elif (len(self.PoCConfig.options("INSTALL.Xilinx.Vivado")) != 0):
-	# 		self.Directories["XilinxPrimitiveSource"] = Path(self.PoCConfig['INSTALL.Xilinx.Vivado']['InstallationDirectory']) / "data/vhdl/src"
+	# 	if (len(self.pyIPCMIConfig.options("INSTALL.Xilinx.ISE")) != 0):
+	# 		self.Directories["XilinxPrimitiveSource"] = Path(self.pyIPCMIConfig['INSTALL.Xilinx.ISE']['InstallationDirectory']) / "ISE/vhdl/src"
+	# 	elif (len(self.pyIPCMIConfig.options("INSTALL.Xilinx.Vivado")) != 0):
+	# 		self.Directories["XilinxPrimitiveSource"] = Path(self.pyIPCMIConfig['INSTALL.Xilinx.Vivado']['InstallationDirectory']) / "data/vhdl/src"
 
 	def _ExtractBoard(self, BoardName, DeviceName, force=False):
 		if (BoardName is not None):     return Board(self, BoardName)
@@ -764,7 +766,7 @@ class PileOfCores(ILogable, ArgParseMixin):
 		elif (force is True):           raise CommonException("Either a board name or a device name is required.")
 		else:                           return self.__SimulationDefaultBoard
 
-	def _ExtractFQNs(self, fqns, defaultLibrary="PoC", defaultType=EntityTypes.Testbench):
+	def _ExtractFQNs(self, fqns, defaultLibrary="pyIPCMI", defaultType=EntityTypes.Testbench):
 		if (len(fqns) == 0):            raise CommonException("No FQN given.")
 		return [FQN(self, fqn, defaultLibrary=defaultLibrary, defaultType=defaultType) for fqn in fqns]
 
@@ -774,12 +776,12 @@ class PileOfCores(ILogable, ArgParseMixin):
 		else:                           return VHDLVersion.Parse(vhdlVersion)
 
 	def __CheckSection(self, sectionName, toolName):
-		if (len(self.PoCConfig.options(sectionName)) == 0):    raise NotConfiguredException("{0} is not configured on this system.".format(toolName))
-		sectionName = self.PoCConfig[sectionName]["SectionName"]
-		if (len(self.PoCConfig.options(sectionName)) == 0):    raise NotConfiguredException("{0} is not configured on this system.".format(toolName))
-		if self.PoCConfig.has_option(sectionName, "SectionName"):
-			sectionName = self.PoCConfig[sectionName]["SectionName"]
-			if (len(self.PoCConfig.options(sectionName)) == 0):  raise NotConfiguredException("{0} is not configured on this system.".format(toolName))
+		if (len(self.pyIPCMIConfig.options(sectionName)) == 0):    raise NotConfiguredException("{0} is not configured on this system.".format(toolName))
+		sectionName = self.pyIPCMIConfig[sectionName]["SectionName"]
+		if (len(self.pyIPCMIConfig.options(sectionName)) == 0):    raise NotConfiguredException("{0} is not configured on this system.".format(toolName))
+		if self.pyIPCMIConfig.has_option(sectionName, "SectionName"):
+			sectionName = self.pyIPCMIConfig[sectionName]["SectionName"]
+			if (len(self.pyIPCMIConfig.options(sectionName)) == 0):  raise NotConfiguredException("{0} is not configured on this system.".format(toolName))
 
 	# TODO: move to Configuration class in ToolChain.Aldec.ActiveHDL
 	def _CheckActiveHDL(self):
@@ -880,26 +882,26 @@ class PileOfCores(ILogable, ArgParseMixin):
 	@CommandAttribute("list-testbench", help="List all testbenches.", description=dedent("""\
 		List all testbenches.
 		"""))
-	@PoCEntityAttribute()
+	@pyIPCMIEntityAttribute()
 	@ArgumentAttribute("--kind", metavar="Kind", dest="TestbenchKind", help="Testbench kind: VHDL | COCOTB")
 	def HandleListTestbenches(self, args):
 		self.PrintHeadline()
 		self.__PrepareForSimulation()
 
-		defaultLibrary = "PoC"
+		defaultLibrary = "pyIPCMI"
 
 		if (args.SolutionID is not None):
 			solutionName = args.SolutionID
 			print("Solution name: {0}".format(solutionName))
-			if self.PoCConfig.has_option("SOLUTION.Solutions", solutionName):
+			if self.pyIPCMIConfig.has_option("SOLUTION.Solutions", solutionName):
 				sectionName = "SOLUTION.{0}".format(solutionName)
 				print("Found registered solution:")
-				print("  Name: {0}".format(self.PoCConfig[sectionName]['Name']))
-				print("  Path: {0}".format(self.PoCConfig[sectionName]['Path']))
+				print("  Name: {0}".format(self.pyIPCMIConfig[sectionName]['Name']))
+				print("  Path: {0}".format(self.pyIPCMIConfig[sectionName]['Path']))
 
-				solutionRootPath = self.Directories.Root / self.PoCConfig[sectionName]['Path']
-				solutionConfigFile = solutionRootPath / ".PoC" / "solution.config.ini"
-				solutionDefaultsFile = solutionRootPath / ".PoC" / "solution.defaults.ini"
+				solutionRootPath = self.Directories.Root / self.pyIPCMIConfig[sectionName]['Path']
+				solutionConfigFile = solutionRootPath / ".pyIPCMI" / "solution.config.ini"
+				solutionDefaultsFile = solutionRootPath / ".pyIPCMI" / "solution.defaults.ini"
 				print("  sln files: {0!s}  {1!s}".format(solutionConfigFile, solutionDefaultsFile))
 
 				self.LogVerbose("Reading solution file...")
@@ -911,25 +913,25 @@ class PileOfCores(ILogable, ArgParseMixin):
 				if not solutionDefaultsFile.exists():
 					raise NotConfiguredException("Solution's {0} defaults file '{1!s}' does not exist.".format(solutionName, solutionDefaultsFile)) \
 						from FileNotFoundError(str(solutionDefaultsFile))
-				self.__pocConfig.read(str(solutionConfigFile))
-				self.__pocConfig.read(str(solutionDefaultsFile))
+				self.__pyIPCMIConfig.read(str(solutionConfigFile))
+				self.__pyIPCMIConfig.read(str(solutionDefaultsFile))
 
-				section =          self.PoCConfig['PROJECT.Projects']
+				section =          self.pyIPCMIConfig['PROJECT.Projects']
 				defaultLibrary =  section['DefaultLibrary']
 				print("Solution:")
 				print("  Name:            {0}".format(section['Name']))
 				print("  Default library: {0}".format(defaultLibrary))
 				print("  Projects:")
 				for item in section:
-					if (section[item] in ["PoCProject", "ISEProject", "VivadoProject", "QuartusProject"]):
+					if (section[item] in ["pyIPCMIProject", "ISEProject", "VivadoProject", "QuartusProject"]):
 						sectionName2 = "PROJECT.{0}".format(item)
-						print("    {0}".format(self.PoCConfig[sectionName2]['Name']))
+						print("    {0}".format(self.pyIPCMIConfig[sectionName2]['Name']))
 
 				print("  Namespace roots:")
 				for item in section:
 					if (section[item] == "Library"):
 						libraryPrefix = item
-						print("    {0: <16}  {1}".format(self.PoCConfig[libraryPrefix]['Name'], libraryPrefix))
+						print("    {0: <16}  {1}".format(self.pyIPCMIConfig[libraryPrefix]['Name'], libraryPrefix))
 
 						self.Root.AddLibrary(libraryPrefix, libraryPrefix)
 
@@ -961,10 +963,10 @@ class PileOfCores(ILogable, ArgParseMixin):
 	# create the sub-parser for the "asim" command
 	# ----------------------------------------------------------------------------
 	@CommandGroupAttribute("Simulation commands")
-	@CommandAttribute("asim", help="Simulate a PoC Entity with Aldec Active-HDL.", description=dedent("""\
-		Simulate a PoC Entity with Aldec Active-HDL.
+	@CommandAttribute("asim", help="Simulate a pyIPCMI Entity with Aldec Active-HDL.", description=dedent("""\
+		Simulate a pyIPCMI Entity with Aldec Active-HDL.
 		"""))
-	@PoCEntityAttribute()
+	@pyIPCMIEntityAttribute()
 	@BoardDeviceAttributeGroup()
 	@VHDLVersionAttribute()
 	@SimulationStepsAttributeGroup()
@@ -989,10 +991,10 @@ class PileOfCores(ILogable, ArgParseMixin):
 	# create the sub-parser for the "ghdl" command
 	# ----------------------------------------------------------------------------
 	@CommandGroupAttribute("Simulation commands")
-	@CommandAttribute("ghdl", help="Simulate a PoC Entity with GHDL.", description=dedent("""\
-		Simulate a PoC Entity with GHDL.
+	@CommandAttribute("ghdl", help="Simulate a pyIPCMI Entity with GHDL.", description=dedent("""\
+		Simulate a pyIPCMI Entity with GHDL.
 		"""))
-	@PoCEntityAttribute()
+	@pyIPCMIEntityAttribute()
 	@BoardDeviceAttributeGroup()
 	@VHDLVersionAttribute()
 	@SimulationStepsAttributeGroup()
@@ -1022,10 +1024,10 @@ class PileOfCores(ILogable, ArgParseMixin):
 	# create the sub-parser for the "isim" command
 	# ----------------------------------------------------------------------------
 	@CommandGroupAttribute("Simulation commands")
-	@CommandAttribute("isim", help="Simulate a PoC Entity with Xilinx ISE Simulator (iSim).", description=dedent("""\
-		Simulate a PoC Entity with Xilinx ISE Simulator (iSim).
+	@CommandAttribute("isim", help="Simulate a pyIPCMI Entity with Xilinx ISE Simulator (iSim).", description=dedent("""\
+		Simulate a pyIPCMI Entity with Xilinx ISE Simulator (iSim).
 		"""))
-	@PoCEntityAttribute()
+	@pyIPCMIEntityAttribute()
 	@BoardDeviceAttributeGroup()
 	@SimulationStepsAttributeGroup()
 	def HandleISESimulation(self, args):
@@ -1046,11 +1048,11 @@ class PileOfCores(ILogable, ArgParseMixin):
 	# create the sub-parser for the "msim" command
 	# ----------------------------------------------------------------------------
 	@CommandGroupAttribute("Simulation commands")
-	@CommandAttribute("msim", help="Simulate a PoC Entity with Mentor ModelSim (msim).",
+	@CommandAttribute("msim", help="Simulate a pyIPCMI Entity with Mentor ModelSim (msim).",
 					  description=dedent("""\
-		Simulate a PoC Entity with Mentor ModelSim (msim).
+		Simulate a pyIPCMI Entity with Mentor ModelSim (msim).
 		"""))
-	@PoCEntityAttribute()
+	@pyIPCMIEntityAttribute()
 	@BoardDeviceAttributeGroup()
 	@VHDLVersionAttribute()
 	@SimulationStepsAttributeGroup()
@@ -1076,11 +1078,11 @@ class PileOfCores(ILogable, ArgParseMixin):
 	# create the sub-parser for the "vsim" command
 	# ----------------------------------------------------------------------------
 	@CommandGroupAttribute("Simulation commands")
-	@CommandAttribute("vsim", help="Simulate a PoC Entity with any Mentor QuestaSim or ModelSim (vsim).",
+	@CommandAttribute("vsim", help="Simulate a pyIPCMI Entity with any Mentor QuestaSim or ModelSim (vsim).",
 					  description=dedent("""\
-		Simulate a PoC Entity with any Mentor QuestaSim or ModelSim (vsim).
+		Simulate a pyIPCMI Entity with any Mentor QuestaSim or ModelSim (vsim).
 		"""))
-	@PoCEntityAttribute()
+	@pyIPCMIEntityAttribute()
 	@BoardDeviceAttributeGroup()
 	@VHDLVersionAttribute()
 	@SimulationStepsAttributeGroup()
@@ -1109,8 +1111,8 @@ class PileOfCores(ILogable, ArgParseMixin):
 	# create the sub-parser for the "rsim" command
 	# ----------------------------------------------------------------------------
 	@CommandGroupAttribute("Simulation commands")
-	@CommandAttribute("rpro", help="Simulate a PoC Entity with Aldec Riviera-PRO (rpro)")
-	@PoCEntityAttribute()
+	@CommandAttribute("rpro", help="Simulate a pyIPCMI Entity with Aldec Riviera-PRO (rpro)")
+	@pyIPCMIEntityAttribute()
 	@BoardDeviceAttributeGroup()
 	@VHDLVersionAttribute()
 	@SimulationStepsAttributeGroup()
@@ -1134,10 +1136,10 @@ class PileOfCores(ILogable, ArgParseMixin):
 	# create the sub-parser for the "qsim" command
 	# ----------------------------------------------------------------------------
 	@CommandGroupAttribute("Simulation commands")
-	@CommandAttribute("qsim", help="Simulate a PoC Entity with Mentor QuestaSim (qsim).", description=dedent("""\
-		Simulate a PoC Entity with Mentor QuestaSim (qsim).
+	@CommandAttribute("qsim", help="Simulate a pyIPCMI Entity with Mentor QuestaSim (qsim).", description=dedent("""\
+		Simulate a pyIPCMI Entity with Mentor QuestaSim (qsim).
 		"""))
-	@PoCEntityAttribute()
+	@pyIPCMIEntityAttribute()
 	@BoardDeviceAttributeGroup()
 	@VHDLVersionAttribute()
 	@SimulationStepsAttributeGroup()
@@ -1162,10 +1164,10 @@ class PileOfCores(ILogable, ArgParseMixin):
 	# create the sub-parser for the "xsim" command
 	# ----------------------------------------------------------------------------
 	@CommandGroupAttribute("Simulation commands")
-	@CommandAttribute("xsim", help="Simulate a PoC Entity with Xilinx Vivado Simulator (xSim).", description=dedent("""\
-		Simulate a PoC Entity with Xilinx Vivado Simulator (xSim).
+	@CommandAttribute("xsim", help="Simulate a pyIPCMI Entity with Xilinx Vivado Simulator (xSim).", description=dedent("""\
+		Simulate a pyIPCMI Entity with Xilinx Vivado Simulator (xSim).
 		"""))
-	@PoCEntityAttribute()
+	@pyIPCMIEntityAttribute()
 	@BoardDeviceAttributeGroup()
 	@VHDLVersionAttribute()
 	@SimulationStepsAttributeGroup()
@@ -1190,10 +1192,10 @@ class PileOfCores(ILogable, ArgParseMixin):
 	# create the sub-parser for the "cocotb" command
 	# ----------------------------------------------------------------------------
 	@CommandGroupAttribute("Simulation commands")
-	@CommandAttribute("cocotb", help="Simulate a PoC Entity with Cocotb and QuestaSim.", description=dedent("""\
-		Simulate a PoC Entity with Cocotb and QuestaSim.
+	@CommandAttribute("cocotb", help="Simulate a pyIPCMI Entity with Cocotb and QuestaSim.", description=dedent("""\
+		Simulate a pyIPCMI Entity with Cocotb and QuestaSim.
 		"""))
-	@PoCEntityAttribute()
+	@pyIPCMIEntityAttribute()
 	@BoardDeviceAttributeGroup()
 	@SimulationStepsAttributeGroup()
 	def HandleCocotbSimulation(self, args):
@@ -1202,8 +1204,8 @@ class PileOfCores(ILogable, ArgParseMixin):
 		self._CheckModelSim()
 
 		# check if QuestaSim is configured
-		if (len(self.PoCConfig.options("INSTALL.Mentor.QuestaSim")) == 0):
-			if (len(self.PoCConfig.options("INSTALL.Altera.ModelSim")) == 0):
+		if (len(self.pyIPCMIConfig.options("INSTALL.Mentor.QuestaSim")) == 0):
+			if (len(self.pyIPCMIConfig.options("INSTALL.Altera.ModelSim")) == 0):
 				raise NotConfiguredException("Neither Mentor QuestaSim, Mentor ModelSim nor ModelSim Altera Edition are configured on this system.")
 
 		fqnList =         self._ExtractFQNs(args.FQN)
@@ -1226,7 +1228,7 @@ class PileOfCores(ILogable, ArgParseMixin):
 	@CommandAttribute("list-netlist", help="List all netlists.", description=dedent("""\
 		List all netlists.
 		"""))
-	@PoCEntityAttribute()
+	@pyIPCMIEntityAttribute()
 	@ArgumentAttribute("--kind", metavar="Kind", dest="NetlistKind", help="Netlist kind: Lattice | Quartus | XST | CoreGen")
 	def HandleListNetlist(self, args):
 		self.PrintHeadline()
@@ -1263,7 +1265,7 @@ class PileOfCores(ILogable, ArgParseMixin):
 	@CommandAttribute("ise", help="Generate any IP core for the Xilinx ISE tool chain.", description=dedent("""\
 		Generate any IP core for the Xilinx ISE tool chain.
 		"""))
-	@PoCEntityAttribute()
+	@pyIPCMIEntityAttribute()
 	@BoardDeviceAttributeGroup()
 	@CompileStepsAttributeGroup()
 	def HandleISECompilation(self, args):
@@ -1286,7 +1288,7 @@ class PileOfCores(ILogable, ArgParseMixin):
 	@CommandAttribute("coregen", help="Generate an IP core with Xilinx ISE Core Generator.", description=dedent("""\
 		Generate an IP core with Xilinx ISE Core Generator.
 		"""))
-	@PoCEntityAttribute()
+	@pyIPCMIEntityAttribute()
 	@BoardDeviceAttributeGroup()
 	@CompileStepsAttributeGroup()
 	def HandleCoreGeneratorCompilation(self, args):
@@ -1306,12 +1308,12 @@ class PileOfCores(ILogable, ArgParseMixin):
 	# create the sub-parser for the "xst" command
 	# ----------------------------------------------------------------------------
 	@CommandGroupAttribute("Synthesis commands")
-	@CommandAttribute("xst", help="Compile a PoC IP core with Xilinx ISE XST to a netlist.", description=dedent("""\
-		Compile a PoC IP core with Xilinx ISE XST to a netlist.
-		:ref:`IP:PoC.Mem`
+	@CommandAttribute("xst", help="Compile a pyIPCMI IP core with Xilinx ISE XST to a netlist.", description=dedent("""\
+		Compile a pyIPCMI IP core with Xilinx ISE XST to a netlist.
+		:ref:`IP:pyIPCMI.Mem`
 		foooo baaarr.
 		"""))
-	@PoCEntityAttribute()
+	@pyIPCMIEntityAttribute()
 	@BoardDeviceAttributeGroup()
 	@CompileStepsAttributeGroup()
 	def HandleXstCompilation(self, args):
@@ -1334,7 +1336,7 @@ class PileOfCores(ILogable, ArgParseMixin):
 	@CommandAttribute("xci", help="Generate an IP core from Xilinx Vivado IP Catalog.", description=dedent("""\
 		Generate an IP core from Xilinx Vivado IP Catalog.
 		"""))
-	@PoCEntityAttribute()
+	@pyIPCMIEntityAttribute()
 	@BoardDeviceAttributeGroup()
 	@CompileStepsAttributeGroup()
 	def HandleIpCatalogCompilation(self, args):
@@ -1354,10 +1356,10 @@ class PileOfCores(ILogable, ArgParseMixin):
 	# create the sub-parser for the "vivado" command
 	# ----------------------------------------------------------------------------
 	@CommandGroupAttribute("Synthesis commands")
-	@CommandAttribute("vivado", help="Compile a PoC IP core with Xilinx Vivado Synth to a design checkpoint.", description=dedent("""\
-		Compile a PoC IP core with Xilinx Vivado Synth to a design checkpoint.
+	@CommandAttribute("vivado", help="Compile a pyIPCMI IP core with Xilinx Vivado Synth to a design checkpoint.", description=dedent("""\
+		Compile a pyIPCMI IP core with Xilinx Vivado Synth to a design checkpoint.
 		"""))
-	@PoCEntityAttribute()
+	@pyIPCMIEntityAttribute()
 	@BoardDeviceAttributeGroup()
 	@CompileStepsAttributeGroup()
 	def HandleVivadoCompilation(self, args):
@@ -1378,10 +1380,10 @@ class PileOfCores(ILogable, ArgParseMixin):
 	# create the sub-parser for the "quartus" command
 	# ----------------------------------------------------------------------------
 	@CommandGroupAttribute("Synthesis commands")
-	@CommandAttribute("quartus", help="Compile a PoC IP core with Altera Quartus II Map to a netlist.", description=dedent("""\
-		Compile a PoC IP core with Altera Quartus II Map to a netlist.
+	@CommandAttribute("quartus", help="Compile a pyIPCMI IP core with Altera Quartus II Map to a netlist.", description=dedent("""\
+		Compile a pyIPCMI IP core with Altera Quartus II Map to a netlist.
 		"""))
-	@PoCEntityAttribute()
+	@pyIPCMIEntityAttribute()
 	@BoardDeviceAttributeGroup()
 	@CompileStepsAttributeGroup()
 	def HandleQuartusCompilation(self, args):
@@ -1402,10 +1404,10 @@ class PileOfCores(ILogable, ArgParseMixin):
 	# create the sub-parser for the "lattice" command
 	# ----------------------------------------------------------------------------
 	@CommandGroupAttribute("Synthesis commands")
-	@CommandAttribute("lse", help="Compile a PoC IP core with Lattice Diamond LSE to a netlist.", description=dedent("""\
-		Compile a PoC IP core with Lattice Diamond LSE to a netlist.
+	@CommandAttribute("lse", help="Compile a pyIPCMI IP core with Lattice Diamond LSE to a netlist.", description=dedent("""\
+		Compile a pyIPCMI IP core with Lattice Diamond LSE to a netlist.
 		"""))
-	@PoCEntityAttribute()
+	@pyIPCMIEntityAttribute()
 	@BoardDeviceAttributeGroup()
 	@CompileStepsAttributeGroup()
 	def HandleLSECompilation(self, args):
@@ -1428,7 +1430,7 @@ def main(): # mccabe:disable=MC0001
 
 	1. It extracts common flags from the script's arguments list, before :py:class:`~argparse.ArgumentParser` is fully loaded.
 	2. It initializes colorama for colored outputs
-	3. It creates an instance of PoC and hands over to class based execution. All is wrapped in a big ``try..except`` block to catch every unhandled exception.
+	3. It creates an instance of pyIPCMI and hands over to class based execution. All is wrapped in a big ``try..except`` block to catch every unhandled exception.
 	4. Shutdown the script and return its exit code.
 	"""
 
@@ -1443,8 +1445,8 @@ def main(): # mccabe:disable=MC0001
 	try:
 		Init.init()
 		# handover to a class instance
-		poc = PileOfCores(debug, verbose, quiet, dryRun)
-		poc.Run()
+		pyIPCMI = PileOfCores(debug, verbose, quiet, dryRun)
+		pyIPCMI.Run()
 		Exit.exit()
 
 	except (CommonException, ConfigurationException, SimulatorException, CompilerException) as ex:
@@ -1493,4 +1495,4 @@ if __name__ == "__main__":
 	main()
 # else:
 # 	print(__name__)
-# 	Exit.printThisIsNoLibraryFile(PoC.HeadLine)
+# 	Exit.printThisIsNoLibraryFile(pyIPCMI.HeadLine)

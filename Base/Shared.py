@@ -82,14 +82,14 @@ class Shared(ILogable):
 
 	class __Directories__:
 		Working = None
-		PoCRoot = None
+		pyIPCMIRoot = None
 
 	def __init__(self, host : IHost, dryRun):
 		ILogable.__init__(self, host.Logger if isinstance(host, ILogable) else None)
 
 		self._host =            host
 		self._dryRun =          dryRun
-		self._pocProject =      None
+		self._pyIPCMIProject =      None
 		self._directories =     self.__Directories__()
 		self._toolChain =       None
 		self._vhdlVersion =     self.VHDL_VERSION
@@ -110,7 +110,7 @@ class Shared(ILogable):
 	@property
 	def VHDLVersion(self):  return self._vhdlVersion
 	@property
-	def PoCProject(self):   return self._pocProject
+	def pyIPCMIProject(self):   return self._pyIPCMIProject
 	@property
 	def Directories(self):  return self._directories
 
@@ -181,20 +181,20 @@ class Shared(ILogable):
 	def _Prepare(self):
 		self.LogNormal("Preparing {0}.".format(self.TOOL.LongName))
 
-	def _CreatePoCProject(self, projectName, board):
-		# create a PoCProject and read all needed files
-		self.LogVerbose("Creating PoC project '{0}'".format(projectName))
-		pocProject = VirtualProject(projectName)
+	def _CreatepyIPCMIProject(self, projectName, board):
+		# create a pyIPCMIProject and read all needed files
+		self.LogVerbose("Creating pyIPCMI project '{0}'".format(projectName))
+		pyIPCMIProject = VirtualProject(projectName)
 
 		# configure the project
-		pocProject.RootDirectory =  self.Host.Directories.Root
-		pocProject.Environment =    self.ENVIRONMENT
-		pocProject.ToolChain =      self.TOOL_CHAIN
-		pocProject.Tool =           self.TOOL
-		pocProject.VHDLVersion =    self._vhdlVersion
-		pocProject.Board =          board
+		pyIPCMIProject.RootDirectory =  self.Host.Directories.Root
+		pyIPCMIProject.Environment =    self.ENVIRONMENT
+		pyIPCMIProject.ToolChain =      self.TOOL_CHAIN
+		pyIPCMIProject.Tool =           self.TOOL
+		pyIPCMIProject.VHDLVersion =    self._vhdlVersion
+		pyIPCMIProject.Board =          board
 
-		self._pocProject = pocProject
+		self._pyIPCMIProject = pyIPCMIProject
 
 	def _AddFileListFile(self, fileListFilePath):
 		self.LogVerbose("Reading filelist '{0!s}'".format(fileListFilePath))
@@ -202,18 +202,18 @@ class Shared(ILogable):
 		# if (not fileListFilePath.exists()):    raise SimulatorException("Files file '{0!s}' not found.".format(fileListFilePath)) from FileNotFoundError(str(fileListFilePath))
 
 		try:
-			fileListFile = self._pocProject.AddFile(FileListFile(fileListFilePath))
+			fileListFile = self._pyIPCMIProject.AddFile(FileListFile(fileListFilePath))
 			fileListFile.Parse(self._host)
 			fileListFile.CopyFilesToFileSet()
 			fileListFile.CopyExternalLibraries()
-			self._pocProject.ExtractVHDLLibrariesFromVHDLSourceFiles()
+			self._pyIPCMIProject.ExtractVHDLLibrariesFromVHDLSourceFiles()
 		except (ParserException, CommonException) as ex:
 			raise SkipableCommonException("Error while parsing '{0!s}'.".format(fileListFilePath)) from ex
 
 		self.LogDebug("=" * 78)
-		self.LogDebug("Pretty printing the PoCProject...")
+		self.LogDebug("Pretty printing the pyIPCMIProject...")
 		self.LogDebug("{DARK_RED}Disabled{NOCOLOR}".format(**Init.Foreground))
-		# self.LogDebug(self._pocProject.pprint(2))
+		# self.LogDebug(self._pyIPCMIProject.pprint(2))
 		self.LogDebug("=" * 78)
 		if (len(fileListFile.Warnings) > 0):
 			for warn in fileListFile.Warnings:
@@ -223,7 +223,7 @@ class Shared(ILogable):
 	def _GetHDLParameters(self, configSectionName):
 		"""Parse option 'HDLParameters' for Verilog Parameters / VHDL Generics."""
 		result = {}
-		hdlParameters = self.Host.PoCConfig[configSectionName]["HDLParameters"]
+		hdlParameters = self.Host.pyIPCMIConfig[configSectionName]["HDLParameters"]
 		if (len(hdlParameters) > 0):
 			for keyValuePair in hdlParameters.split(";"):
 				try:

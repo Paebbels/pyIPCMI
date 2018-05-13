@@ -40,7 +40,7 @@ from ToolChain                  import ToolMixIn, ConfigurationException, ToolCo
 from ToolChain.GNU              import Bash
 from ToolChain.Windows          import Cmd
 from ToolChain.Xilinx           import XilinxException
-from Simulator                  import PoCSimulationResultFilter
+from Simulator                  import pyIPCMISimulationResultFilter
 
 
 __api__ = [
@@ -90,8 +90,8 @@ class Configuration(ToolConfiguration):
 	}                                                   #: The template for the configuration sections represented as nested dictionaries.
 
 	def CheckDependency(self):
-		"""Check if general Xilinx support is configured in PoC."""
-		return (len(self._host.PoCConfig['INSTALL.Xilinx']) != 0)
+		"""Check if general Xilinx support is configured in pyIPCMI."""
+		return (len(self._host.pyIPCMIConfig['INSTALL.Xilinx']) != 0)
 
 	def ConfigureForAll(self):
 		try:
@@ -102,8 +102,8 @@ class Configuration(ToolConfiguration):
 				version = self._ConfigureVersion()
 				if self._multiVersionSupport:
 					self.PrepareVersionedSections()
-					sectionName = self._host.PoCConfig[self._section]['SectionName']
-					self._host.PoCConfig[sectionName]['Version'] = version
+					sectionName = self._host.pyIPCMIConfig[self._section]['SectionName']
+					self._host.pyIPCMIConfig[sectionName]['Version'] = version
 
 				self._ConfigureInstallationDirectory()
 				binPath = self._ConfigureBinaryDirectory()
@@ -321,7 +321,7 @@ class XSim(OutputFilteredExecutable, ToolMixIn):
 		self._hasErrors = False
 		simulationResult =  CallByRefParam(SimulationResult.Error)
 		try:
-			iterator = iter(PoCSimulationResultFilter(SimulatorFilter(self.GetReader()), simulationResult))
+			iterator = iter(pyIPCMISimulationResultFilter(SimulatorFilter(self.GetReader()), simulationResult))
 
 			line = next(iterator)
 			self._hasOutput = True
@@ -462,10 +462,10 @@ def ElaborationFilter(gen): # mccabe:disable=MC0001
 			yield LogEntry(line, Severity.Normal)
 
 def SimulatorFilter(gen):
-	PoCOutputFound = False
+	pyIPCMIOutputFound = False
 	for line in gen:
 		if (line == ""):
-			if (not PoCOutputFound):
+			if (not pyIPCMIOutputFound):
 				continue
 			else:
 				yield LogEntry(line, Severity.Normal)
@@ -488,7 +488,7 @@ def SimulatorFilter(gen):
 		elif line.startswith("Time resolution is "):
 			yield LogEntry(line, Severity.Verbose)
 		elif line.startswith("========================================"):
-			PoCOutputFound = True
+			pyIPCMIOutputFound = True
 			yield LogEntry(line, Severity.Normal)
 		elif line.startswith("Failure: "):
 			yield LogEntry(line, Severity.Error)
