@@ -32,13 +32,13 @@ from enum               import Enum, unique
 
 from flags              import Flags
 
-from Base               import IHost
-from Base.Exceptions    import ExceptionBase, SkipableException
-from Base.Logging       import LogEntry
-from Base.Project       import Environment, VHDLVersion
-from Base.Shared        import Shared, to_time
-from DataBase.Entity    import WildCard, SimulationResult
-from DataBase.TestCase  import TestCase, SimulationStatus, TestSuite
+from pyIPCMI.Base               import IHost
+from pyIPCMI.Base.Exceptions    import ExceptionBase, SkipableException
+from pyIPCMI.Base.Logging       import LogEntry
+from pyIPCMI.Base.Project       import Environment, VHDLVersion
+from pyIPCMI.Base.Shared        import Shared, to_time
+from pyIPCMI.DataBase.Entity    import WildCard, SimulationResult
+from pyIPCMI.DataBase.TestCase  import TestCase, SimulationStatus, TestSuite
 from lib.Decorators     import MethodAlias
 from lib.Functions      import Init
 from lib.SphinxExtensions import DocumentMemberAttribute

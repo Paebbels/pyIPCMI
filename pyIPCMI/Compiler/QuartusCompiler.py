@@ -31,10 +31,10 @@
 from datetime                   import datetime
 from pathlib                    import Path
 
-from Base.Project               import ToolChain, Tool
-from DataBase.Entity            import WildCard
-from ToolChain.Altera.Quartus   import QuartusException, Quartus, QuartusSettings, QuartusProjectFile
-from Compiler                   import CompilerException, SkipableCompilerException, CompileState, Compiler as BaseCompiler
+from pyIPCMI.Base.Project               import ToolChain, Tool
+from pyIPCMI.DataBase.Entity            import WildCard
+from pyIPCMI.ToolChain.Altera.Quartus   import QuartusException, Quartus, QuartusSettings, QuartusProjectFile
+from pyIPCMI.Compiler                   import CompilerException, SkipableCompilerException, CompileState, Compiler as BaseCompiler
 
 
 __api__ = [

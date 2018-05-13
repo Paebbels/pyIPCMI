@@ -28,8 +28,8 @@
 # ==============================================================================
 #
 # load dependencies
-from Base.Project             import ConstraintFile, FileTypes
-from ToolChain                import ToolChainException, VendorConfiguration
+from pyIPCMI.Base.Project             import ConstraintFile, FileTypes
+from pyIPCMI.ToolChain                import ToolChainException, VendorConfiguration
 
 
 __api__ = [

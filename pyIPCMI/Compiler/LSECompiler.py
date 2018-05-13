@@ -31,12 +31,12 @@
 from datetime                   import datetime
 from pathlib                    import Path
 
-from Base.Exceptions            import PlatformNotSupportedException
-from Base.Project               import ToolChain, Tool, VHDLVersion
-from DataBase.Entity            import WildCard
-from ToolChain.Lattice          import LatticeException
-from ToolChain.Lattice.Diamond  import Diamond, SynthesisArgumentFile
-from Compiler                   import CompilerException, SkipableCompilerException, CompileState, Compiler as BaseCompiler
+from pyIPCMI.Base.Exceptions            import PlatformNotSupportedException
+from pyIPCMI.Base.Project               import ToolChain, Tool, VHDLVersion
+from pyIPCMI.DataBase.Entity            import WildCard
+from pyIPCMI.ToolChain.Lattice          import LatticeException
+from pyIPCMI.ToolChain.Lattice.Diamond  import Diamond, SynthesisArgumentFile
+from pyIPCMI.Compiler                   import CompilerException, SkipableCompilerException, CompileState, Compiler as BaseCompiler
 
 
 __api__ = [

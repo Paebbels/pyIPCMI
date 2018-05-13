@@ -31,9 +31,9 @@
 from subprocess                   import check_output
 
 from lib.Functions                import Init
-from ToolChain                    import ConfigurationException
-from ToolChain.Lattice            import LatticeException
-from ToolChain.Aldec.ActiveHDL    import Configuration as ActiveHDL_Configuration, ActiveHDLException as Aldec_ActiveHDL_ActiveHDLException
+from pyIPCMI.ToolChain                    import ConfigurationException
+from pyIPCMI.ToolChain.Lattice            import LatticeException
+from pyIPCMI.ToolChain.Aldec.ActiveHDL    import Configuration as ActiveHDL_Configuration, ActiveHDLException as Aldec_ActiveHDL_ActiveHDLException
 
 
 class ActiveHDLException(LatticeException, Aldec_ActiveHDL_ActiveHDLException):

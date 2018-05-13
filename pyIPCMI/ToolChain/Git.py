@@ -35,10 +35,10 @@ from os                   import environ
 from shutil               import copy as shutil_copy
 
 from lib.Functions        import Init
-from Base.Exceptions      import PlatformNotSupportedException, CommonException
-from Base.Executable      import Executable, ExecutableArgument, CommandLineArgumentList
-from Base.Executable      import CommandArgument, LongFlagArgument, ValuedFlagArgument, StringArgument, LongValuedFlagArgument, LongTupleArgument
-from ToolChain            import ToolMixIn, ToolChainException, ConfigurationException, SkipConfigurationException, ChangeState, ToolConfiguration
+from pyIPCMI.Base.Exceptions      import PlatformNotSupportedException, CommonException
+from pyIPCMI.Base.Executable      import Executable, ExecutableArgument, CommandLineArgumentList
+from pyIPCMI.Base.Executable      import CommandArgument, LongFlagArgument, ValuedFlagArgument, StringArgument, LongValuedFlagArgument, LongTupleArgument
+from pyIPCMI.ToolChain            import ToolMixIn, ToolChainException, ConfigurationException, SkipConfigurationException, ChangeState, ToolConfiguration
 
 
 __api__ = [

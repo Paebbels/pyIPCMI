@@ -27,7 +27,7 @@
 # ==============================================================================
 #
 # load dependencies
-from ToolChain                import ToolChainException, VendorConfiguration
+from pyIPCMI.ToolChain                import ToolChainException, VendorConfiguration
 
 
 __api__ = [

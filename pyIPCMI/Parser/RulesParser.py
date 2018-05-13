@@ -27,7 +27,7 @@
 # ==============================================================================
 #
 from lib.Parser           import ParserException
-from Parser.RulesCodeDOM  import Document, PreProcessRulesStatement, PostProcessRulesStatement, CopyStatement, ReplaceStatement, FileStatement, DeleteStatement, AppendLineStatement
+from pyIPCMI.Parser.RulesCodeDOM  import Document, PreProcessRulesStatement, PostProcessRulesStatement, CopyStatement, ReplaceStatement, FileStatement, DeleteStatement, AppendLineStatement
 
 
 __api__ = [

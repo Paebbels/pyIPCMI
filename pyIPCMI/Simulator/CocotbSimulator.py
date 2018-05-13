@@ -31,11 +31,11 @@
 from shutil                  import copy as shutil_copy
 from textwrap                import dedent
 
-from Base.Project            import FileTypes, ToolChain, Tool
-from DataBase.Config         import Vendors
-from DataBase.Entity         import WildCard
-from ToolChain.GNU           import Make
-from Simulator               import SimulatorException, SimulationSteps, Simulator as BaseSimulator
+from pyIPCMI.Base.Project            import FileTypes, ToolChain, Tool
+from pyIPCMI.DataBase.Config         import Vendors
+from pyIPCMI.DataBase.Entity         import WildCard
+from pyIPCMI.ToolChain.GNU           import Make
+from pyIPCMI.Simulator               import SimulatorException, SimulationSteps, Simulator as BaseSimulator
 
 
 __api__ = [

@@ -28,15 +28,16 @@
 # ==============================================================================
 #
 # load dependencies
-from collections        import OrderedDict, namedtuple
-from enum               import unique, Enum
-from pathlib            import Path
+from collections              import OrderedDict, namedtuple
+from enum                     import unique, Enum
+from pathlib                  import Path
 
-from lib.Functions      import Init, CallByRefBoolParam
-from Base               import ILogable, IHost
-from Base.Exceptions    import ExceptionBase
-from Base.Executable    import Executable, Environment
-from Base.Logging       import Severity
+from lib.Functions            import Init
+from lib.CallBy               import CallByRefBoolParam
+from pyIPCMI.Base             import ILogable, IHost
+from pyIPCMI.Base.Exceptions  import ExceptionBase
+from pyIPCMI.Base.Executable  import Executable, Environment
+from pyIPCMI.Base.Logging     import Severity
 
 
 __api__ = [

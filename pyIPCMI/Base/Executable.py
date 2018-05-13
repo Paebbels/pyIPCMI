@@ -32,8 +32,8 @@ from subprocess             import Popen				as Subprocess_Popen
 from subprocess             import PIPE					as Subprocess_Pipe
 from subprocess             import STDOUT				as Subprocess_StdOut
 
-from Base.Exceptions        import CommonException, ExceptionBase
-from Base.Logging           import ILogable, Logger
+from pyIPCMI.Base.Exceptions        import CommonException, ExceptionBase
+from pyIPCMI.Base.Logging           import ILogable, Logger
 
 
 __api__ = [

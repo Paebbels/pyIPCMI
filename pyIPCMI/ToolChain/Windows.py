@@ -29,9 +29,9 @@
 # load dependencies
 from pathlib                 import Path
 
-from Base.Exceptions         import PlatformNotSupportedException
-from Base.Executable         import Executable, ExecutableArgument, CommandLineArgumentList, WindowsTupleArgument
-from ToolChain               import Environment, ToolChainException #, OutputFilteredExecutable
+from pyIPCMI.Base.Exceptions         import PlatformNotSupportedException
+from pyIPCMI.Base.Executable         import Executable, ExecutableArgument, CommandLineArgumentList, WindowsTupleArgument
+from pyIPCMI.ToolChain               import Environment, ToolChainException #, OutputFilteredExecutable
 
 
 __api__ = [

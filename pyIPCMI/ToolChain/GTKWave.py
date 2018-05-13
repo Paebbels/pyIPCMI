@@ -33,10 +33,10 @@ from re                       import compile as re_compile
 from subprocess               import check_output, CalledProcessError
 
 from lib.Functions            import Init
-from Base.Exceptions          import PlatformNotSupportedException
-from Base.Logging             import LogEntry, Severity
-from Base.Executable          import ExecutableArgument, LongValuedFlagArgument, CommandLineArgumentList, DryRunException
-from ToolChain                import ToolChainException, ConfigurationException, ToolConfiguration, OutputFilteredExecutable
+from pyIPCMI.Base.Exceptions          import PlatformNotSupportedException
+from pyIPCMI.Base.Logging             import LogEntry, Severity
+from pyIPCMI.Base.Executable          import ExecutableArgument, LongValuedFlagArgument, CommandLineArgumentList, DryRunException
+from pyIPCMI.ToolChain                import ToolChainException, ConfigurationException, ToolConfiguration, OutputFilteredExecutable
 
 
 __api__ = [

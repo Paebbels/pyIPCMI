@@ -30,10 +30,10 @@
 # load dependencies
 from pathlib                      import Path
 
-from Base.Executable              import DryRunException
-from Base.Project                 import FileTypes, ToolChain, Tool
-from ToolChain.Aldec.ActiveHDL    import ActiveHDL, ActiveHDLException
-from Simulator                    import VHDL_TESTBENCH_LIBRARY_NAME, SimulatorException, SkipableSimulatorException, SimulationSteps, Simulator as BaseSimulator
+from pyIPCMI.Base.Executable              import DryRunException
+from pyIPCMI.Base.Project                 import FileTypes, ToolChain, Tool
+from pyIPCMI.ToolChain.Aldec.ActiveHDL    import ActiveHDL, ActiveHDLException
+from pyIPCMI.Simulator                    import VHDL_TESTBENCH_LIBRARY_NAME, SimulatorException, SkipableSimulatorException, SimulationSteps, Simulator as BaseSimulator
 
 
 __api__ = [

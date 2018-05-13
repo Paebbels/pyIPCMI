@@ -32,9 +32,9 @@ from os                   import environ
 from pathlib              import Path
 from subprocess           import CalledProcessError
 
-from Base.Exceptions      import EnvironmentException
-from ToolChain            import ToolConfiguration
-from ToolChain.Git        import Git
+from pyIPCMI.Base.Exceptions      import EnvironmentException
+from pyIPCMI.ToolChain            import ToolConfiguration
+from pyIPCMI.ToolChain.Git        import Git
 
 
 __api__ = [

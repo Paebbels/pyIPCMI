@@ -31,12 +31,12 @@
 from pathlib                      import Path
 from textwrap                     import dedent
 
-from Base.Project                 import FileTypes, ToolChain, Tool
-from DataBase.Config              import Vendors
-from ToolChain.Mentor.ModelSim    import ModelSim
-from ToolChain.Mentor.QuestaSim   import QuestaSimException
-from Simulator                    import VHDL_TESTBENCH_LIBRARY_NAME, SimulatorException, SkipableSimulatorException, SimulationSteps, Simulator as BaseSimulator
-from Simulator.ModelSimSimulator  import Simulator as ModelSimSimulator_Simulator
+from pyIPCMI.Base.Project                 import FileTypes, ToolChain, Tool
+from pyIPCMI.DataBase.Config              import Vendors
+from pyIPCMI.ToolChain.Mentor.ModelSim    import ModelSim
+from pyIPCMI.ToolChain.Mentor.QuestaSim   import QuestaSimException
+from pyIPCMI.Simulator                    import VHDL_TESTBENCH_LIBRARY_NAME, SimulatorException, SkipableSimulatorException, SimulationSteps, Simulator as BaseSimulator
+from pyIPCMI.Simulator.ModelSimSimulator  import Simulator as ModelSimSimulator_Simulator
 
 __api__ = [
 	'Simulator'

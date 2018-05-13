@@ -33,9 +33,9 @@ from pathlib            import Path
 from flags              import Flags
 
 from lib.Functions      import merge
-from Base.Exceptions    import CommonException
-from Parser.FilesParser import VHDLSourceFileMixIn, VerilogSourceFileMixIn, CocotbSourceFileMixIn
-from DataBase.Config    import Board, Device
+from pyIPCMI.Base.Exceptions    import CommonException
+from pyIPCMI.Parser.FilesParser import VHDLSourceFileMixIn, VerilogSourceFileMixIn, CocotbSourceFileMixIn
+from pyIPCMI.DataBase.Config    import Board, Device
 
 
 __api__ = [

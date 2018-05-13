@@ -34,14 +34,14 @@ from pathlib                  import Path
 from subprocess               import check_output, CalledProcessError, STDOUT
 
 from lib.Functions            import Init
-from Base.Exceptions          import PlatformNotSupportedException
-from Base.Logging             import Severity, LogEntry
-from Base.Executable          import CommandLineArgumentList, ExecutableArgument, ShortTupleArgument, DryRunException
-from Base.Project             import File, FileTypes, VHDLVersion
-from ToolChain                import ToolMixIn, ConfigurationException, ToolConfiguration, OutputFilteredExecutable
-from ToolChain.GNU            import Bash
-from ToolChain.Windows        import Cmd
-from ToolChain.Lattice        import LatticeException
+from pyIPCMI.Base.Exceptions          import PlatformNotSupportedException
+from pyIPCMI.Base.Logging             import Severity, LogEntry
+from pyIPCMI.Base.Executable          import CommandLineArgumentList, ExecutableArgument, ShortTupleArgument, DryRunException
+from pyIPCMI.Base.Project             import File, FileTypes, VHDLVersion
+from pyIPCMI.ToolChain                import ToolMixIn, ConfigurationException, ToolConfiguration, OutputFilteredExecutable
+from pyIPCMI.ToolChain.GNU            import Bash
+from pyIPCMI.ToolChain.Windows        import Cmd
+from pyIPCMI.ToolChain.Lattice        import LatticeException
 
 
 __api__ = [

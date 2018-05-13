@@ -28,23 +28,23 @@
 # ==============================================================================
 #
 # load dependencies
-from collections                  import OrderedDict
-from enum                         import unique, Enum
-from re                           import compile as re_compile
-from subprocess                   import check_output
-from textwrap                     import dedent
+from collections                import OrderedDict
+from enum                       import unique, Enum
+from re                         import compile as re_compile
+from subprocess                 import check_output
+from textwrap                   import dedent
 
-from flags import Flags
+from flags                      import Flags
 
-from lib.Functions                import Init, CallByRefParam
-from Base.Exceptions              import PlatformNotSupportedException
-from Base.Executable              import ExecutableArgument, ShortFlagArgument, ShortTupleArgument, StringArgument, PathArgument, CommandLineArgumentList, DryRunException, \
-	ShortOptionalValuedFlagArgument, OptionalValuedFlagArgument
-from Base.Logging                 import Severity, LogEntry
-from DataBase.Entity              import SimulationResult
-from ToolChain                    import ConfigurationException, EditionDescription, Edition, ToolConfiguration, ToolSelector, ToolMixIn, OutputFilteredExecutable
-from ToolChain.Mentor             import MentorException
-from Simulator                    import PoCSimulationResultFilter, pyIPCMISimulationResultNotFoundException
+from lib.Functions              import Init
+from lib.CallBy                 import CallByRefParam
+from pyIPCMI.Base.Exceptions    import PlatformNotSupportedException
+from pyIPCMI.Base.Executable    import ExecutableArgument, ShortFlagArgument, ShortTupleArgument, StringArgument, PathArgument, CommandLineArgumentList, DryRunException, OptionalValuedFlagArgument
+from pyIPCMI.Base.Logging       import Severity, LogEntry
+from pyIPCMI.DataBase.Entity    import SimulationResult
+from pyIPCMI.ToolChain          import ConfigurationException, EditionDescription, Edition, ToolConfiguration, ToolSelector, ToolMixIn, OutputFilteredExecutable
+from pyIPCMI.ToolChain.Mentor   import MentorException
+from pyIPCMI.Simulator          import PoCSimulationResultFilter, pyIPCMISimulationResultNotFoundException
 
 
 __api__ = [

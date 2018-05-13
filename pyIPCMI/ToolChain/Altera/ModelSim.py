@@ -33,9 +33,9 @@ from re                           import compile as re_compile
 from subprocess                   import check_output
 
 from lib.Functions                import Init
-from ToolChain                    import ConfigurationException, EditionDescription, Edition
-from ToolChain.Altera             import AlteraException
-from ToolChain.Mentor.ModelSim    import Configuration as Mentor_ModelSim_Configuration, ModelSimException as Mentor_ModelSimException
+from pyIPCMI.ToolChain                    import ConfigurationException, EditionDescription, Edition
+from pyIPCMI.ToolChain.Altera             import AlteraException
+from pyIPCMI.ToolChain.Mentor.ModelSim    import Configuration as Mentor_ModelSim_Configuration, ModelSimException as Mentor_ModelSimException
 
 
 __api__ = [

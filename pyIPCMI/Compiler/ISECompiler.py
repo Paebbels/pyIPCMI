@@ -27,11 +27,11 @@
 # ==============================================================================
 #
 # load dependencies
-from Base.Project           import ToolChain, Tool
-from DataBase.Entity        import WildCard, FQN, EntityTypes
-from Compiler               import Compiler as BaseCompiler
-from Compiler.XCOCompiler   import Compiler as XCOCompiler
-from Compiler.XSTCompiler   import Compiler as XSTCompiler
+from pyIPCMI.Base.Project           import ToolChain, Tool
+from pyIPCMI.DataBase.Entity        import WildCard, FQN, EntityTypes
+from pyIPCMI.Compiler               import Compiler as BaseCompiler
+from pyIPCMI.Compiler.XCOCompiler   import Compiler as XCOCompiler
+from pyIPCMI.Compiler.XSTCompiler   import Compiler as XSTCompiler
 
 
 __api__ = [

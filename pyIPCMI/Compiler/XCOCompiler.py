@@ -34,10 +34,10 @@ from pathlib                import Path
 from shutil                 import copy as shutil_copy
 from textwrap               import dedent
 
-from Base.Project           import ToolChain, Tool
-from DataBase.Entity        import WildCard
-from ToolChain.Xilinx.ISE   import ISE, ISEException
-from Compiler               import CompilerException, SkipableCompilerException, CompileState, Compiler as BaseCompiler
+from pyIPCMI.Base.Project           import ToolChain, Tool
+from pyIPCMI.DataBase.Entity        import WildCard
+from pyIPCMI.ToolChain.Xilinx.ISE   import ISE, ISEException
+from pyIPCMI.Compiler               import CompilerException, SkipableCompilerException, CompileState, Compiler as BaseCompiler
 
 
 __api__ = [

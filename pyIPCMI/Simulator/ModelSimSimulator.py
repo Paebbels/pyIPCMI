@@ -31,11 +31,11 @@
 from pathlib                      import Path
 from textwrap                     import dedent
 
-from Base.Executable              import DryRunException
-from Base.Project                 import FileTypes, ToolChain, Tool
-from DataBase.Config              import Vendors
-from ToolChain.Mentor.ModelSim    import ModelSim, ModelSimException, VHDLCompilerCoverageOptions, VHDLCompilerFSMVerbosityLevel
-from Simulator                    import VHDL_TESTBENCH_LIBRARY_NAME, SimulatorException, SkipableSimulatorException, SimulationSteps, Simulator as BaseSimulator
+from pyIPCMI.Base.Executable              import DryRunException
+from pyIPCMI.Base.Project                 import FileTypes, ToolChain, Tool
+from pyIPCMI.DataBase.Config              import Vendors
+from pyIPCMI.ToolChain.Mentor.ModelSim    import ModelSim, ModelSimException, VHDLCompilerCoverageOptions, VHDLCompilerFSMVerbosityLevel
+from pyIPCMI.Simulator                    import VHDL_TESTBENCH_LIBRARY_NAME, SimulatorException, SkipableSimulatorException, SimulationSteps, Simulator as BaseSimulator
 
 
 __api__ = [

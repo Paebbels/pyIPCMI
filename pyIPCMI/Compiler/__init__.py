@@ -35,16 +35,16 @@ from flags                        import Flags
 
 from lib.Functions                import Init
 from lib.Parser                   import ParserException
-from Base                         import IHost
-from Base.Exceptions              import ExceptionBase, SkipableException
-from Base.Project                 import Environment, VHDLVersion, FileTypes
-from Base.Shared                  import Shared, to_time
-from Parser.RulesParser           import CopyRuleMixIn, DeleteRuleMixIn, ReplaceRuleMixIn, AppendLineRuleMixIn
-from DataBase.Solution            import RulesFile
-from DataBase.TestCase            import SynthesisSuite, CompileStatus, Synthesis
+from pyIPCMI.Base                 import IHost
+from pyIPCMI.Base.Exceptions      import ExceptionBase, SkipableException
+from pyIPCMI.Base.Project         import Environment, VHDLVersion, FileTypes
+from pyIPCMI.Base.Shared          import Shared, to_time
+from pyIPCMI.Parser.RulesParser   import CopyRuleMixIn, DeleteRuleMixIn, ReplaceRuleMixIn, AppendLineRuleMixIn
+from pyIPCMI.DataBase.Solution    import RulesFile
+from pyIPCMI.DataBase.TestCase    import SynthesisSuite, CompileStatus, Synthesis
 
 # required for autoapi.sphinx
-from lib.SphinxExtensions import DocumentMemberAttribute
+from lib.SphinxExtensions         import DocumentMemberAttribute
 
 
 __api__ = [

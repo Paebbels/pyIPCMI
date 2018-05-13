@@ -31,13 +31,13 @@ import shutil
 from datetime           import datetime
 from os                 import chdir
 
-from Base import IHost
+from pyIPCMI.Base import IHost
 from lib.Functions      import Init
 from lib.Parser         import ParserException
-from Base.Exceptions    import CommonException, SkipableCommonException
-from Base.Logging       import ILogable
-from Base.Project       import ToolChain, Tool, VHDLVersion, Environment
-from DataBase.Solution  import VirtualProject, FileListFile
+from pyIPCMI.Base.Exceptions    import CommonException, SkipableCommonException
+from pyIPCMI.Base.Logging       import ILogable
+from pyIPCMI.Base.Project       import ToolChain, Tool, VHDLVersion, Environment
+from pyIPCMI.DataBase.Solution  import VirtualProject, FileListFile
 
 
 __api__ = [

@@ -28,7 +28,7 @@
 #
 # load dependencies
 from lib.ExtendedConfigParser import ExtendedConfigParser
-from Base.Logging             import ILogable
+from pyIPCMI.Base.Logging             import ILogable
 
 
 __api__ = [

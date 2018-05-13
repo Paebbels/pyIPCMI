@@ -28,9 +28,9 @@
 # ==============================================================================
 #
 # load dependencies
-from lib.Functions              import Init
-from ToolChain                  import ConfigurationException
-from ToolChain.Mentor.ModelSim  import ModelSimException, Configuration as ModelSim_Configuration
+from lib.Functions                      import Init
+from pyIPCMI.ToolChain                  import ConfigurationException
+from pyIPCMI.ToolChain.Mentor.ModelSim  import ModelSimException, Configuration as ModelSim_Configuration
 
 
 __api__ = [

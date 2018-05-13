@@ -31,13 +31,13 @@ from collections        import OrderedDict
 from textwrap           import dedent
 
 from lib.Decorators     import ILazyLoadable, LazyLoadTrigger
-from Base.Exceptions    import CommonException
-from Base.Project       import Project as BaseProject, File, FileTypes, VHDLSourceFile, VerilogSourceFile, CocotbSourceFile  #, ProjectFile
-from Parser.FilesParser import FilesParserMixIn
-from Parser.RulesParser import RulesParserMixIn
-from DataBase           import __pyIPCMI_SOLUTION_KEYWORD__
-from DataBase.Entity    import Visibility
-from ToolChain          import ConfigurationException
+from pyIPCMI.Base.Exceptions    import CommonException
+from pyIPCMI.Base.Project       import Project as BaseProject, File, FileTypes, VHDLSourceFile, VerilogSourceFile, CocotbSourceFile  #, ProjectFile
+from pyIPCMI.Parser.FilesParser import FilesParserMixIn
+from pyIPCMI.Parser.RulesParser import RulesParserMixIn
+from pyIPCMI.DataBase           import __pyIPCMI_SOLUTION_KEYWORD__
+from pyIPCMI.DataBase.Entity    import Visibility
+from pyIPCMI.ToolChain          import ConfigurationException
 
 
 __api__ = [

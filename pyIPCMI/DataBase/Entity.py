@@ -34,7 +34,7 @@ from flags                import Flags
 
 from lib.Functions        import Init
 from lib.Decorators       import LazyLoadTrigger, ILazyLoadable
-from ToolChain            import ConfigurationException
+from pyIPCMI.ToolChain            import ConfigurationException
 
 
 __api__ = [

@@ -29,8 +29,8 @@
 # load dependencies
 from pathlib              import Path
 
-from Base.Exceptions      import NotConfiguredException, PlatformNotSupportedException
-from ToolChain            import ConfigurationException
+from pyIPCMI.Base.Exceptions      import NotConfiguredException, PlatformNotSupportedException
+from pyIPCMI.ToolChain            import ConfigurationException
 
 
 __api__ = [

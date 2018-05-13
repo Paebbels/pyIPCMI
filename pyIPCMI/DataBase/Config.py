@@ -31,7 +31,7 @@
 from enum                 import Enum, unique
 from re                   import compile as re_compile
 
-from ToolChain            import ConfigurationException
+from pyIPCMI.ToolChain            import ConfigurationException
 
 
 __api__ = [

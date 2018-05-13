@@ -31,8 +31,8 @@
 from os                       import environ
 from pathlib                  import Path
 
-from Base.Project             import FileTypes, VHDLVersion
-from ToolChain                import ToolChainException, VendorConfiguration
+from pyIPCMI.Base.Project             import FileTypes, VHDLVersion
+from pyIPCMI.ToolChain                import ToolChainException, VendorConfiguration
 
 
 __api__ = [

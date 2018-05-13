@@ -30,12 +30,12 @@
 # load dependencies
 from pathlib                    import Path
 
-from Base.Executable            import DryRunException
-from Base.Logging               import Severity
-from Base.Project               import ToolChain, Tool
-from ToolChain.Xilinx           import XilinxProjectExportMixIn
-from ToolChain.Xilinx.Vivado    import Vivado, VivadoException
-from Simulator                  import VHDL_TESTBENCH_LIBRARY_NAME, SimulatorException, SkipableSimulatorException, SimulationSteps, Simulator as BaseSimulator
+from pyIPCMI.Base.Executable            import DryRunException
+from pyIPCMI.Base.Logging               import Severity
+from pyIPCMI.Base.Project               import ToolChain, Tool
+from pyIPCMI.ToolChain.Xilinx           import XilinxProjectExportMixIn
+from pyIPCMI.ToolChain.Xilinx.Vivado    import Vivado, VivadoException
+from pyIPCMI.Simulator                  import VHDL_TESTBENCH_LIBRARY_NAME, SimulatorException, SkipableSimulatorException, SimulationSteps, Simulator as BaseSimulator
 
 
 __api__ = [

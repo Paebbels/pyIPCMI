@@ -34,7 +34,6 @@ from sys          import version_info
 
 __api__ = [
 	'merge', 'merge_with',
-	'CallByRefParam',
 	'Init',
 	'Exit'
 ]
@@ -50,81 +49,11 @@ def merge_with(f, *dicts):
 	return {k : reduce(lambda x: f(*x) if (len(x) > 1) else x[0])([ d[k] for d in dicts if k in d ]) for k in reduce(or_, map(lambda x: x.keys(), dicts), set()) }
 
 
-class CallByRefParam:
-	"""Implements a "call by reference" parameter.
-
-	.. seealso::
-
-	   :py:class:`CallByRefBoolParam`
-	     A special "call by reference" implementation for boolean reference types.
-	   :py:class:`CallByRefIntParam`
-	     A special "call by reference" implementation for integer reference types.
-	"""
-	def __init__(self, value=None):
-		self.value = value
-
-	def __ilshift__(self, other):
-		self.value = other
-		return self
-
-	def __eq__(self, other):  return self.value == other
-	def __ne__(self, other):  return self.value != other
-	def __repr__(self):       return repr(self.value)
-	def __str__(self):        return str(self.value)
-
-
-class CallByRefBoolParam(CallByRefParam):
-	"""A special "call by reference" implementation for boolean reference types."""
-	# unary operators
-	def __neg__(self):         return not self.value
-
-	# binary operators - logical
-	def __and__(self, other):  return self.value and other
-	def __or__(self, other):   return self.value or  other
-
-	# binary inplace operators
-	def __iand__(self, other):
-		self.value = self.value and other
-		return self
-	def __ior__(self, other):
-		self.value = self.value or other
-		return self
-
-	# type conversion operators
-	def __bool__(self): return self.value
-	def __int__(self):  return int(self.value)
-
-class CallByRefIntParam(CallByRefParam):
-	"""A special "call by reference" implementation for integer reference types."""
-
-	# unary operators
-	def __neg__(self):            return not self.value
-
-	# binary operators - arithmetic
-	def __add__(self, other):     return self.value +  other
-	def __sub__(self, other):     return self.value -  other
-	def __truediv__(self, other): return self.value /  other
-	def __mul__(self, other):     return self.value *  other
-	def __mod__(self, other):     return self.value %  other
-	def __pow__(self, other):     return self.value ** other
-
-	# binary operators - comparison
-	def __eq__(self, other):  return self.value == other
-	def __ne__(self, other):  return self.value != other
-	def __lt__(self, other):  return self.value <  other
-	def __le__(self, other):  return self.value <= other
-	def __gt__(self, other):  return self.value >  other
-	def __ge__(self, other):  return self.value >= other
-
-	# type conversion operators
-	def __bool__(self):       return bool(self.value)
-	def __int__(self):        return self.value
-
-
 class Init:
 	@classmethod
 	def init(cls):
-		from colorama import init, Back as Background
+		from colorama import init
+
 		init()#strip=False)
 		# print(Background.BLACK, end="")
 

@@ -33,9 +33,9 @@ from enum import unique
 from subprocess                 import check_output, STDOUT
 
 from lib.Functions              import Init
-from ToolChain import ConfigurationException, Edition, EditionDescription, ToolSelector
-from ToolChain.Altera.Quartus   import QuartusException as Altera_QuartusException, Configuration as Altera_Quartus_Configuration, Quartus as Altera_Quartus, Map as Altera_Quartus_Map
-from ToolChain.Intel            import IntelException
+from pyIPCMI.ToolChain import ConfigurationException, Edition, EditionDescription, ToolSelector
+from pyIPCMI.ToolChain.Altera.Quartus   import QuartusException as Altera_QuartusException, Configuration as Altera_Quartus_Configuration, Quartus as Altera_Quartus, Map as Altera_Quartus_Map
+from pyIPCMI.ToolChain.Intel            import IntelException
 
 
 __api__ = [

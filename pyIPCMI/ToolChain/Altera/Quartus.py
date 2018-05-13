@@ -33,13 +33,13 @@ from enum                       import unique
 from subprocess                 import check_output, STDOUT
 
 from lib.Functions              import Init
-from Base.Exceptions            import PlatformNotSupportedException
-from Base.Logging               import Severity, LogEntry
-from Base.Executable            import Executable, CommandLineArgumentList, DryRunException
-from Base.Executable            import ExecutableArgument, ShortValuedFlagArgument, LongValuedFlagArgument, StringArgument, ShortFlagArgument
-from Base.Project               import Project as BaseProject, ProjectFile, FileTypes, SettingsFile
-from ToolChain                  import ToolMixIn, ConfigurationException, ToolConfiguration, EditionDescription, Edition, ToolSelector, OutputFilteredExecutable
-from ToolChain.Altera           import AlteraException
+from pyIPCMI.Base.Exceptions            import PlatformNotSupportedException
+from pyIPCMI.Base.Logging               import Severity, LogEntry
+from pyIPCMI.Base.Executable            import Executable, CommandLineArgumentList, DryRunException
+from pyIPCMI.Base.Executable            import ExecutableArgument, ShortValuedFlagArgument, LongValuedFlagArgument, StringArgument, ShortFlagArgument
+from pyIPCMI.Base.Project               import Project as BaseProject, ProjectFile, FileTypes, SettingsFile
+from pyIPCMI.ToolChain                  import ToolMixIn, ConfigurationException, ToolConfiguration, EditionDescription, Edition, ToolSelector, OutputFilteredExecutable
+from pyIPCMI.ToolChain.Altera           import AlteraException
 
 
 __api__ = [
