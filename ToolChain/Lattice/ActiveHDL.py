@@ -56,7 +56,7 @@ class Configuration(ActiveHDL_Configuration):
 
 	def CheckDependency(self):
 		"""Check if Lattice Diamond support is configured in pyIPCMI."""
-		return (len(self._host.pyIPCMIConfig['INSTALL.Lattice.Diamond']) != 0)
+		return (len(self._host.Config['INSTALL.Lattice.Diamond']) != 0)
 
 	def ConfigureForAll(self):
 		try:

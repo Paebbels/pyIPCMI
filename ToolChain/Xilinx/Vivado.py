@@ -91,7 +91,7 @@ class Configuration(ToolConfiguration):
 
 	def CheckDependency(self):
 		"""Check if general Xilinx support is configured in pyIPCMI."""
-		return (len(self._host.pyIPCMIConfig['INSTALL.Xilinx']) != 0)
+		return (len(self._host.Config['INSTALL.Xilinx']) != 0)
 
 	def ConfigureForAll(self):
 		try:
@@ -102,8 +102,8 @@ class Configuration(ToolConfiguration):
 				version = self._ConfigureVersion()
 				if self._multiVersionSupport:
 					self.PrepareVersionedSections()
-					sectionName = self._host.pyIPCMIConfig[self._section]['SectionName']
-					self._host.pyIPCMIConfig[sectionName]['Version'] = version
+					sectionName = self._host.Config[self._section]['SectionName']
+					self._host.Config[sectionName]['Version'] = version
 
 				self._ConfigureInstallationDirectory()
 				binPath = self._ConfigureBinaryDirectory()

@@ -223,7 +223,7 @@ class Shared(ILogable):
 	def _GetHDLParameters(self, configSectionName):
 		"""Parse option 'HDLParameters' for Verilog Parameters / VHDL Generics."""
 		result = {}
-		hdlParameters = self.Host.pyIPCMIConfig[configSectionName]["HDLParameters"]
+		hdlParameters = self.Host.Config[configSectionName]["HDLParameters"]
 		if (len(hdlParameters) > 0):
 			for keyValuePair in hdlParameters.split(";"):
 				try:

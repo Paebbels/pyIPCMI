@@ -5,7 +5,7 @@
 # ==============================================================================
 # Authors:          Patrick Lehmann
 #
-# Python Package:   Saves The pyIPCMI-Library configuration as python source code.
+# Python Package:   Saves the pyIPCMI configuration as python source code.
 #
 # License:
 # ==============================================================================
@@ -45,11 +45,11 @@ class IHost(ILogable):
 
 	# instance fields
 	Platform =    "string"
-	pyIPCMIConfig =   ExtendedConfigParser()
+	Config =   ExtendedConfigParser()
 
 	# methods
-	def SaveAndReloadpyIPCMIConfiguration(self): pass
+	def SaveAndReloadConfiguration(self): pass
 
 	# Syntax not supported by Python 3.5 -> requires 3.6
 	# Platform :  str =                  None
-	# pyIPCMIConfig : ExtendedConfigParser = None
+	# Config : ExtendedConfigParser = None

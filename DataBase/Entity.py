@@ -169,7 +169,7 @@ class PathElement:
 	@property
 	def ConfigSectionName(self):  return self._configSectionName
 	@property
-	def ConfigSection(self):      return self._host.pyIPCMIConfig[self._configSectionName]
+	def ConfigSection(self):      return self._host.Config[self._configSectionName]
 	@property
 	def Level(self):              return self._parent.Level + 1
 	@property

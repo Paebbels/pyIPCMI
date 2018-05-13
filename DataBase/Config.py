@@ -566,15 +566,15 @@ class Board:
 				self.__device = Device(device)
 		else:
 			boardSectionName = None
-			for board in host.pyIPCMIConfig['BOARDS']:
+			for board in host.Config['BOARDS']:
 				if (board.lower() == boardName):
-					boardSectionName = host.pyIPCMIConfig['BOARDS'][board] # real board name
+					boardSectionName = host.Config['BOARDS'][board] # real board name
 					boardName = boardSectionName.split('.')[1]
 					break
 			else:
 				raise ConfigurationException("Unknown board '{0}'".format(boardName))
 
-			deviceName = host.pyIPCMIConfig[boardSectionName]['FPGA']
+			deviceName = host.Config[boardSectionName]['FPGA']
 			self.__device = Device(deviceName)
 
 		self.__boardName = boardName

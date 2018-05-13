@@ -53,7 +53,7 @@ class Simulator(ModelSimSimulator_Simulator):
 		simulationSteps &= ~SimulationSteps.Elaborate
 		super().__init__(host, dryRun, simulationSteps)
 
-		vSimSimulatorFiles =            host.pyIPCMIConfig['CONFIG.DirectoryNames']['ModelSimFiles']
+		vSimSimulatorFiles =            host.Config['CONFIG.DirectoryNames']['ModelSimFiles']
 		self.Directories.Working =      host.Directories.Temp / vSimSimulatorFiles
 		self.Directories.PreCompiled =  host.Directories.PreCompiled / vSimSimulatorFiles
 		self.ModelSimIniDirectoryPath = self.Directories.PreCompiled
@@ -70,27 +70,27 @@ class Simulator(ModelSimSimulator_Simulator):
 		# create the ModelSim executable factory
 		self.LogVerbose("Preparing Mentor simulator.")
 		# for sectionName in ['INSTALL.Mentor.QuestaSim', 'INSTALL.Mentor.ModelSim', 'INSTALL.Altera.ModelSim']:
-		# 	if (len(self.Host.pyIPCMIConfig.options(sectionName)) != 0):
+		# 	if (len(self.Host.Config.options(sectionName)) != 0):
 		# 		break
 		# else:
 		# XXX: check SectionName if ModelSim is configured
 		# 	raise NotConfiguredException(
 		# 		"Neither Mentor Graphics ModelSim, ModelSim PE nor ModelSim Altera-Edition are configured on this system.")
 
-		# questaSection = self.Host.pyIPCMIConfig[sectionName]
+		# questaSection = self.Host.Config[sectionName]
 		# binaryPath = Path(questaSection['BinaryDirectory'])
 		# version = questaSection['Version']
 
-		binaryPath =  Path(self.Host.pyIPCMIConfig['INSTALL.ModelSim']['BinaryDirectory'])
-		version =     self.Host.pyIPCMIConfig['INSTALL.ModelSim']['Version']
+		binaryPath =  Path(self.Host.Config['INSTALL.ModelSim']['BinaryDirectory'])
+		version =     self.Host.Config['INSTALL.ModelSim']['Version']
 		self._toolChain = ModelSim(self.Host.Platform, self.DryRun, binaryPath, version, logger=self.Logger)
 
 	def Run(self, testbench, board, vhdlVersion, vhdlGenerics=None):
 		# TODO: refactor into a ModelSim module, shared by ModelSim and Cocotb (-> MixIn class)?
 		# select modelsim.ini
-		if board.Device.Vendor is Vendors.Altera:     self.ModelSimIniDirectoryPath /= self.Host.pyIPCMIConfig['CONFIG.DirectoryNames']['AlteraSpecificFiles']
-		elif board.Device.Vendor is Vendors.Lattice:  self.ModelSimIniDirectoryPath /= self.Host.pyIPCMIConfig['CONFIG.DirectoryNames']['LatticeSpecificFiles']
-		elif board.Device.Vendor is Vendors.Xilinx:   self.ModelSimIniDirectoryPath  /= self.Host.pyIPCMIConfig['CONFIG.DirectoryNames']['XilinxSpecificFiles']
+		if board.Device.Vendor is Vendors.Altera:     self.ModelSimIniDirectoryPath /= self.Host.Config['CONFIG.DirectoryNames']['AlteraSpecificFiles']
+		elif board.Device.Vendor is Vendors.Lattice:  self.ModelSimIniDirectoryPath /= self.Host.Config['CONFIG.DirectoryNames']['LatticeSpecificFiles']
+		elif board.Device.Vendor is Vendors.Xilinx:   self.ModelSimIniDirectoryPath  /= self.Host.Config['CONFIG.DirectoryNames']['XilinxSpecificFiles']
 
 		self.ModelSimIniPath = self.ModelSimIniDirectoryPath / self.ModelSimIniPath
 		if not self.ModelSimIniPath.exists():
@@ -167,8 +167,8 @@ class Simulator(ModelSimSimulator_Simulator):
 		if (SimulationSteps.ShowWaveform in self._simulationSteps):
 			return self._RunSimulationWithGUI(testbench)
 
-		tclBatchFilePath =        self.Host.Directories.Root / self.Host.pyIPCMIConfig[testbench.ConfigSectionName]['vSimBatchScript']
-		tclDefaultBatchFilePath = self.Host.Directories.Root / self.Host.pyIPCMIConfig[testbench.ConfigSectionName]['vSimDefaultBatchScript']
+		tclBatchFilePath =        self.Host.Directories.Root / self.Host.Config[testbench.ConfigSectionName]['vSimBatchScript']
+		tclDefaultBatchFilePath = self.Host.Directories.Root / self.Host.Config[testbench.ConfigSectionName]['vSimDefaultBatchScript']
 
 		# create a VHDLSimulator instance
 		vsim = self._toolChain.GetSimulator()
@@ -196,10 +196,10 @@ class Simulator(ModelSimSimulator_Simulator):
 		testbench.Result = vsim.Simulate()
 
 	def _RunSimulationWithGUI(self, testbench):
-		tclGUIFilePath =          self.Host.Directories.Root / self.Host.pyIPCMIConfig[testbench.ConfigSectionName]['vSimGUIScript']
-		tclWaveFilePath =         self.Host.Directories.Root / self.Host.pyIPCMIConfig[testbench.ConfigSectionName]['vSimWaveScript']
-		tclDefaultGUIFilePath =   self.Host.Directories.Root / self.Host.pyIPCMIConfig[testbench.ConfigSectionName]['vSimDefaultGUIScript']
-		tclDefaultWaveFilePath =  self.Host.Directories.Root / self.Host.pyIPCMIConfig[testbench.ConfigSectionName]['vSimDefaultWaveScript']
+		tclGUIFilePath =          self.Host.Directories.Root / self.Host.Config[testbench.ConfigSectionName]['vSimGUIScript']
+		tclWaveFilePath =         self.Host.Directories.Root / self.Host.Config[testbench.ConfigSectionName]['vSimWaveScript']
+		tclDefaultGUIFilePath =   self.Host.Directories.Root / self.Host.Config[testbench.ConfigSectionName]['vSimDefaultGUIScript']
+		tclDefaultWaveFilePath =  self.Host.Directories.Root / self.Host.Config[testbench.ConfigSectionName]['vSimDefaultWaveScript']
 
 		# create a VHDLSimulator instance
 		vsim = self._toolChain.GetSimulator()

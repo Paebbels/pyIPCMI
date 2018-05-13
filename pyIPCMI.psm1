@@ -34,12 +34,15 @@
 # Module parameters
 [CmdletBinding()]
 param(
-	[Parameter(Mandatory=$true)][string]	$pyIPCMI_RootDir
+	[Parameter(Mandatory=$true)][string]	$Library_RootDirectory,
+	[Parameter(Mandatory=$true)][string]	$Library,
+	[Parameter(Mandatory=$true)][string]	$pyIPCMI_Dir,
+	[Parameter(Mandatory=$true)][string]	$pyIPCMI_PSModule
 )
 #
 # ==============================================================================
 # find suitable python version for pyIPCMI
-$PythonVersion_Major, $PythonVersion_Minor =	(3, 4)
+$PythonVersion_Major, $PythonVersion_Minor =	(3, 5)
 
 $Py_exe =		"py.exe"
 $Command =	"$Py_exe -{0} -c `"import sys; sys.exit(not (0x{0:00}{1:00}0000 < sys.hexversion < 0x04000000))`"" -f ($PythonVersion_Major, $PythonVersion_Minor)
@@ -58,23 +61,23 @@ Export-ModuleMember -Variable "Python_Interpreter"
 Export-ModuleMember -Variable "Python_Parameters"
 
 # ==============================================================================
-$pyIPCMI_PythonPath =		"py"
-$pyIPCMI_FrontEndPy =		"pyIPCMI.py"
-$pyIPCMI_ModulePath =		"py\Wrapper"
-$pyIPCMI_HookPath =			"$pyIPCMI_ModulePath\Hooks"
-$pyIPCMI_FrontEnd =			"pyIPCMI.ps1"
+$pyIPCMI_RootDirectory =      "$Library_RootDirectory\$pyIPCMI_Dir"
+$pyIPCMI_FrontEndPy =         "$pyIPCMI_RootDirectory\pyIPCMI.py"
+$pyIPCMI_ConfigDir =          ".pyIPCMI"
+$pyIPCMI_HookDir =            "$pyIPCMI_ConfigDir\Hook"
+$pyIPCMI_HookDirectory =      "$Library_RootDirectory\$pyIPCMI_HookDir"
 
-$pyIPCMI_PythonDir =		"$pyIPCMI_RootDir\$pyIPCMI_PythonPath"
-$pyIPCMI_ModuleDir =		"$pyIPCMI_RootDir\$pyIPCMI_ModulePath"
-$pyIPCMI_HookDir =			"$pyIPCMI_RootDir\$pyIPCMI_HookPath"
+$env:LibraryRootDirectory =   "$Library_RootDirectory"
+$env:Library =                "$Library"
+$env:pyIPCMIRootDirectory =   "$pyIPCMI_RootDirectory"
+$env:pyIPCMIConfigDirectory = "$Library_RootDirectory\.pyIPCMI"
+$env:pyIPCMIFrontEnd =        "$pyIPCMI_FrontEndPy"
 
-$env:pyIPCMIRootDirectory = $pyIPCMI_RootDir
-
-Export-ModuleMember -Variable "pyIPCMI_RootDir"
-Export-ModuleMember -Variable "pyIPCMI_PythonDir"
+Export-ModuleMember -Variable "Library_RootDirectory"
+Export-ModuleMember -Variable "pyIPCMI_RootDirectory"
+Export-ModuleMember -Variable "pyIPCMI_HookDirectory"
 Export-ModuleMember -Variable "pyIPCMI_FrontEndPy"
-Export-ModuleMember -Variable "pyIPCMI_ModuleDir"
-Export-ModuleMember -Variable "pyIPCMI_FrontEnd"
+Export-ModuleMember -Variable "pyIPCMI_PSModule"
 
 # ==============================================================================
 $pyIPCMI_Environments =	@{
@@ -241,8 +244,8 @@ function Get-pyIPCMIEnvironmentArray
 	)
 
 	# set default values
-	$Debug =		$false
-	$pyIPCMIEnv =		$pyIPCMI_Environments
+	$Debug =      $false
+	$pyIPCMIEnv = $pyIPCMI_Environments
 
 	# search parameters for specific options like '-D' to enable batch script debug mode
 	# TODO: restrict to first n=2? parameters

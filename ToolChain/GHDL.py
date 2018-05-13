@@ -141,8 +141,8 @@ class Configuration(ToolConfiguration):
 	def _ConfigureScriptDirectory(self):
 		"""Updates section with value from _template and returns directory as Path object."""
 		# unresolved = self._template[self._host.Platform][self._section]['ScriptDirectory']
-		# self._host.pyIPCMIConfig[self._section]['ScriptDirectory'] = unresolved  # create entry
-		scriptPath = Path(self._host.pyIPCMIConfig[self._section]['ScriptDirectory'])  # resolve entry
+		# self._host.Config[self._section]['ScriptDirectory'] = unresolved  # create entry
+		scriptPath = Path(self._host.Config[self._section]['ScriptDirectory'])  # resolve entry
 
 		if (not scriptPath.exists()):
 			raise ConfigurationException("{0!s} script directory '{1!s}' does not exist.".format(self, scriptPath)) \
@@ -180,8 +180,8 @@ class Configuration(ToolConfiguration):
 		if ((version is None) or (backend is None)):
 			raise ConfigurationException("Version number or back-end name not found in '{0!s} -v' output.".format(ghdlPath))
 
-		self._host.pyIPCMIConfig[self._section]['Version'] = version
-		self._host.pyIPCMIConfig[self._section]['Backend'] = backend
+		self._host.Config[self._section]['Version'] = version
+		self._host.Config[self._section]['Backend'] = backend
 
 
 class GHDL(OutputFilteredExecutable, ToolMixIn):

@@ -105,7 +105,7 @@ __api__ = [
 	'VHDLVersionAttribute',
 	'SimulationStepsAttributeGroup',
 	'CompileStepsAttributeGroup',
-	'PileOfCores',
+	'IPCoreManagementInfrastructure',
 	'main'
 ]
 __all__ = __api__
@@ -156,11 +156,10 @@ class CompileStepsAttributeGroup(Attribute):
 		return func
 
 
-class PileOfCores(ILogable, ArgParseMixin):
-	HeadLine =                "The pyIPCMI-Library - Service Tool"
+class IPCoreManagementInfrastructure(ILogable, ArgParseMixin):
+	HeadLine =                "pyIPCMI - Service Tool"
 
 	# configure hard coded variables here
-	__CONFIGFILE_DIRECTORY =  "py"
 	__CONFIGFILE_PRIVATE =    "config.private.ini"
 	__CONFIGFILE_DEFAULTS =   "config.defaults.ini"
 	__CONFIGFILE_BOARDS =     "config.boards.ini"
@@ -179,6 +178,7 @@ class PileOfCores(ILogable, ArgParseMixin):
 		"""
 		Working =     Path()
 		Root =        Path()
+#		PyIPCMIRoot = Path()
 		ConfigFiles = Path()
 		Solution =    Path()
 		Project =     Path()
@@ -217,7 +217,7 @@ class PileOfCores(ILogable, ArgParseMixin):
 		# Call the constructor of the ArgParseMixin
 		# --------------------------------------------------------------------------
 		description = dedent("""\
-			This is the pyIPCMI-Library Service Tool.
+			This is the pyIPCMI Service Tool.
 			""")
 		epilog = "Pile-of-Cores"
 
@@ -230,12 +230,14 @@ class PileOfCores(ILogable, ArgParseMixin):
 		if sphinx: return
 
 		# Do some basic checks
-		self.__CheckEnvironment()
+		(libraryName, libraryRootDirectory, ConfigDirectory) = self.__CheckEnvironment()
 
 		# declare members
 		# --------------------------------------------------------------------------
 		self.__dryRun =       dryRun
-		self.__pyIPCMIConfig =    None
+		self.Library =        libraryName
+		self.LibraryKey =     "INSTALL." + libraryName
+		self.__config =       None
 		self.__root =         None
 		self.__repo =         None
 		self.__directories =  {}
@@ -245,8 +247,9 @@ class PileOfCores(ILogable, ArgParseMixin):
 
 		self._directories =             self.__Directories__()
 		self._directories.Working =     Path.cwd()
-		self._directories.Root =        Path(environ.get('pyIPCMIRootDirectory'))
-		self._directories.ConfigFiles = self.Directories.Root / self.__CONFIGFILE_DIRECTORY
+		self._directories.Root =        Path(libraryRootDirectory)
+#		self._directories.PyIPCMIRoot = Path(pyIPCMIRootDirectory)
+		self._directories.ConfigFiles = Path(ConfigDirectory)
 
 		self._configFiles =             self.__ConfigFiles__()
 		self._configFiles.Private =     self.Directories.ConfigFiles / self.__CONFIGFILE_PRIVATE
@@ -255,8 +258,8 @@ class PileOfCores(ILogable, ArgParseMixin):
 		self._configFiles.Structure =   self.Directories.ConfigFiles / self.__CONFIGFILE_STRUCTURE
 		self._configFiles.IPCores =     self.Directories.ConfigFiles / self.__CONFIGFILE_IPCORES
 
-		self.__pyIPCMIConfig =              ExtendedConfigParser()
-		self.__pyIPCMIConfig.optionxform =  str
+		self.__config =                 ExtendedConfigParser()
+		self.Config.optionxform =       str
 
 	# class properties
 	# ============================================================================
@@ -271,7 +274,7 @@ class PileOfCores(ILogable, ArgParseMixin):
 	def ConfigFiles(self):        return self._configFiles
 
 	@property
-	def pyIPCMIConfig(self):          return self.__pyIPCMIConfig
+	def Config(self):             return self.__config
 	@property
 	def Root(self):               return self.__root
 	@property
@@ -279,11 +282,20 @@ class PileOfCores(ILogable, ArgParseMixin):
 
 	def __CheckEnvironment(self):
 		if (self.Platform not in ["Windows", "Linux", "Darwin"]):  raise PlatformNotSupportedException(self.Platform)
-		if (environ.get('pyIPCMIRootDirectory') is None):              raise EnvironmentException("Shell environment does not provide 'pyIPCMIRootDirectory' variable.")
+
+		libraryName =             environ.get('Library')
+		libraryRootDirectory =    environ.get('LibraryRootDirectory')
+		pyIPCMIConfigDirectory =  environ.get('pyIPCMIConfigDirectory')
+
+		if (libraryName is None):             raise EnvironmentException("Shell environment does not provide 'Library' variable.")
+		if (libraryRootDirectory is None):    raise EnvironmentException("Shell environment does not provide 'LibraryRootDirectory' variable.")
+		if (pyIPCMIConfigDirectory is None):  raise EnvironmentException("Shell environment does not provide 'pyIPCMIConfigDirectory' variable.")
+
+		return (libraryName, libraryRootDirectory, pyIPCMIConfigDirectory)
 
 	# read pyIPCMI configuration
 	# ============================================================================
-	def __ReadpyIPCMIConfiguration(self):
+	def __ReadConfiguration(self):
 		self.LogVerbose("Reading configuration files...")
 
 		configFiles = [
@@ -302,21 +314,21 @@ class PileOfCores(ILogable, ArgParseMixin):
 			file, name = configFiles[0]
 			self.LogDebug("  {0!s}".format(file))
 			if not file.exists():  raise NotConfiguredException("pyIPCMI's {0} configuration file '{1!s}' does not exist.".format(name, file))  from FileNotFoundError(str(file))
-			self.__pyIPCMIConfig.read(str(file))
+			self.Config.read(str(file))
 
 			for file, name in configFiles[1:]:
 				self.LogDebug("  {0!s}".format(file))
 				if not file.exists():  raise ConfigurationException("pyIPCMI's {0} configuration file '{1!s}' does not exist.".format(name, file))  from FileNotFoundError(str(file))
-				self.__pyIPCMIConfig.read(str(file))
+				self.Config.read(str(file))
 		except DuplicateOptionError as ex:
 			raise ConfigurationException("Error in configuration file '{0!s}'.".format(file)) from ex
 
 		# check pyIPCMI installation directory
-		if (self.Directories.Root != Path(self.pyIPCMIConfig['INSTALL.pyIPCMI']['InstallationDirectory'])):
+		if (self.Directories.Root != Path(self.Config[self.LibraryKey]['InstallationDirectory'])):
 			raise NotConfiguredException("There is a mismatch between pyIPCMIRoot and pyIPCMI's installation directory.")
 
 		# parsing values into class fields
-		configSection =                 self.__pyIPCMIConfig['CONFIG.DirectoryNames']
+		configSection =                 self.Config['CONFIG.DirectoryNames']
 		self.Directories.Source =       self.Directories.Root / configSection['HDLSourceFiles']
 		self.Directories.Testbench =    self.Directories.Root / configSection['TestbenchFiles']
 		self.Directories.NetList =      self.Directories.Root / configSection['NetlistFiles']
@@ -330,7 +342,7 @@ class PileOfCores(ILogable, ArgParseMixin):
 		self.__root = NamespaceRoot(self)
 		self.__repo = Repository(self)
 
-	def __BackuppyIPCMIConfiguration(self):
+	def __BackupConfiguration(self):
 		now = datetime.now()
 		backupFile = self._configFiles.Private.with_suffix(".{datetime}.ini".format(datetime=now.strftime("%Y.%m.%d-%H.%M.%S")))
 		self.LogVerbose("Copying old configuration file to '{0!s}'.".format(backupFile, **Init.Foreground))
@@ -340,32 +352,32 @@ class PileOfCores(ILogable, ArgParseMixin):
 		except OSError as ex:
 			raise ConfigurationException("Error while copying '{0!s}'.".format(self._configFiles.Private)) from ex
 
-	def __WritepyIPCMIConfiguration(self):
-		for sectionName in [sectionName for sectionName in self.__pyIPCMIConfig if not (sectionName.startswith("INSTALL") or sectionName.startswith("SOLUTION"))]:
-			self.__pyIPCMIConfig.remove_section(sectionName)
+	def __WriteConfiguration(self):
+		for sectionName in [sectionName for sectionName in self.Config if not (sectionName.startswith("INSTALL") or sectionName.startswith("SOLUTION"))]:
+			self.Config.remove_section(sectionName)
 
-		self.__pyIPCMIConfig.remove_section("SOLUTION.DEFAULTS")
+		self.Config.remove_section("SOLUTION.DEFAULTS")
 
 		# Writing configuration to disc
 		self.LogNormal("{GREEN}Writing configuration file to '{0!s}'.{NOCOLOR}".format(self._configFiles.Private, **Init.Foreground))
 		with self._configFiles.Private.open('w') as configFileHandle:
-			self.pyIPCMIConfig.write(configFileHandle)
+			self.Config.write(configFileHandle)
 
-	def SaveAndReloadpyIPCMIConfiguration(self):
-		self.__WritepyIPCMIConfiguration()
-		self.__pyIPCMIConfig.clear()
-		self.__ReadpyIPCMIConfiguration()
+	def SaveAndReloadConfiguration(self):
+		self.__WriteConfiguration()
+		self.Config.clear()
+		self.__ReadConfiguration()
 
 	def __PrepareForConfiguration(self):
-		self.__ReadpyIPCMIConfiguration()
+		self.__ReadConfiguration()
 
 	def __PrepareForSimulation(self):
-		self.LogNormal("Initializing pyIPCMI-Library Service Tool for simulations")
-		self.__ReadpyIPCMIConfiguration()
+		self.LogNormal("Initializing pyIPCMI Service Tool for simulations")
+		self.__ReadConfiguration()
 
 	def __PrepareForSynthesis(self):
-		self.LogNormal("Initializing pyIPCMI-Library Service Tool for synthesis")
-		self.__ReadpyIPCMIConfiguration()
+		self.LogNormal("Initializing pyIPCMI Service Tool for synthesis")
+		self.__ReadConfiguration()
 
 	# ============================================================================
 	# Common commands
@@ -461,8 +473,8 @@ class PileOfCores(ILogable, ArgParseMixin):
 
 		# load existing configuration or create a new one
 		try:
-			self.__ReadpyIPCMIConfiguration()
-			self.__BackuppyIPCMIConfiguration()
+			self.__ReadConfiguration()
+			self.__BackupConfiguration()
 			configurator = Configurator(self)
 			configurator.UpdateConfiguration()
 		except NotConfiguredException as ex:
@@ -482,13 +494,13 @@ class PileOfCores(ILogable, ArgParseMixin):
 				configurator.ConfigureTool(toolChain)
 
 		if (self.Logger.LogLevel is Severity.Debug):
-			self.LogDebug("Dumping pyIPCMIConfig...")
+			self.LogDebug("Dumping Config...")
 			self.LogDebug("-" * 40)
-			for sectionName in self.__pyIPCMIConfig.sections():
+			for sectionName in self.Config.sections():
 				if (not sectionName.startswith("INSTALL")):
 					continue
 				self.LogDebug("[{0}]".format(sectionName))
-				configSection = self.__pyIPCMIConfig[sectionName]
+				configSection = self.Config[sectionName]
 				for optionName in configSection:
 					try:
 						optionValue = configSection[optionName]
@@ -510,8 +522,8 @@ class PileOfCores(ILogable, ArgParseMixin):
 
 		# load existing configuration or create a new one
 		try:
-			self.__ReadpyIPCMIConfiguration()
-			self.__BackuppyIPCMIConfiguration()
+			self.__ReadConfiguration()
+			self.__BackupConfiguration()
 			configurator = Configurator(self)
 			configurator.UpdateConfiguration()
 		except NotConfiguredException as ex:
@@ -520,13 +532,13 @@ class PileOfCores(ILogable, ArgParseMixin):
 		configurator.ConfigureDefaultTools()
 
 		if (self.Logger.LogLevel is Severity.Debug):
-			self.LogDebug("Dumping pyIPCMIConfig...")
+			self.LogDebug("Dumping Config...")
 			self.LogDebug("-" * 40)
-			for sectionName in self.__pyIPCMIConfig.sections():
+			for sectionName in self.Config.sections():
 				if (not sectionName.startswith("INSTALL")):
 					continue
 				self.LogDebug("[{0}]".format(sectionName))
-				configSection = self.__pyIPCMIConfig[sectionName]
+				configSection = self.Config[sectionName]
 				for optionName in configSection:
 					try:
 						optionValue = configSection[optionName]
@@ -576,7 +588,7 @@ class PileOfCores(ILogable, ArgParseMixin):
 				raise ConfigurationException("Error while creating '{0!s}'.".format(solutionRootPath)) from ex
 
 			self.__repo.AddSolution(solutionID, solutionName, solutionRootPath)
-		self.__WritepyIPCMIConfiguration()
+		self.__WriteConfiguration()
 		self.LogNormal("Solution {GREEN}successfully{NOCOLOR} created.".format(**Init.Foreground))
 
 
@@ -627,7 +639,7 @@ class PileOfCores(ILogable, ArgParseMixin):
 
 		self.__repo.RemoveSolution(solution)
 
-		self.__WritepyIPCMIConfiguration()
+		self.__WriteConfiguration()
 		self.LogNormal("Solution {GREEN}successfully{NOCOLOR} removed.".format(**Init.Foreground))
 
 
@@ -752,13 +764,13 @@ class PileOfCores(ILogable, ArgParseMixin):
 	# TODO: Maybe required to self-compile libraries again or in the future
 	# def __PrepareVendorLibraryPaths(self):
 	# 	# prepare vendor library path for Altera
-	# 	if (len(self.pyIPCMIConfig.options("INSTALL.Altera.Quartus")) != 0):
-	# 		self.Directories["AlteraPrimitiveSource"] = Path(self.pyIPCMIConfig['INSTALL.Altera.Quartus']['InstallationDirectory']) / "eda/sim_lib"
+	# 	if (len(self.Config.options("INSTALL.Altera.Quartus")) != 0):
+	# 		self.Directories["AlteraPrimitiveSource"] = Path(self.Config['INSTALL.Altera.Quartus']['InstallationDirectory']) / "eda/sim_lib"
 	# 	# prepare vendor library path for Xilinx
-	# 	if (len(self.pyIPCMIConfig.options("INSTALL.Xilinx.ISE")) != 0):
-	# 		self.Directories["XilinxPrimitiveSource"] = Path(self.pyIPCMIConfig['INSTALL.Xilinx.ISE']['InstallationDirectory']) / "ISE/vhdl/src"
-	# 	elif (len(self.pyIPCMIConfig.options("INSTALL.Xilinx.Vivado")) != 0):
-	# 		self.Directories["XilinxPrimitiveSource"] = Path(self.pyIPCMIConfig['INSTALL.Xilinx.Vivado']['InstallationDirectory']) / "data/vhdl/src"
+	# 	if (len(self.Config.options("INSTALL.Xilinx.ISE")) != 0):
+	# 		self.Directories["XilinxPrimitiveSource"] = Path(self.Config['INSTALL.Xilinx.ISE']['InstallationDirectory']) / "ISE/vhdl/src"
+	# 	elif (len(self.Config.options("INSTALL.Xilinx.Vivado")) != 0):
+	# 		self.Directories["XilinxPrimitiveSource"] = Path(self.Config['INSTALL.Xilinx.Vivado']['InstallationDirectory']) / "data/vhdl/src"
 
 	def _ExtractBoard(self, BoardName, DeviceName, force=False):
 		if (BoardName is not None):     return Board(self, BoardName)
@@ -776,12 +788,12 @@ class PileOfCores(ILogable, ArgParseMixin):
 		else:                           return VHDLVersion.Parse(vhdlVersion)
 
 	def __CheckSection(self, sectionName, toolName):
-		if (len(self.pyIPCMIConfig.options(sectionName)) == 0):    raise NotConfiguredException("{0} is not configured on this system.".format(toolName))
-		sectionName = self.pyIPCMIConfig[sectionName]["SectionName"]
-		if (len(self.pyIPCMIConfig.options(sectionName)) == 0):    raise NotConfiguredException("{0} is not configured on this system.".format(toolName))
-		if self.pyIPCMIConfig.has_option(sectionName, "SectionName"):
-			sectionName = self.pyIPCMIConfig[sectionName]["SectionName"]
-			if (len(self.pyIPCMIConfig.options(sectionName)) == 0):  raise NotConfiguredException("{0} is not configured on this system.".format(toolName))
+		if (len(self.Config.options(sectionName)) == 0):    raise NotConfiguredException("{0} is not configured on this system.".format(toolName))
+		sectionName = self.Config[sectionName]["SectionName"]
+		if (len(self.Config.options(sectionName)) == 0):    raise NotConfiguredException("{0} is not configured on this system.".format(toolName))
+		if self.Config.has_option(sectionName, "SectionName"):
+			sectionName = self.Config[sectionName]["SectionName"]
+			if (len(self.Config.options(sectionName)) == 0):  raise NotConfiguredException("{0} is not configured on this system.".format(toolName))
 
 	# TODO: move to Configuration class in ToolChain.Aldec.ActiveHDL
 	def _CheckActiveHDL(self):
@@ -893,13 +905,13 @@ class PileOfCores(ILogable, ArgParseMixin):
 		if (args.SolutionID is not None):
 			solutionName = args.SolutionID
 			print("Solution name: {0}".format(solutionName))
-			if self.pyIPCMIConfig.has_option("SOLUTION.Solutions", solutionName):
+			if self.Config.has_option("SOLUTION.Solutions", solutionName):
 				sectionName = "SOLUTION.{0}".format(solutionName)
 				print("Found registered solution:")
-				print("  Name: {0}".format(self.pyIPCMIConfig[sectionName]['Name']))
-				print("  Path: {0}".format(self.pyIPCMIConfig[sectionName]['Path']))
+				print("  Name: {0}".format(self.Config[sectionName]['Name']))
+				print("  Path: {0}".format(self.Config[sectionName]['Path']))
 
-				solutionRootPath = self.Directories.Root / self.pyIPCMIConfig[sectionName]['Path']
+				solutionRootPath = self.Directories.Root / self.Config[sectionName]['Path']
 				solutionConfigFile = solutionRootPath / ".pyIPCMI" / "solution.config.ini"
 				solutionDefaultsFile = solutionRootPath / ".pyIPCMI" / "solution.defaults.ini"
 				print("  sln files: {0!s}  {1!s}".format(solutionConfigFile, solutionDefaultsFile))
@@ -913,10 +925,10 @@ class PileOfCores(ILogable, ArgParseMixin):
 				if not solutionDefaultsFile.exists():
 					raise NotConfiguredException("Solution's {0} defaults file '{1!s}' does not exist.".format(solutionName, solutionDefaultsFile)) \
 						from FileNotFoundError(str(solutionDefaultsFile))
-				self.__pyIPCMIConfig.read(str(solutionConfigFile))
-				self.__pyIPCMIConfig.read(str(solutionDefaultsFile))
+				self.Config.read(str(solutionConfigFile))
+				self.Config.read(str(solutionDefaultsFile))
 
-				section =          self.pyIPCMIConfig['PROJECT.Projects']
+				section =          self.Config['PROJECT.Projects']
 				defaultLibrary =  section['DefaultLibrary']
 				print("Solution:")
 				print("  Name:            {0}".format(section['Name']))
@@ -925,13 +937,13 @@ class PileOfCores(ILogable, ArgParseMixin):
 				for item in section:
 					if (section[item] in ["pyIPCMIProject", "ISEProject", "VivadoProject", "QuartusProject"]):
 						sectionName2 = "PROJECT.{0}".format(item)
-						print("    {0}".format(self.pyIPCMIConfig[sectionName2]['Name']))
+						print("    {0}".format(self.Config[sectionName2]['Name']))
 
 				print("  Namespace roots:")
 				for item in section:
 					if (section[item] == "Library"):
 						libraryPrefix = item
-						print("    {0: <16}  {1}".format(self.pyIPCMIConfig[libraryPrefix]['Name'], libraryPrefix))
+						print("    {0: <16}  {1}".format(self.Config[libraryPrefix]['Name'], libraryPrefix))
 
 						self.Root.AddLibrary(libraryPrefix, libraryPrefix)
 
@@ -1204,8 +1216,8 @@ class PileOfCores(ILogable, ArgParseMixin):
 		self._CheckModelSim()
 
 		# check if QuestaSim is configured
-		if (len(self.pyIPCMIConfig.options("INSTALL.Mentor.QuestaSim")) == 0):
-			if (len(self.pyIPCMIConfig.options("INSTALL.Altera.ModelSim")) == 0):
+		if (len(self.Config.options("INSTALL.Mentor.QuestaSim")) == 0):
+			if (len(self.Config.options("INSTALL.Altera.ModelSim")) == 0):
 				raise NotConfiguredException("Neither Mentor QuestaSim, Mentor ModelSim nor ModelSim Altera Edition are configured on this system.")
 
 		fqnList =         self._ExtractFQNs(args.FQN)
@@ -1445,7 +1457,7 @@ def main(): # mccabe:disable=MC0001
 	try:
 		Init.init()
 		# handover to a class instance
-		pyIPCMI = PileOfCores(debug, verbose, quiet, dryRun)
+		pyIPCMI = IPCoreManagementInfrastructure(debug, verbose, quiet, dryRun)
 		pyIPCMI.Run()
 		Exit.exit()
 

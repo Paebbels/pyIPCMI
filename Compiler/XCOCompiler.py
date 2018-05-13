@@ -53,7 +53,7 @@ class Compiler(BaseCompiler):
 	def __init__(self, host, dryRun, noCleanUp):
 		super().__init__(host, dryRun, noCleanUp)
 
-		configSection = host.pyIPCMIConfig['CONFIG.DirectoryNames']
+		configSection = host.Config['CONFIG.DirectoryNames']
 		self.Directories.Working = host.Directories.Temp / configSection['ISECoreGeneratorFiles']
 		self.Directories.Netlist = host.Directories.Root / configSection['NetlistFiles']
 
@@ -61,7 +61,7 @@ class Compiler(BaseCompiler):
 
 	def _PrepareCompiler(self):
 		super()._PrepareCompiler()
-		iseSection =            self.Host.pyIPCMIConfig['INSTALL.Xilinx.ISE']
+		iseSection =            self.Host.Config['INSTALL.Xilinx.ISE']
 		version =               iseSection['Version']
 		installationDirectory = Path(iseSection['InstallationDirectory'])
 		binaryPath =            Path(iseSection['BinaryDirectory'])
@@ -120,10 +120,10 @@ class Compiler(BaseCompiler):
 
 	def _WriteSpecialSectionIntoConfig(self, device):
 		# add the key Device to section SPECIAL at runtime to change interpolation results
-		self.Host.pyIPCMIConfig['SPECIAL'] = {}
-		self.Host.pyIPCMIConfig['SPECIAL']['Device'] =        device.FullName
-		self.Host.pyIPCMIConfig['SPECIAL']['DeviceSeries'] =  device.Series
-		self.Host.pyIPCMIConfig['SPECIAL']['OutputDir']	=     self.Directories.Working.as_posix()
+		self.Host.Config['SPECIAL'] = {}
+		self.Host.Config['SPECIAL']['Device'] =        device.FullName
+		self.Host.Config['SPECIAL']['DeviceSeries'] =  device.Series
+		self.Host.Config['SPECIAL']['OutputDir']	=     self.Directories.Working.as_posix()
 
 	def _RunCompile(self, netlist, device):
 		self.LogVerbose("Patching coregen.cgp and .cgc files...")

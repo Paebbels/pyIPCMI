@@ -87,7 +87,7 @@ class Configuration(ToolConfiguration):
 
 	def CheckDependency(self):
 		"""Check if general Aldec support is configured in pyIPCMI."""
-		return (len(self._host.pyIPCMIConfig['INSTALL.Aldec']) != 0)
+		return (len(self._host.Config['INSTALL.Aldec']) != 0)
 
 	def ConfigureForAll(self):
 		"""Configuration routine for Aldec Riviera-PRO on all supported platforms.
@@ -110,8 +110,8 @@ class Configuration(ToolConfiguration):
 				version = self._ConfigureVersion()
 				if self._multiVersionSupport:
 					self.PrepareVersionedSections()
-					sectionName = self._host.pyIPCMIConfig[self._section]['SectionName']
-					self._host.pyIPCMIConfig[sectionName]['Version'] = version
+					sectionName = self._host.Config[self._section]['SectionName']
+					self._host.Config[sectionName]['Version'] = version
 
 				self._ConfigureInstallationDirectory()
 				# Configure binary directory

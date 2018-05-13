@@ -102,7 +102,7 @@ class Configuration(ToolConfiguration):
 
 	def CheckDependency(self):
 		"""Check if general Altera support is configured in pyIPCMI."""
-		return (len(self._host.pyIPCMIConfig['INSTALL.Altera']) != 0)
+		return (len(self._host.Config['INSTALL.Altera']) != 0)
 
 	def ConfigureForAll(self):
 		try:
@@ -113,8 +113,8 @@ class Configuration(ToolConfiguration):
 				version = self._ConfigureVersion()
 				if self._multiVersionSupport:
 					self.PrepareVersionedSections()
-					sectionName = self._host.pyIPCMIConfig[self._section]['SectionName']
-					self._host.pyIPCMIConfig[sectionName]['Version'] = version
+					sectionName = self._host.Config[self._section]['SectionName']
+					self._host.Config[sectionName]['Version'] = version
 
 				self._ConfigureInstallationDirectory()
 				binPath = self._ConfigureBinaryDirectory()
@@ -150,11 +150,11 @@ class Selector(ToolSelector):
 
 		if (len(editions) == 0):
 			self._host.LogWarning("No Quartus installation found.", indent=1)
-			self._host.pyIPCMIConfig['INSTALL.Quartus'] = OrderedDict()
+			self._host.Config['INSTALL.Quartus'] = OrderedDict()
 		elif (len(editions) == 1):
 			self._host.LogNormal("Default Quartus installation:", indent=1)
 			self._host.LogNormal("Set to {0}".format(editions[0].Name), indent=2)
-			self._host.pyIPCMIConfig['INSTALL.Quartus']['SectionName'] = editions[0].Section
+			self._host.Config['INSTALL.Quartus']['SectionName'] = editions[0].Section
 		else:
 			self._host.LogNormal("Select Quartus installation:", indent=1)
 
@@ -163,7 +163,7 @@ class Selector(ToolSelector):
 				defaultEdition = editions[0]
 
 			selectedEdition = self._AskSelection(editions, defaultEdition)
-			self._host.pyIPCMIConfig['INSTALL.Quartus']['SectionName'] = selectedEdition.Section
+			self._host.Config['INSTALL.Quartus']['SectionName'] = selectedEdition.Section
 
 
 class Quartus(ToolMixIn):

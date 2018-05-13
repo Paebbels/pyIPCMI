@@ -65,7 +65,7 @@ class Configuration(Mentor_ModelSim_Configuration):
 
 	def CheckDependency(self):
 		"""Check if general Altera support is configured in pyIPCMI."""
-		return (len(self._host.pyIPCMIConfig['INSTALL.Altera']) != 0)
+		return (len(self._host.Config['INSTALL.Altera']) != 0)
 
 	def ConfigureForAll(self):
 		try:
@@ -76,11 +76,11 @@ class Configuration(Mentor_ModelSim_Configuration):
 
 				changed,edition = self._ConfigureEdition()
 				if changed:
-					configSection = self._host.pyIPCMIConfig[self._section]
+					configSection = self._host.Config[self._section]
 					if (edition is AlteraModelSimEditions.ModelSimAlteraEdition):
-						configSection['InstallationDirectory'] = self._host.pyIPCMIConfig.get(self._section, 'InstallationDirectory', raw=True).replace("_ase", "_ae")
+						configSection['InstallationDirectory'] = self._host.Config.get(self._section, 'InstallationDirectory', raw=True).replace("_ase", "_ae")
 					elif (edition is AlteraModelSimEditions.ModelSimAlteraStarterEdition):
-						configSection['InstallationDirectory'] = self._host.pyIPCMIConfig.get(self._section, 'InstallationDirectory', raw=True).replace("_ae", "_ase")
+						configSection['InstallationDirectory'] = self._host.Config.get(self._section, 'InstallationDirectory', raw=True).replace("_ae", "_ase")
 
 				self._ConfigureInstallationDirectory()
 				binPath = self._ConfigureBinaryDirectory()
@@ -92,13 +92,13 @@ class Configuration(Mentor_ModelSim_Configuration):
 
 	def _ConfigureEdition(self):
 		"""Configure ModelSim for Altera."""
-		configSection =   self._host.pyIPCMIConfig[self._section]
+		configSection =   self._host.Config[self._section]
 		defaultEdition =  AlteraModelSimEditions.Parse(configSection['Edition'])
 		edition =         super()._ConfigureEdition(AlteraModelSimEditions, defaultEdition)
 
 		if (edition is not defaultEdition):
 			configSection['Edition'] = edition.Name
-			self._host.pyIPCMIConfig.Interpolation.clear_cache()
+			self._host.Config.Interpolation.clear_cache()
 			return (True, edition)
 		else:
 			return (False, edition)
@@ -128,7 +128,7 @@ class Configuration(Mentor_ModelSim_Configuration):
 				if match is not None:
 					version = match.group(1)
 
-		self._host.pyIPCMIConfig[self._section]['Version'] = version
+		self._host.Config[self._section]['Version'] = version
 
 
 class AlteraEditionConfiguration(Configuration):

@@ -59,7 +59,7 @@ class Simulator(BaseSimulator):
 		"""Constructor"""
 		super().__init__(host, dryRun, simulationSteps)
 
-		ghdlFilesDirectoryName =        host.pyIPCMIConfig['CONFIG.DirectoryNames']['GHDLFiles']
+		ghdlFilesDirectoryName =        host.Config['CONFIG.DirectoryNames']['GHDLFiles']
 		self.Directories.Working =      host.Directories.Temp / ghdlFilesDirectoryName
 		self.Directories.PreCompiled =  host.Directories.PreCompiled / ghdlFilesDirectoryName
 
@@ -75,15 +75,15 @@ class Simulator(BaseSimulator):
 		if (SimulationSteps.ShowWaveform in self._simulationSteps):
 			# prepare paths for GTKWave, if configured
 			sectionName = 'INSTALL.GTKWave'
-			if (len(host.pyIPCMIConfig.options(sectionName)) != 0):
-				self.Directories.GTKWBinary = Path(host.pyIPCMIConfig[sectionName]['BinaryDirectory'])
+			if (len(host.Config.options(sectionName)) != 0):
+				self.Directories.GTKWBinary = Path(host.Config[sectionName]['BinaryDirectory'])
 			else:
 				raise NotConfiguredException("No GHDL compatible waveform viewer is configured on this system.")
 
 	def _PrepareSimulator(self):
 		"""Create the GHDL executable factory instance."""
 		self.LogVerbose("Preparing GHDL simulator.")
-		ghdlSection =     self.Host.pyIPCMIConfig['INSTALL.GHDL']
+		ghdlSection =     self.Host.Config['INSTALL.GHDL']
 		binaryPath =      Path(ghdlSection['BinaryDirectory'])
 		version =         ghdlSection['Version']
 		backend =         ghdlSection['Backend']
@@ -208,7 +208,7 @@ class Simulator(BaseSimulator):
 
 		# set dump format to save simulation results to *.vcd file
 		if (SimulationSteps.ShowWaveform in self._simulationSteps):
-			configSection = self.Host.pyIPCMIConfig[testbench.ConfigSectionName]
+			configSection = self.Host.Config[testbench.ConfigSectionName]
 			testbench.WaveformOptionFile = Path(configSection['ghdlWaveformOptionFile'])
 			testbench.WaveformFileFormat = configSection['ghdlWaveformFileFormat']
 
@@ -243,12 +243,12 @@ class Simulator(BaseSimulator):
 				from FileNotFoundError(str(testbench.WaveformFile))
 
 		gtkwBinaryPath =    self.Directories.GTKWBinary
-		gtkwVersion =       self.Host.pyIPCMIConfig['INSTALL.GTKWave']['Version']
+		gtkwVersion =       self.Host.Config['INSTALL.GTKWave']['Version']
 		gtkw = GTKWave(self.Host.Platform, self.DryRun, gtkwBinaryPath, gtkwVersion, logger=self.Logger)
 		gtkw.Parameters[gtkw.SwitchDumpFile] = str(testbench.WaveformFile)
 
 		# if GTKWave savefile exists, load it's settings
-		configSection =     self.Host.pyIPCMIConfig[testbench.ConfigSectionName]
+		configSection =     self.Host.Config[testbench.ConfigSectionName]
 		gtkwSaveFilePath =  self.Host.Directories.Root / configSection['gtkwSaveFile']
 		if gtkwSaveFilePath.exists():
 			self.LogDebug("Found waveform save file: '{0!s}'".format(gtkwSaveFilePath))

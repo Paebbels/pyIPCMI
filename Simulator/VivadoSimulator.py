@@ -52,7 +52,7 @@ class Simulator(BaseSimulator, XilinxProjectExportMixIn):
 		super().__init__(host, dryRun, simulationSteps)
 		XilinxProjectExportMixIn.__init__(self)
 
-		vivadoFilesDirectoryName =      host.pyIPCMIConfig['CONFIG.DirectoryNames']['VivadoSimulatorFiles']
+		vivadoFilesDirectoryName =      host.Config['CONFIG.DirectoryNames']['VivadoSimulatorFiles']
 		self.Directories.Working =      host.Directories.Temp / vivadoFilesDirectoryName
 		self.Directories.PreCompiled =  host.Directories.PreCompiled / vivadoFilesDirectoryName
 
@@ -62,7 +62,7 @@ class Simulator(BaseSimulator, XilinxProjectExportMixIn):
 	def _PrepareSimulator(self):
 		# create the Vivado executable factory
 		self.LogVerbose("Preparing Vivado simulator.")
-		vivadoSection =         self.Host.pyIPCMIConfig['INSTALL.Xilinx.Vivado']
+		vivadoSection =         self.Host.Config['INSTALL.Xilinx.Vivado']
 		version =               vivadoSection['Version']
 		installationDirectory = Path(vivadoSection['InstallationDirectory'])
 		binaryPath =            Path(vivadoSection['BinaryDirectory'])
@@ -100,9 +100,9 @@ class Simulator(BaseSimulator, XilinxProjectExportMixIn):
 
 	def _RunSimulation(self, testbench):
 		xSimLogFilePath =    self.Directories.Working / (testbench.ModuleName + ".xSim.log")
-		tclBatchFilePath =  self.Host.Directories.Root / self.Host.pyIPCMIConfig[testbench.ConfigSectionName]['xSimBatchScript']
-		tclGUIFilePath =    self.Host.Directories.Root / self.Host.pyIPCMIConfig[testbench.ConfigSectionName]['xSimGUIScript']
-		wcfgFilePath =      self.Host.Directories.Root / self.Host.pyIPCMIConfig[testbench.ConfigSectionName]['xSimWaveformConfigFile']
+		tclBatchFilePath =  self.Host.Directories.Root / self.Host.Config[testbench.ConfigSectionName]['xSimBatchScript']
+		tclGUIFilePath =    self.Host.Directories.Root / self.Host.Config[testbench.ConfigSectionName]['xSimGUIScript']
+		wcfgFilePath =      self.Host.Directories.Root / self.Host.Config[testbench.ConfigSectionName]['xSimWaveformConfigFile']
 
 		# create a VivadoSimulator instance
 		xSim = self._toolChain.GetSimulator()

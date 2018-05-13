@@ -50,7 +50,7 @@ class Compiler(BaseCompiler):
 	def __init__(self, host, dryRun, noCleanUp):
 		super().__init__(host, dryRun, noCleanUp)
 
-		configSection = host.pyIPCMIConfig['CONFIG.DirectoryNames']
+		configSection = host.Config['CONFIG.DirectoryNames']
 		self.Directories.Working = host.Directories.Temp / configSection['QuartusSynthesisFiles']
 		self.Directories.Netlist = host.Directories.Root / configSection['NetlistFiles']
 
@@ -60,12 +60,12 @@ class Compiler(BaseCompiler):
 		super()._PrepareCompiler()
 
 		# XXX: check SectionName if Quartus is configured
-		# quartusSection = self.Host.pyIPCMIConfig['INSTALL.Altera.Quartus']
+		# quartusSection = self.Host.Config['INSTALL.Altera.Quartus']
 		# binaryPath = Path(quartusSection['BinaryDirectory'])
 		# version =  quartusSection['Version']
 
-		binaryPath =  Path(self.Host.pyIPCMIConfig['INSTALL.Quartus']['BinaryDirectory'])
-		version =     self.Host.pyIPCMIConfig['INSTALL.Quartus']['Version']
+		binaryPath =  Path(self.Host.Config['INSTALL.Quartus']['BinaryDirectory'])
+		version =     self.Host.Config['INSTALL.Quartus']['Version']
 		self._toolChain =    Quartus(self.Host.Platform, self.DryRun, binaryPath, version, logger=self.Logger)
 
 	def RunAll(self, fqnList, *args, **kwargs):
@@ -125,10 +125,10 @@ class Compiler(BaseCompiler):
 
 	def _WriteSpecialSectionIntoConfig(self, device):
 		# add the key Device to section SPECIAL at runtime to change interpolation results
-		self.Host.pyIPCMIConfig['SPECIAL'] = {}
-		self.Host.pyIPCMIConfig['SPECIAL']['Device'] =        device.ShortName
-		self.Host.pyIPCMIConfig['SPECIAL']['DeviceSeries'] =  device.Series
-		self.Host.pyIPCMIConfig['SPECIAL']['OutputDir']	=      self.Directories.Working.as_posix()
+		self.Host.Config['SPECIAL'] = {}
+		self.Host.Config['SPECIAL']['Device'] =        device.ShortName
+		self.Host.Config['SPECIAL']['DeviceSeries'] =  device.Series
+		self.Host.Config['SPECIAL']['OutputDir']	=      self.Directories.Working.as_posix()
 
 
 	def _WriteQuartusProjectFile(self, netlist, device):

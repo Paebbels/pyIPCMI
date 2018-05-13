@@ -72,13 +72,13 @@ class Configuration(ToolConfiguration):
 				from NotADirectoryError(str(pyIPCMIInstallationDirectory))
 
 		self._host.LogNormal("  Installation directory: {0!s} (found in environment variable)".format(pyIPCMIInstallationDirectory))
-		self._host.pyIPCMIConfig['INSTALL.pyIPCMI']['InstallationDirectory'] = pyIPCMIInstallationDirectory.as_posix()
+		self._host.Config[self._host.LibraryKey]['InstallationDirectory'] = pyIPCMIInstallationDirectory.as_posix()
 
 	def RunPostConfigurationTasks(self):
 		success = False
-		if (len(self._host.pyIPCMIConfig['INSTALL.Git']) != 0):
+		if (len(self._host.Config['INSTALL.Git']) != 0):
 			try:
-				binaryDirectoryPath = Path(self._host.pyIPCMIConfig['INSTALL.Git']['BinaryDirectory'])
+				binaryDirectoryPath = Path(self._host.Config['INSTALL.Git']['BinaryDirectory'])
 				git = Git(self._host.Platform, self._host.DryRun, binaryDirectoryPath, "", logger=self._host.Logger)
 
 				gitDescribe =   git.GetGitDescribe()
@@ -87,16 +87,16 @@ class Configuration(ToolConfiguration):
 				latestTagName = gitDescribe.Execute().strip()
 
 				self._host.LogNormal("  pyIPCMI version: {0} (found in git)".format(latestTagName))
-				self._host.pyIPCMIConfig['INSTALL.pyIPCMI']['Version'] = latestTagName
+				self._host.Config[self._host.LibraryKey]['Version'] = latestTagName
 				success = True
 			except CalledProcessError:
 				pass
 
 		if not success:
 			self._host.LogWarning("Can't get version information from latest Git tag.")
-			pyIPCMIVersion = self._template['ALL']['INSTALL.pyIPCMI']['Version']
+			pyIPCMIVersion = self._template['ALL'][self._host.LibraryKey]['Version']
 			self._host.LogNormal("  pyIPCMI version: {0} (found in default configuration)".format(pyIPCMIVersion))
-			self._host.pyIPCMIConfig['INSTALL.pyIPCMI']['Version'] = pyIPCMIVersion
+			self._host.Config[self._host.LibraryKey]['Version'] = pyIPCMIVersion
 
 	# LOCAL = git rev-parse @
 	# PS G:\git\pyIPCMI> git rev-parse "@"

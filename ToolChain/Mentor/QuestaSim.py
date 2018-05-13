@@ -81,8 +81,8 @@ class Configuration(ModelSim_Configuration):
 				version = self._ConfigureVersion()
 				if self._multiVersionSupport:
 					self.PrepareVersionedSections()
-					sectionName = self._host.pyIPCMIConfig[self._section]['SectionName']
-					self._host.pyIPCMIConfig[sectionName]['Version'] = version
+					sectionName = self._host.Config[self._section]['SectionName']
+					self._host.Config[sectionName]['Version'] = version
 
 				self._ConfigureInstallationDirectory()
 				binPath = self._ConfigureBinaryDirectory()

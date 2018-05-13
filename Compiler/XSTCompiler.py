@@ -55,7 +55,7 @@ class Compiler(BaseCompiler, XilinxProjectExportMixIn):
 		super().__init__(host, dryRun, noCleanUp)
 		XilinxProjectExportMixIn.__init__(self)
 
-		configSection = host.pyIPCMIConfig['CONFIG.DirectoryNames']
+		configSection = host.Config['CONFIG.DirectoryNames']
 		self.Directories.Working =  host.Directories.Temp / configSection['ISESynthesisFiles']
 		self.Directories.XSTFiles = host.Directories.Root / configSection['ISESynthesisFiles']
 		self.Directories.Netlist =  host.Directories.Root / configSection['NetlistFiles']
@@ -64,7 +64,7 @@ class Compiler(BaseCompiler, XilinxProjectExportMixIn):
 
 	def _PrepareCompiler(self):
 		super()._PrepareCompiler()
-		iseSection =            self.Host.pyIPCMIConfig['INSTALL.Xilinx.ISE']
+		iseSection =            self.Host.Config['INSTALL.Xilinx.ISE']
 		version =               iseSection['Version']
 		installationDirectory = Path(iseSection['InstallationDirectory'])
 		binaryPath =            Path(iseSection['BinaryDirectory'])
@@ -129,10 +129,10 @@ class Compiler(BaseCompiler, XilinxProjectExportMixIn):
 
 	def _WriteSpecialSectionIntoConfig(self, device):
 		# add the key Device to section SPECIAL at runtime to change interpolation results
-		self.Host.pyIPCMIConfig['SPECIAL'] = {}
-		self.Host.pyIPCMIConfig['SPECIAL']['Device'] =        device.FullName
-		self.Host.pyIPCMIConfig['SPECIAL']['DeviceSeries'] =  device.Series
-		self.Host.pyIPCMIConfig['SPECIAL']['OutputDir']	=      self.Directories.Working.as_posix()
+		self.Host.Config['SPECIAL'] = {}
+		self.Host.Config['SPECIAL']['Device'] =        device.FullName
+		self.Host.Config['SPECIAL']['DeviceSeries'] =  device.Series
+		self.Host.Config['SPECIAL']['OutputDir']	=      self.Directories.Working.as_posix()
 
 	def _RunCompile(self, netlist):
 		reportFilePath = self.Directories.Working / (netlist.ModuleName + ".log")
@@ -163,66 +163,66 @@ class Compiler(BaseCompiler, XilinxProjectExportMixIn):
 
 		xstTemplateDictionary = {
 			'prjFile':                                                            str(netlist.PrjFile),
-			'UseNewParser': self.Host.pyIPCMIConfig[netlist.ConfigSectionName]                  ['XSTOption.UseNewParser'],
-			'InputFormat': self.Host.pyIPCMIConfig[netlist.ConfigSectionName]                   ['XSTOption.InputFormat'],
-			'OutputFormat': self.Host.pyIPCMIConfig[netlist.ConfigSectionName]                  ['XSTOption.OutputFormat'],
+			'UseNewParser': self.Host.Config[netlist.ConfigSectionName]                  ['XSTOption.UseNewParser'],
+			'InputFormat': self.Host.Config[netlist.ConfigSectionName]                   ['XSTOption.InputFormat'],
+			'OutputFormat': self.Host.Config[netlist.ConfigSectionName]                  ['XSTOption.OutputFormat'],
 			'OutputName':                                                         netlist.ModuleName,
 			'Part':                                                               str(device),
 			'TopModuleName':                                                      netlist.ModuleName,
-			'OptimizationMode': self.Host.pyIPCMIConfig[netlist.ConfigSectionName]              ['XSTOption.OptimizationMode'],
-			'OptimizationLevel': self.Host.pyIPCMIConfig[netlist.ConfigSectionName]             ['XSTOption.OptimizationLevel'],
-			'PowerReduction': self.Host.pyIPCMIConfig[netlist.ConfigSectionName]                ['XSTOption.PowerReduction'],
-			'IgnoreSynthesisConstraintsFile': self.Host.pyIPCMIConfig[netlist.ConfigSectionName]['XSTOption.IgnoreSynthesisConstraintsFile'],
+			'OptimizationMode': self.Host.Config[netlist.ConfigSectionName]              ['XSTOption.OptimizationMode'],
+			'OptimizationLevel': self.Host.Config[netlist.ConfigSectionName]             ['XSTOption.OptimizationLevel'],
+			'PowerReduction': self.Host.Config[netlist.ConfigSectionName]                ['XSTOption.PowerReduction'],
+			'IgnoreSynthesisConstraintsFile': self.Host.Config[netlist.ConfigSectionName]['XSTOption.IgnoreSynthesisConstraintsFile'],
 			'SynthesisConstraintsFile':                                           str(netlist.XcfFile),
-			'KeepHierarchy': self.Host.pyIPCMIConfig[netlist.ConfigSectionName]                 ['XSTOption.KeepHierarchy'],
-			'NetListHierarchy': self.Host.pyIPCMIConfig[netlist.ConfigSectionName]              ['XSTOption.NetListHierarchy'],
-			'GenerateRTLView': self.Host.pyIPCMIConfig[netlist.ConfigSectionName]               ['XSTOption.GenerateRTLView'],
-			'GlobalOptimization': self.Host.pyIPCMIConfig[netlist.ConfigSectionName]            ['XSTOption.Globaloptimization'],
-			'ReadCores': self.Host.pyIPCMIConfig[netlist.ConfigSectionName]                     ['XSTOption.ReadCores'],
+			'KeepHierarchy': self.Host.Config[netlist.ConfigSectionName]                 ['XSTOption.KeepHierarchy'],
+			'NetListHierarchy': self.Host.Config[netlist.ConfigSectionName]              ['XSTOption.NetListHierarchy'],
+			'GenerateRTLView': self.Host.Config[netlist.ConfigSectionName]               ['XSTOption.GenerateRTLView'],
+			'GlobalOptimization': self.Host.Config[netlist.ConfigSectionName]            ['XSTOption.Globaloptimization'],
+			'ReadCores': self.Host.Config[netlist.ConfigSectionName]                     ['XSTOption.ReadCores'],
 			'SearchDirectories':                                                  '"{0!s}"'.format(self.Directories.Destination),
-			'WriteTimingConstraints': self.Host.pyIPCMIConfig[netlist.ConfigSectionName]        ['XSTOption.WriteTimingConstraints'],
-			'CrossClockAnalysis': self.Host.pyIPCMIConfig[netlist.ConfigSectionName]            ['XSTOption.CrossClockAnalysis'],
-			'HierarchySeparator': self.Host.pyIPCMIConfig[netlist.ConfigSectionName]            ['XSTOption.HierarchySeparator'],
-			'BusDelimiter': self.Host.pyIPCMIConfig[netlist.ConfigSectionName]                  ['XSTOption.BusDelimiter'],
-			'Case': self.Host.pyIPCMIConfig[netlist.ConfigSectionName]                          ['XSTOption.Case'],
-			'SliceUtilizationRatio': self.Host.pyIPCMIConfig[netlist.ConfigSectionName]         ['XSTOption.SliceUtilizationRatio'],
-			'BRAMUtilizationRatio': self.Host.pyIPCMIConfig[netlist.ConfigSectionName]          ['XSTOption.BRAMUtilizationRatio'],
-			'DSPUtilizationRatio': self.Host.pyIPCMIConfig[netlist.ConfigSectionName]           ['XSTOption.DSPUtilizationRatio'],
-			'LUTCombining': self.Host.pyIPCMIConfig[netlist.ConfigSectionName]                  ['XSTOption.LUTCombining'],
-			'ReduceControlSets': self.Host.pyIPCMIConfig[netlist.ConfigSectionName]             ['XSTOption.ReduceControlSets'],
-			'Verilog2001': self.Host.pyIPCMIConfig[netlist.ConfigSectionName]                   ['XSTOption.Verilog2001'],
-			'FSMExtract': self.Host.pyIPCMIConfig[netlist.ConfigSectionName]                    ['XSTOption.FSMExtract'],
-			'FSMEncoding': self.Host.pyIPCMIConfig[netlist.ConfigSectionName]                   ['XSTOption.FSMEncoding'],
-			'FSMSafeImplementation': self.Host.pyIPCMIConfig[netlist.ConfigSectionName]         ['XSTOption.FSMSafeImplementation'],
-			'FSMStyle': self.Host.pyIPCMIConfig[netlist.ConfigSectionName]                      ['XSTOption.FSMStyle'],
-			'RAMExtract': self.Host.pyIPCMIConfig[netlist.ConfigSectionName]                    ['XSTOption.RAMExtract'],
-			'RAMStyle': self.Host.pyIPCMIConfig[netlist.ConfigSectionName]                      ['XSTOption.RAMStyle'],
-			'ROMExtract': self.Host.pyIPCMIConfig[netlist.ConfigSectionName]                    ['XSTOption.ROMExtract'],
-			'ROMStyle': self.Host.pyIPCMIConfig[netlist.ConfigSectionName]                      ['XSTOption.ROMStyle'],
-			'MUXExtract': self.Host.pyIPCMIConfig[netlist.ConfigSectionName]                    ['XSTOption.MUXExtract'],
-			'MUXStyle': self.Host.pyIPCMIConfig[netlist.ConfigSectionName]                      ['XSTOption.MUXStyle'],
-			'DecoderExtract': self.Host.pyIPCMIConfig[netlist.ConfigSectionName]                ['XSTOption.DecoderExtract'],
-			'PriorityExtract': self.Host.pyIPCMIConfig[netlist.ConfigSectionName]               ['XSTOption.PriorityExtract'],
-			'ShRegExtract': self.Host.pyIPCMIConfig[netlist.ConfigSectionName]                  ['XSTOption.ShRegExtract'],
-			'ShiftExtract': self.Host.pyIPCMIConfig[netlist.ConfigSectionName]                  ['XSTOption.ShiftExtract'],
-			'XorCollapse': self.Host.pyIPCMIConfig[netlist.ConfigSectionName]                   ['XSTOption.XorCollapse'],
-			'AutoBRAMPacking': self.Host.pyIPCMIConfig[netlist.ConfigSectionName]               ['XSTOption.AutoBRAMPacking'],
-			'ResourceSharing': self.Host.pyIPCMIConfig[netlist.ConfigSectionName]               ['XSTOption.ResourceSharing'],
-			'ASyncToSync': self.Host.pyIPCMIConfig[netlist.ConfigSectionName]                   ['XSTOption.ASyncToSync'],
-			'UseDSP48': self.Host.pyIPCMIConfig[netlist.ConfigSectionName]                      ['XSTOption.UseDSP48'],
-			'IOBuf': self.Host.pyIPCMIConfig[netlist.ConfigSectionName]                         ['XSTOption.IOBuf'],
-			'MaxFanOut': self.Host.pyIPCMIConfig[netlist.ConfigSectionName]                     ['XSTOption.MaxFanOut'],
-			'BufG': self.Host.pyIPCMIConfig[netlist.ConfigSectionName]                          ['XSTOption.BufG'],
-			'RegisterDuplication': self.Host.pyIPCMIConfig[netlist.ConfigSectionName]           ['XSTOption.RegisterDuplication'],
-			'RegisterBalancing': self.Host.pyIPCMIConfig[netlist.ConfigSectionName]             ['XSTOption.RegisterBalancing'],
-			'SlicePacking': self.Host.pyIPCMIConfig[netlist.ConfigSectionName]                  ['XSTOption.SlicePacking'],
-			'OptimizePrimitives': self.Host.pyIPCMIConfig[netlist.ConfigSectionName]            ['XSTOption.OptimizePrimitives'],
-			'UseClockEnable': self.Host.pyIPCMIConfig[netlist.ConfigSectionName]                ['XSTOption.UseClockEnable'],
-			'UseSyncSet': self.Host.pyIPCMIConfig[netlist.ConfigSectionName]                    ['XSTOption.UseSyncSet'],
-			'UseSyncReset': self.Host.pyIPCMIConfig[netlist.ConfigSectionName]                  ['XSTOption.UseSyncReset'],
-			'PackIORegistersIntoIOBs': self.Host.pyIPCMIConfig[netlist.ConfigSectionName]       ['XSTOption.PackIORegistersIntoIOBs'],
-			'EquivalentRegisterRemoval': self.Host.pyIPCMIConfig[netlist.ConfigSectionName]     ['XSTOption.EquivalentRegisterRemoval'],
-			'SliceUtilizationRatioMaxMargin': self.Host.pyIPCMIConfig[netlist.ConfigSectionName]['XSTOption.SliceUtilizationRatioMaxMargin']
+			'WriteTimingConstraints': self.Host.Config[netlist.ConfigSectionName]        ['XSTOption.WriteTimingConstraints'],
+			'CrossClockAnalysis': self.Host.Config[netlist.ConfigSectionName]            ['XSTOption.CrossClockAnalysis'],
+			'HierarchySeparator': self.Host.Config[netlist.ConfigSectionName]            ['XSTOption.HierarchySeparator'],
+			'BusDelimiter': self.Host.Config[netlist.ConfigSectionName]                  ['XSTOption.BusDelimiter'],
+			'Case': self.Host.Config[netlist.ConfigSectionName]                          ['XSTOption.Case'],
+			'SliceUtilizationRatio': self.Host.Config[netlist.ConfigSectionName]         ['XSTOption.SliceUtilizationRatio'],
+			'BRAMUtilizationRatio': self.Host.Config[netlist.ConfigSectionName]          ['XSTOption.BRAMUtilizationRatio'],
+			'DSPUtilizationRatio': self.Host.Config[netlist.ConfigSectionName]           ['XSTOption.DSPUtilizationRatio'],
+			'LUTCombining': self.Host.Config[netlist.ConfigSectionName]                  ['XSTOption.LUTCombining'],
+			'ReduceControlSets': self.Host.Config[netlist.ConfigSectionName]             ['XSTOption.ReduceControlSets'],
+			'Verilog2001': self.Host.Config[netlist.ConfigSectionName]                   ['XSTOption.Verilog2001'],
+			'FSMExtract': self.Host.Config[netlist.ConfigSectionName]                    ['XSTOption.FSMExtract'],
+			'FSMEncoding': self.Host.Config[netlist.ConfigSectionName]                   ['XSTOption.FSMEncoding'],
+			'FSMSafeImplementation': self.Host.Config[netlist.ConfigSectionName]         ['XSTOption.FSMSafeImplementation'],
+			'FSMStyle': self.Host.Config[netlist.ConfigSectionName]                      ['XSTOption.FSMStyle'],
+			'RAMExtract': self.Host.Config[netlist.ConfigSectionName]                    ['XSTOption.RAMExtract'],
+			'RAMStyle': self.Host.Config[netlist.ConfigSectionName]                      ['XSTOption.RAMStyle'],
+			'ROMExtract': self.Host.Config[netlist.ConfigSectionName]                    ['XSTOption.ROMExtract'],
+			'ROMStyle': self.Host.Config[netlist.ConfigSectionName]                      ['XSTOption.ROMStyle'],
+			'MUXExtract': self.Host.Config[netlist.ConfigSectionName]                    ['XSTOption.MUXExtract'],
+			'MUXStyle': self.Host.Config[netlist.ConfigSectionName]                      ['XSTOption.MUXStyle'],
+			'DecoderExtract': self.Host.Config[netlist.ConfigSectionName]                ['XSTOption.DecoderExtract'],
+			'PriorityExtract': self.Host.Config[netlist.ConfigSectionName]               ['XSTOption.PriorityExtract'],
+			'ShRegExtract': self.Host.Config[netlist.ConfigSectionName]                  ['XSTOption.ShRegExtract'],
+			'ShiftExtract': self.Host.Config[netlist.ConfigSectionName]                  ['XSTOption.ShiftExtract'],
+			'XorCollapse': self.Host.Config[netlist.ConfigSectionName]                   ['XSTOption.XorCollapse'],
+			'AutoBRAMPacking': self.Host.Config[netlist.ConfigSectionName]               ['XSTOption.AutoBRAMPacking'],
+			'ResourceSharing': self.Host.Config[netlist.ConfigSectionName]               ['XSTOption.ResourceSharing'],
+			'ASyncToSync': self.Host.Config[netlist.ConfigSectionName]                   ['XSTOption.ASyncToSync'],
+			'UseDSP48': self.Host.Config[netlist.ConfigSectionName]                      ['XSTOption.UseDSP48'],
+			'IOBuf': self.Host.Config[netlist.ConfigSectionName]                         ['XSTOption.IOBuf'],
+			'MaxFanOut': self.Host.Config[netlist.ConfigSectionName]                     ['XSTOption.MaxFanOut'],
+			'BufG': self.Host.Config[netlist.ConfigSectionName]                          ['XSTOption.BufG'],
+			'RegisterDuplication': self.Host.Config[netlist.ConfigSectionName]           ['XSTOption.RegisterDuplication'],
+			'RegisterBalancing': self.Host.Config[netlist.ConfigSectionName]             ['XSTOption.RegisterBalancing'],
+			'SlicePacking': self.Host.Config[netlist.ConfigSectionName]                  ['XSTOption.SlicePacking'],
+			'OptimizePrimitives': self.Host.Config[netlist.ConfigSectionName]            ['XSTOption.OptimizePrimitives'],
+			'UseClockEnable': self.Host.Config[netlist.ConfigSectionName]                ['XSTOption.UseClockEnable'],
+			'UseSyncSet': self.Host.Config[netlist.ConfigSectionName]                    ['XSTOption.UseSyncSet'],
+			'UseSyncReset': self.Host.Config[netlist.ConfigSectionName]                  ['XSTOption.UseSyncReset'],
+			'PackIORegistersIntoIOBs': self.Host.Config[netlist.ConfigSectionName]       ['XSTOption.PackIORegistersIntoIOBs'],
+			'EquivalentRegisterRemoval': self.Host.Config[netlist.ConfigSectionName]     ['XSTOption.EquivalentRegisterRemoval'],
+			'SliceUtilizationRatioMaxMargin': self.Host.Config[netlist.ConfigSectionName]['XSTOption.SliceUtilizationRatioMaxMargin']
 		}
 
 		xstFileContent = xstFileContent.format(**xstTemplateDictionary)

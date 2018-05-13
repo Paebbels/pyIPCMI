@@ -52,7 +52,7 @@ class Simulator(BaseSimulator):
 	def __init__(self, host, dryRun, simulationSteps):
 		super().__init__(host, dryRun, simulationSteps)
 
-		configSection =                 host.pyIPCMIConfig['CONFIG.DirectoryNames']
+		configSection =                 host.Config['CONFIG.DirectoryNames']
 		self.Directories.Working =      host.Directories.Temp / configSection['CocotbFiles']
 		self.Directories.PreCompiled =  host.Directories.PreCompiled / configSection['ModelSimFiles']
 
@@ -88,11 +88,11 @@ class Simulator(BaseSimulator):
 		precompiledModelsimIniPath = self.Directories.PreCompiled
 		device_vendor = self._pyIPCMIProject.Board.Device.Vendor
 		if device_vendor is Vendors.Altera:
-			precompiledModelsimIniPath /= self.Host.pyIPCMIConfig['CONFIG.DirectoryNames']['AlteraSpecificFiles']
+			precompiledModelsimIniPath /= self.Host.Config['CONFIG.DirectoryNames']['AlteraSpecificFiles']
 		elif device_vendor is Vendors.Lattice:
-			precompiledModelsimIniPath /= self.Host.pyIPCMIConfig['CONFIG.DirectoryNames']['LatticeSpecificFiles']
+			precompiledModelsimIniPath /= self.Host.Config['CONFIG.DirectoryNames']['LatticeSpecificFiles']
 		elif device_vendor is Vendors.Xilinx:
-			precompiledModelsimIniPath /= self.Host.pyIPCMIConfig['CONFIG.DirectoryNames']['XilinxSpecificFiles']
+			precompiledModelsimIniPath /= self.Host.Config['CONFIG.DirectoryNames']['XilinxSpecificFiles']
 
 		precompiledModelsimIniPath /= "modelsim.ini"
 		if not precompiledModelsimIniPath.exists():
@@ -127,7 +127,7 @@ class Simulator(BaseSimulator):
 		#
 		self.LogNormal("Running simulation...")
 		cocotbTemplateFilePath = self.Host.Directories.Root / \
-															self.Host.pyIPCMIConfig[testbench.ConfigSectionName]['CocotbMakefile'] # depends on testbench
+															self.Host.Config[testbench.ConfigSectionName]['CocotbMakefile'] # depends on testbench
 		topLevel =      testbench.TopLevel
 		cocotbModule =  testbench.ModuleName
 

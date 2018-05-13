@@ -100,7 +100,7 @@ class Configuration(ToolConfiguration):
 
 	def CheckDependency(self):
 		"""Check if general Aldec support is configured in pyIPCMI."""
-		return (len(self._host.pyIPCMIConfig['INSTALL.Aldec']) != 0)
+		return (len(self._host.Config['INSTALL.Aldec']) != 0)
 
 	def ConfigureForAll(self):
 		"""Configuration routine for Aldec Active-HDL on all supported platforms.
@@ -123,19 +123,19 @@ class Configuration(ToolConfiguration):
 				version = self._ConfigureVersion()
 				if self._multiVersionSupport:
 					self.PrepareVersionedSections()
-					sectionName = self._host.pyIPCMIConfig[self._section]['SectionName']
-					self._host.pyIPCMIConfig[sectionName]['Version'] = version
+					sectionName = self._host.Config[self._section]['SectionName']
+					self._host.Config[sectionName]['Version'] = version
 
 				# Configure Active-HDL edition
 				changed,edition = self._ConfigureEdition()
 				if changed:
 					if (edition is AldecActiveHDLEditions.StudentEdition):
 						if self._multiVersionSupport:
-							sectionName = self._host.pyIPCMIConfig[self._section]['SectionName']
+							sectionName = self._host.Config[self._section]['SectionName']
 						else:
 							sectionName = self._section
-						self._host.pyIPCMIConfig[sectionName]['InstallationDirectory'] = self._host.pyIPCMIConfig.get(sectionName, 'InstallationDirectory', raw=True) + "-Student-Edition"
-						self._host.pyIPCMIConfig.Interpolation.clear_cache()
+						self._host.Config[sectionName]['InstallationDirectory'] = self._host.Config.get(sectionName, 'InstallationDirectory', raw=True) + "-Student-Edition"
+						self._host.Config.Interpolation.clear_cache()
 				# Configure installation directory
 				self._ConfigureInstallationDirectory()
 				# Configure binary directory
@@ -152,15 +152,15 @@ class Configuration(ToolConfiguration):
 		"""Configure Active-HDL for Aldec."""
 		sectionName =     self._section
 		if self._multiVersionSupport:
-			sectionName =   self._host.pyIPCMIConfig[sectionName]['SectionName']
+			sectionName =   self._host.Config[sectionName]['SectionName']
 
-		configSection =   self._host.pyIPCMIConfig[sectionName]
+		configSection =   self._host.Config[sectionName]
 		defaultEdition =  AldecActiveHDLEditions.Parse(configSection['Edition'])
 		edition =         super()._ConfigureEdition(AldecActiveHDLEditions, defaultEdition)
 
 		if (edition is not defaultEdition):
 			configSection['Edition'] = edition.Name
-			self._host.pyIPCMIConfig.Interpolation.clear_cache()
+			self._host.Config.Interpolation.clear_cache()
 			return (True, edition)
 		else:
 			return (False, edition)
@@ -190,11 +190,11 @@ class Selector(ToolSelector):
 
 		if (len(editions) == 0):
 			self._host.LogWarning("No Active-HDL installation found.", indent=1)
-			self._host.pyIPCMIConfig['INSTALL.ActiveHDL'] = OrderedDict()
+			self._host.Config['INSTALL.ActiveHDL'] = OrderedDict()
 		elif (len(editions) == 1):
 			self._host.LogNormal("Default Active-HDL installation:", indent=1)
 			self._host.LogNormal("Set to {0}".format(editions[0].Name), indent=2)
-			self._host.pyIPCMIConfig['INSTALL.ActiveHDL']['SectionName'] = editions[0].Section
+			self._host.Config['INSTALL.ActiveHDL']['SectionName'] = editions[0].Section
 		else:
 			self._host.LogNormal("Select Active-HDL installation:", indent=1)
 
@@ -203,7 +203,7 @@ class Selector(ToolSelector):
 				defaultEdition = editions[0]
 
 			selectedEdition = self._AskSelection(editions, defaultEdition)
-			self._host.pyIPCMIConfig['INSTALL.ActiveHDL']['SectionName'] = selectedEdition.Section
+			self._host.Config['INSTALL.ActiveHDL']['SectionName'] = selectedEdition.Section
 
 
 class ActiveHDL(ToolMixIn):

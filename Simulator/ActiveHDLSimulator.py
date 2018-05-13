@@ -49,7 +49,7 @@ class Simulator(BaseSimulator):
 	def __init__(self, host, dryRun, simulationSteps):
 		super().__init__(host, dryRun, simulationSteps)
 
-		activeHDLFilesDirectoryName =   host.pyIPCMIConfig['CONFIG.DirectoryNames']['ActiveHDLFiles']
+		activeHDLFilesDirectoryName =   host.Config['CONFIG.DirectoryNames']['ActiveHDLFiles']
 		self.Directories.Working =      host.Directories.Temp / activeHDLFilesDirectoryName
 		self.Directories.PreCompiled =  host.Directories.PreCompiled / activeHDLFilesDirectoryName
 
@@ -60,15 +60,15 @@ class Simulator(BaseSimulator):
 		"""Create the Active-HDL executable factory."""
 		self.LogVerbose("Preparing Active-HDL simulator.")
 		# for sectionName in ['INSTALL.Aldec.ActiveHDL', 'INSTALL.Lattice.ActiveHDL']:
-		# 	if (len(self.Host.pyIPCMIConfig.options(sectionName)) != 0):
+		# 	if (len(self.Host.Config.options(sectionName)) != 0):
 		# 		break
 		# else:
 		# XXX: check SectionName if ActiveHDL is configured
 		# 	raise NotConfiguredException(
 		# 		"Neither Aldec's Active-HDL nor Active-HDL Lattice Edition are configured on this system.")
 
-		binaryPath =      Path(self.Host.pyIPCMIConfig['INSTALL.ActiveHDL']['BinaryDirectory'])
-		version =         self.Host.pyIPCMIConfig['INSTALL.ActiveHDL']['Version']
+		binaryPath =      Path(self.Host.Config['INSTALL.ActiveHDL']['BinaryDirectory'])
+		version =         self.Host.Config['INSTALL.ActiveHDL']['Version']
 		self._toolChain = ActiveHDL(self.Host.Platform, self.DryRun, binaryPath, version, logger=self.Logger)
 
 	def _RunAnalysis(self, _):
@@ -109,7 +109,7 @@ class Simulator(BaseSimulator):
 		if (SimulationSteps.ShowWaveform in self._simulationSteps):
 			return self._RunSimulationWithGUI(testbench)
 
-		# tclBatchFilePath =    self.Host.Directories.Root / self.Host.pyIPCMIConfig[testbench.ConfigSectionName]['aSimBatchScript']
+		# tclBatchFilePath =    self.Host.Directories.Root / self.Host.Config[testbench.ConfigSectionName]['aSimBatchScript']
 
 		# create a ActiveHDLSimulator instance
 		asim = self._toolChain.GetSimulator()
@@ -132,8 +132,8 @@ class Simulator(BaseSimulator):
 	def _RunSimulationWithGUI(self, testbench):
 		raise SimulatorException("GUI mode is not supported for Active-HDL.")
 
-		# tclGUIFilePath =      self.Host.Directories.Root / self.Host.pyIPCMIConfig[testbench.ConfigSectionName]['aSimGUIScript']
-		# tclWaveFilePath =      self.Host.Directories.Root / self.Host.pyIPCMIConfig[testbench.ConfigSectionName]['aSimWaveScript']
+		# tclGUIFilePath =      self.Host.Directories.Root / self.Host.Config[testbench.ConfigSectionName]['aSimGUIScript']
+		# tclWaveFilePath =      self.Host.Directories.Root / self.Host.Config[testbench.ConfigSectionName]['aSimWaveScript']
 		#
 		# # create a ActiveHDLSimulator instance
 		# aSim = self._toolChain.GetSimulator()

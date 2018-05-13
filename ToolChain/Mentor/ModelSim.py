@@ -100,7 +100,7 @@ class Configuration(ToolConfiguration):
 
 	def CheckDependency(self):
 		"""Check if general Mentor Graphics support is configured in pyIPCMI."""
-		return (len(self._host.pyIPCMIConfig['INSTALL.Mentor']) != 0)
+		return (len(self._host.Config['INSTALL.Mentor']) != 0)
 
 	def ConfigureForAll(self):
 		"""Configuration routine for Mentor Graphics ModelSim on all supported platforms.
@@ -123,8 +123,8 @@ class Configuration(ToolConfiguration):
 				version = self._ConfigureVersion()
 				if self._multiVersionSupport:
 					self.PrepareVersionedSections()
-					sectionName = self._host.pyIPCMIConfig[self._section]['SectionName']
-					self._host.pyIPCMIConfig[sectionName]['Version'] = version
+					sectionName = self._host.Config[self._section]['SectionName']
+					self._host.Config[sectionName]['Version'] = version
 
 				self._ConfigureEdition()
 
@@ -163,7 +163,7 @@ class Configuration(ToolConfiguration):
 
 		print(self._section, version)
 
-		self._host.pyIPCMIConfig[self._section]['Version'] = version
+		self._host.Config[self._section]['Version'] = version
 
 	def _CheckModelSimVersion(self, binPath, version):
 		if (self._host.Platform == "Windows"):
@@ -183,10 +183,10 @@ class Configuration(ToolConfiguration):
 	# 	pass
 
 	def RunPostConfigurationTasks(self):
-		if (len(self._host.pyIPCMIConfig[self._section]) == 0): return  # exit if not configured
+		if (len(self._host.Config[self._section]) == 0): return  # exit if not configured
 
-		precompiledDirectory =  self._host.pyIPCMIConfig['CONFIG.DirectoryNames']['PrecompiledFiles']
-		vSimSimulatorFiles =    self._host.pyIPCMIConfig['CONFIG.DirectoryNames']['ModelSimFiles']
+		precompiledDirectory =  self._host.Config['CONFIG.DirectoryNames']['PrecompiledFiles']
+		vSimSimulatorFiles =    self._host.Config['CONFIG.DirectoryNames']['ModelSimFiles']
 		vsimPath =              self._host.Directories.Root / precompiledDirectory / vSimSimulatorFiles
 		modelsimIniPath =       vsimPath / "modelsim.ini"
 
@@ -238,23 +238,23 @@ class ModelSimPEConfiguration(Configuration):
 		"""Configure ModelSim PE for Mentor Graphics."""
 		sectionName = self._section
 		if self._multiVersionSupport:
-			sectionName = self._host.pyIPCMIConfig[sectionName]['SectionName']
+			sectionName = self._host.Config[sectionName]['SectionName']
 
-		configSection = self._host.pyIPCMIConfig[sectionName]
+		configSection = self._host.Config[sectionName]
 		defaultEdition = MentorModelSimPEEditions.Parse(configSection['Edition'])
 		edition = super()._ConfigureEdition(MentorModelSimPEEditions, defaultEdition)
 
 		if (edition is not defaultEdition):
 			configSection['Edition'] = edition.Name
-			self._host.pyIPCMIConfig.Interpolation.clear_cache()
+			self._host.Config.Interpolation.clear_cache()
 
 		if self._multiVersionSupport:
-			sectionName = self._host.pyIPCMIConfig[self._section]['SectionName']
+			sectionName = self._host.Config[self._section]['SectionName']
 		else:
 			sectionName = self._section
 
-		configSection =   self._host.pyIPCMIConfig[sectionName]
-		binaryDirectory = self._host.pyIPCMIConfig.get(sectionName, 'BinaryDirectory', raw=True)
+		configSection =   self._host.Config[sectionName]
+		binaryDirectory = self._host.Config.get(sectionName, 'BinaryDirectory', raw=True)
 		if (edition is MentorModelSimPEEditions.ModelSimPE):
 			toolInstallationName =  "ModelSim PE"
 			binaryDirectory =       binaryDirectory.replace("win32peedu", "win32pe")
@@ -354,11 +354,11 @@ class Selector(ToolSelector):
 
 		if (len(editions) == 0):
 			self._host.LogWarning("No ModelSim installation found.", indent=1)
-			self._host.pyIPCMIConfig['INSTALL.ModelSim'] = OrderedDict()
+			self._host.Config['INSTALL.ModelSim'] = OrderedDict()
 		elif (len(editions) == 1):
 			self._host.LogNormal("Default ModelSim installation:", indent=1)
 			self._host.LogNormal("Set to {0}".format(editions[0].Name), indent=2)
-			self._host.pyIPCMIConfig['INSTALL.ModelSim']['SectionName'] = editions[0].Section
+			self._host.Config['INSTALL.ModelSim']['SectionName'] = editions[0].Section
 		else:
 			self._host.LogNormal("Select ModelSim installation:", indent=1)
 
@@ -367,7 +367,7 @@ class Selector(ToolSelector):
 				defaultEdition = editions[0]
 
 			selectedEdition = self._AskSelection(editions, defaultEdition)
-			self._host.pyIPCMIConfig['INSTALL.ModelSim']['SectionName'] = selectedEdition.Section
+			self._host.Config['INSTALL.ModelSim']['SectionName'] = selectedEdition.Section
 
 
 class ModelSim(ToolMixIn):
