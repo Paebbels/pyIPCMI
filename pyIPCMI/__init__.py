@@ -51,8 +51,7 @@ __api__ = [
 	'VHDLVersionAttribute',
 	'SimulationStepsAttributeGroup',
 	'CompileStepsAttributeGroup',
-	'IPCoreManagementInfrastructure',
-	'main'
+	'IPCoreManagementInfrastructure'
 ]
 __all__ = __api__
 
