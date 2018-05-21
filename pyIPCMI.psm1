@@ -62,7 +62,7 @@ Export-ModuleMember -Variable "Python_Parameters"
 
 # ==============================================================================
 $pyIPCMI_RootDirectory =      "$Library_RootDirectory\$pyIPCMI_Dir"
-$pyIPCMI_FrontEndPy =         "$pyIPCMI_RootDirectory\pyIPCMI.py"
+$pyIPCMI_FrontEndPy =         "$pyIPCMI_RootDirectory\FrontEnd.py"
 $pyIPCMI_ConfigDir =          ".pyIPCMI"
 $pyIPCMI_HookDir =            "$pyIPCMI_ConfigDir\Hook"
 $pyIPCMI_HookDirectory =      "$Library_RootDirectory\$pyIPCMI_HookDir"

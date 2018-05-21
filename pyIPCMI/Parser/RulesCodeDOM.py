@@ -155,6 +155,7 @@ class CopyStatement(Statement):
 		else:
 			return "{0}Copy \"{1!s}\" To \"{2!s}\"".format(("  " * indent), self._sourcePath, self._destinationPath)
 
+
 class DeleteStatement(Statement):
 	def __init__(self, file, commentText):
 		super().__init__()
@@ -321,7 +322,7 @@ class ReplaceStatement(Statement):
 						break
 
 		# match for delimiter sign: \n or #
-    commentText = ""
+		commentText = ""
 		if (not isinstance(token, CharacterToken)): raise MismatchingParserResult("ReplaceParser: Expected end of line or comment")
 		if (token.Value == "\n"):
 			pass
@@ -340,6 +341,7 @@ class ReplaceStatement(Statement):
 
 	def __str__(self, indent=0):
 		return "{0}Replace {1} by {2}".format("  " * indent, self._searchPattern, self._replacePattern)
+
 
 class AppendLineStatement(Statement):
 	def __init__(self, appendPattern, commentText):
@@ -396,6 +398,7 @@ class AppendLineStatement(Statement):
 
 	def __str__(self, indent=0):
 		return "{0}AppendLine {1}".format("  " * indent, self._appendPattern)
+
 
 # ==============================================================================
 # Block Statements

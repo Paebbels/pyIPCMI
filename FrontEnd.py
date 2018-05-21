@@ -63,7 +63,7 @@ except ImportError as ex:
 
 # main program
 def main(): # mccabe:disable=MC0001
-	"""This is the entry point for pyIPCMI.py written as a function.
+	"""This is the entry point for pyIPCMI written as a function.
 
 	1. It extracts common flags from the script's arguments list, before :py:class:`~argparse.ArgumentParser` is fully loaded.
 	2. It initializes colorama for colored outputs
@@ -130,6 +130,3 @@ def main(): # mccabe:disable=MC0001
 if __name__ == "__main__":
 	Exit.versionCheck((3,5,0))
 	main()
-# else:
-# 	print(__name__)
-# 	Exit.printThisIsNoLibraryFile(pyIPCMI.HeadLine)

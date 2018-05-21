@@ -3,7 +3,7 @@ matrix:
   include:
     - env: CONFIG="Python3.5"
       os: linux
-      python: "3.5"
+      python: 3.5
       before_install:
 #        - sudo apt-get -qq update
 #        - GRC_VERSION="$(curl -s https://api.github.com/repos/garabik/grc/releases/latest | grep 'tag_name' | cut -d : -f 2 | tr -d \, | tr -d \" | cut -c3-)"
@@ -15,7 +15,7 @@ matrix:
         - sudo dpkg --ignore-depends=python3:any -i grc.deb
     - env: CONFIG="Python3.6"
       os: linux
-      python: "3.6"
+      python: 3.6
       before_install:
 #        - sudo apt-get -qq update
         - GRC_VERSION="$(curl -s https://api.github.com/repos/garabik/grc/releases/latest | grep 'tag_name' | cut -d : -f 2 | tr -d \, | tr -d \" | cut -c3-)"
