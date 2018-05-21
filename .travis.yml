@@ -6,7 +6,8 @@ matrix:
       python: "3.5"
       before_install:
 #        - sudo apt-get -qq update
-        - GRC_VERSION="$(curl -s https://api.github.com/repos/garabik/grc/releases/latest | grep 'tag_name' | cut -d : -f 2 | tr -d \, | tr -d \" | cut -c3-)"
+#        - GRC_VERSION="$(curl -s https://api.github.com/repos/garabik/grc/releases/latest | grep 'tag_name' | cut -d : -f 2 | tr -d \, | tr -d \" | cut -c3-)"
+        - GRC_VERSION=1.11.3
         - GRC_FILE="grc_${GRC_VERSION}-1_all.deb"
         - curl -L https://korpus.sk/~garabik/software/grc/$GRC_FILE -o grc.deb
         - FORCE="$([ "$(command -v python3)" != "/usr/bin/python3" ] && echo "--ignore-depends=python3:any")"
