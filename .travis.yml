@@ -11,7 +11,8 @@ matrix:
         - GRC_FILE="grc_${GRC_VERSION}-1_all.deb"
         - curl -L https://korpus.sk/~garabik/software/grc/$GRC_FILE -o grc.deb
         - FORCE="$([ "$(command -v python3)" != "/usr/bin/python3" ] && echo "--ignore-depends=python3:any")"
-        - sudo dpkg $FORCE -i grc.deb
+        - echo $FORCE
+        - sudo dpkg --ignore-depends=python3:any -i grc.deb
     - env: CONFIG="Python3.6"
       os: linux
       python: "3.6"
