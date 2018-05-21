@@ -122,7 +122,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'The PoC-Library'
-copyright = '2007-2016 Technische Universitaet Dresden - Germany, Chair of VLSI-Design, Diagnostics and Architecture'
+copyright = '2007-2016 Technische Universität Dresden - Germany, Chair of VLSI-Design, Diagnostics and Architecture'
 author = 'Patrick Lehmann, Thomas B. Preusser, Martin Zabel'
 
 # The version info for the project you're documenting, acts as replacement for

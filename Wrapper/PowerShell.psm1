@@ -3,20 +3,20 @@
 # kate: tab-width 2; replace-tabs off; indent-width 2;
 #
 # ==============================================================================
-#	Authors:						Patrick Lehmann
+# Authors:						Patrick Lehmann
 #
-#	PowerShell Module:
+# PowerShell Module:
 #
 # Description:
 # ------------------------------------
-#	TODO:
-#		-
+# TODO:
+#   -
 #
 # License:
 # ==============================================================================
-# Copyright 2007-2016 Technische Universitaet Dresden - Germany
-#                     Chair of VLSI-Design, Diagnostics and Architecture
 # Copyright 2017-2018 Patrick Lehmann - Bötzingen, Germany
+# Copyright 2007-2016 Technische Universität Dresden - Germany
+#                     Chair of VLSI-Design, Diagnostics and Architecture
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.

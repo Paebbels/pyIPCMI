@@ -2,12 +2,82 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b1217729-6dda-4bce-a9eb-baa5346607ac" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitmodules" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/_themes/sphinx_rtd_theme" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/py.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/py.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pyIPCMI.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FrontEnd.py" beforeDir="false" afterPath="$PROJECT_DIR$/FrontEnd.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Wrapper/PowerShell.psm1" beforeDir="false" afterPath="$PROJECT_DIR$/Wrapper/PowerShell.psm1" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/PoCSphinx.py" beforeDir="false" afterPath="$PROJECT_DIR$/docs/PoCSphinx.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/conf.py" beforeDir="false" afterPath="$PROJECT_DIR$/docs/conf.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/poc.py" beforeDir="false" afterPath="$PROJECT_DIR$/docs/poc.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/CodeDOM.py" beforeDir="false" afterPath="$PROJECT_DIR$/lib/CodeDOM.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Decorators.py" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Decorators.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Functions.py" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Functions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Parser.py" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Parser.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/lib/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/pyAttribute/ArgParseAttributes.py" beforeDir="false" afterPath="$PROJECT_DIR$/lib/pyAttribute/ArgParseAttributes.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/pyAttribute/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/lib/pyAttribute/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyIPCMI.psm1" beforeDir="false" afterPath="$PROJECT_DIR$/pyIPCMI.psm1" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyIPCMI.sh" beforeDir="false" afterPath="$PROJECT_DIR$/pyIPCMI.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyIPCMI/Base/Exceptions.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyIPCMI/Base/Exceptions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyIPCMI/Base/Executable.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyIPCMI/Base/Executable.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyIPCMI/Base/Logging.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyIPCMI/Base/Logging.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyIPCMI/Base/Project.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyIPCMI/Base/Project.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyIPCMI/Base/Shared.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyIPCMI/Base/Shared.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyIPCMI/Base/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyIPCMI/Base/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyIPCMI/Compiler/ISECompiler.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyIPCMI/Compiler/ISECompiler.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyIPCMI/Compiler/LSECompiler.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyIPCMI/Compiler/LSECompiler.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyIPCMI/Compiler/QuartusCompiler.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyIPCMI/Compiler/QuartusCompiler.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyIPCMI/Compiler/VivadoCompiler.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyIPCMI/Compiler/VivadoCompiler.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyIPCMI/Compiler/XCICompiler.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyIPCMI/Compiler/XCICompiler.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyIPCMI/Compiler/XCOCompiler.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyIPCMI/Compiler/XCOCompiler.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyIPCMI/Compiler/XSTCompiler.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyIPCMI/Compiler/XSTCompiler.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyIPCMI/Compiler/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyIPCMI/Compiler/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyIPCMI/DataBase/Config.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyIPCMI/DataBase/Config.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyIPCMI/DataBase/Entity.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyIPCMI/DataBase/Entity.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyIPCMI/DataBase/Solution.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyIPCMI/DataBase/Solution.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyIPCMI/DataBase/TestCase.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyIPCMI/DataBase/TestCase.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyIPCMI/DataBase/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyIPCMI/DataBase/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyIPCMI/Parser/FilesCodeDOM.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyIPCMI/Parser/FilesCodeDOM.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyIPCMI/Parser/FilesParser.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyIPCMI/Parser/FilesParser.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyIPCMI/Parser/RulesCodeDOM.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyIPCMI/Parser/RulesCodeDOM.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyIPCMI/Parser/RulesParser.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyIPCMI/Parser/RulesParser.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyIPCMI/Parser/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyIPCMI/Parser/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyIPCMI/Processor/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyIPCMI/Processor/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyIPCMI/Simulator/ActiveHDLSimulator.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyIPCMI/Simulator/ActiveHDLSimulator.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyIPCMI/Simulator/CocotbSimulator.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyIPCMI/Simulator/CocotbSimulator.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyIPCMI/Simulator/GHDLSimulator.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyIPCMI/Simulator/GHDLSimulator.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyIPCMI/Simulator/ISESimulator.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyIPCMI/Simulator/ISESimulator.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyIPCMI/Simulator/ModelSimSimulator.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyIPCMI/Simulator/ModelSimSimulator.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyIPCMI/Simulator/QuestaSimulator.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyIPCMI/Simulator/QuestaSimulator.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyIPCMI/Simulator/RivieraPROSimulator.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyIPCMI/Simulator/RivieraPROSimulator.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyIPCMI/Simulator/VivadoSimulator.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyIPCMI/Simulator/VivadoSimulator.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyIPCMI/Simulator/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyIPCMI/Simulator/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyIPCMI/ToolChain/Aldec/ActiveHDL.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyIPCMI/ToolChain/Aldec/ActiveHDL.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyIPCMI/ToolChain/Aldec/RivieraPRO.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyIPCMI/ToolChain/Aldec/RivieraPRO.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyIPCMI/ToolChain/Aldec/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyIPCMI/ToolChain/Aldec/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyIPCMI/ToolChain/Altera/ModelSim.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyIPCMI/ToolChain/Altera/ModelSim.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyIPCMI/ToolChain/Altera/Quartus.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyIPCMI/ToolChain/Altera/Quartus.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyIPCMI/ToolChain/Altera/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyIPCMI/ToolChain/Altera/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyIPCMI/ToolChain/GHDL.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyIPCMI/ToolChain/GHDL.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyIPCMI/ToolChain/GNU.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyIPCMI/ToolChain/GNU.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyIPCMI/ToolChain/GTKWave.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyIPCMI/ToolChain/GTKWave.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyIPCMI/ToolChain/Git.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyIPCMI/ToolChain/Git.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyIPCMI/ToolChain/Intel/ModelSim.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyIPCMI/ToolChain/Intel/ModelSim.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyIPCMI/ToolChain/Intel/Quartus.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyIPCMI/ToolChain/Intel/Quartus.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyIPCMI/ToolChain/Intel/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyIPCMI/ToolChain/Intel/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyIPCMI/ToolChain/Lattice/ActiveHDL.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyIPCMI/ToolChain/Lattice/ActiveHDL.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyIPCMI/ToolChain/Lattice/Diamond.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyIPCMI/ToolChain/Lattice/Diamond.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyIPCMI/ToolChain/Lattice/Synplify.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyIPCMI/ToolChain/Lattice/Synplify.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyIPCMI/ToolChain/Lattice/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyIPCMI/ToolChain/Lattice/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyIPCMI/ToolChain/Mentor/ModelSim.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyIPCMI/ToolChain/Mentor/ModelSim.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyIPCMI/ToolChain/Mentor/QuestaSim.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyIPCMI/ToolChain/Mentor/QuestaSim.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyIPCMI/ToolChain/Mentor/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyIPCMI/ToolChain/Mentor/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyIPCMI/ToolChain/PoC.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyIPCMI/ToolChain/PoC.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyIPCMI/ToolChain/Synopsys/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyIPCMI/ToolChain/Synopsys/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyIPCMI/ToolChain/Windows.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyIPCMI/ToolChain/Windows.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyIPCMI/ToolChain/Xilinx/ISE.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyIPCMI/ToolChain/Xilinx/ISE.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyIPCMI/ToolChain/Xilinx/Vivado.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyIPCMI/ToolChain/Xilinx/Vivado.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyIPCMI/ToolChain/Xilinx/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyIPCMI/ToolChain/Xilinx/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyIPCMI/ToolChain/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyIPCMI/ToolChain/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pyIPCMI/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/pyIPCMI/__init__.py" afterDir="false" />
     </list>
     <ignored path="py.iws" />
@@ -48,7 +118,7 @@
         <entry file="file://$PROJECT_DIR$/lib/Functions.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="208">
-              <caret line="13" column="58" selection-start-line="13" selection-end-line="13" selection-end-column="58" />
+              <caret line="13" column="72" selection-start-line="13" selection-start-column="72" selection-end-line="13" selection-end-column="72" />
               <folding>
                 <element signature="e#1331#1362#0" expanded="true" />
               </folding>
@@ -65,32 +135,20 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="conf.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/docs/conf.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="710">
-              <caret line="105" column="3" selection-start-line="105" selection-start-column="3" selection-end-line="105" selection-end-column="3" />
-              <folding>
-                <element signature="e#451#461#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="index.rst" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/docs/index.rst">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="192">
-              <caret line="22" column="7" selection-start-line="22" selection-start-column="7" selection-end-line="22" selection-end-column="7" />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="__init__.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pyIPCMI/__init__.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="608">
-              <caret line="55" column="17" selection-start-line="55" selection-start-column="17" selection-end-line="55" selection-end-column="17" />
+            <state relative-caret-position="176">
+              <caret line="11" selection-start-line="11" selection-end-line="11" selection-end-column="58" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="poc.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/docs/poc.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="128">
+              <caret line="8" column="16" lean-forward="true" selection-start-line="8" selection-start-column="16" selection-end-line="8" selection-end-column="16" />
             </state>
           </provider>
         </entry>
@@ -106,12 +164,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>type</find>
-      <find>m</find>
-      <find>metho</find>
-      <find>method</find>
-      <find>Mentor</find>
-      <find>Diagnostics and Architecture\n\#</find>
       <find>\n#\s+Thomas B. Preusser</find>
       <find>Preusser</find>
       <find>PoC</find>
@@ -136,6 +188,12 @@
       <find>basis,default</find>
       <find>VLSI-EDA/PoC</find>
       <find>class</find>
+      <find>\# Copyright 2007\-2016 Technische Universitaet Dresden \- Germany\n\#                     Chair of VLSI\-Design\, Diagnostics and Architecture\n\# Copyright 2017\-2018 Patrick Lehmann \- Bötzingen\, Germany</find>
+      <find>Universitaet</find>
+      <find>Universität</find>
+      <find>#										 	Chair</find>
+      <find>#\t</find>
+      <find>#(\s+)\t</find>
     </findStrings>
     <replaceStrings>
       <replace>if ((self._logger is not None) and condition):</replace>
@@ -162,6 +220,12 @@
       <replace>from pyIPCMI.Tool</replace>
       <replace>from lib.Functions            import Init from lib.CallBy               import CallByRefBoolParam</replace>
       <replace>Paebbels/pyIPCMI</replace>
+      <replace>\# Copyright 2017\-2018 Patrick Lehmann \- Bötzingen\, Germany\n\# Copyright 2007\-2016 Technische Universitaet Dresden \- Germany\n\#                     Chair of VLSI\-Design\, Diagnostics and Architecture</replace>
+      <replace>Universität</replace>
+      <replace>#                     Chair</replace>
+      <replace>#</replace>
+      <replace>#\1</replace>
+      <replace>#$1</replace>
     </replaceStrings>
   </component>
   <component name="Git.Settings">
@@ -170,7 +234,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/ToolChain/Altera/ModelSim.py" />
         <option value="$PROJECT_DIR$/ToolChain/Intel/Quartus.py" />
         <option value="$PROJECT_DIR$/ToolChain/Altera/Quartus.py" />
         <option value="$PROJECT_DIR$/ToolChain/Intel/__init__.py" />
@@ -218,9 +281,10 @@
         <option value="$PROJECT_DIR$/docs/_extensions/DocumentMember.py" />
         <option value="$PROJECT_DIR$/docs/PoCSphinx.py" />
         <option value="$PROJECT_DIR$/docs/shields.inc" />
-        <option value="$PROJECT_DIR$/pyIPCMI/__init__.py" />
         <option value="$PROJECT_DIR$/docs/index.rst" />
         <option value="$PROJECT_DIR$/docs/conf.py" />
+        <option value="$PROJECT_DIR$/pyIPCMI/__init__.py" />
+        <option value="$PROJECT_DIR$/docs/poc.py" />
       </list>
     </option>
   </component>
@@ -230,11 +294,11 @@
     <detection-done>true</detection-done>
     <sorting>DEFINITION_ORDER</sorting>
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
-    <option name="x" value="1449" />
-    <option name="y" value="477" />
-    <option name="width" value="4662" />
-    <option name="height" value="2556" />
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="805" />
+    <option name="y" value="265" />
+    <option name="width" value="2590" />
+    <option name="height" value="1420" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -564,12 +628,13 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-6" y="-6" width="1719" height="892" extended-state="7" />
+    <frame x="-7" y="-7" width="2062" height="1086" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" x="778" y="490" width="124" height="255" id="Project" order="0" sideWeight="0.48669624" visible="true" weight="0.15694527" />
+      <window_info active="true" content_ui="combo" x="778" y="490" width="124" height="255" id="Project" order="0" sideWeight="0.48669624" visible="true" weight="0.13036963" />
       <window_info anchor="bottom" x="-1206" y="358" width="1898" height="296" id="TODO" order="6" sideWeight="0.49758744" weight="0.32815966" />
       <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.5063966" side_tool="true" weight="0.3257979" />
+      <window_info anchor="bottom" x="131" y="418" width="1898" height="200" id="Find" order="1" sideWeight="0.49367756" weight="0.37263158" />
       <window_info anchor="bottom" id="Version Control" order="8" sideWeight="0.49758744" weight="1.0" />
       <window_info anchor="bottom" id="Python Console" order="11" sideWeight="0.49276236" weight="0.32705098" />
       <window_info anchor="bottom" id="Run" order="2" sideWeight="0.4936034" weight="0.32594234" />
@@ -588,7 +653,6 @@
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Statistic" order="7" weight="0.32947367" />
-      <window_info anchor="bottom" x="131" y="418" width="1898" height="200" id="Find" order="1" sideWeight="0.49367756" weight="0.37263158" />
       <window_info anchor="right" id="Coverage" order="4" sideWeight="0.5082237" side_tool="true" weight="0.16897655" />
     </layout>
     <layout-to-restore>
@@ -696,13 +760,6 @@
     </watches-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/docs/prolog.inc">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="160">
-          <caret line="10" selection-start-line="10" selection-end-line="10" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/docs/shields.inc">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="528">
@@ -999,7 +1056,7 @@
     <entry file="file://$PROJECT_DIR$/lib/Functions.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="208">
-          <caret line="13" column="58" selection-start-line="13" selection-end-line="13" selection-end-column="58" />
+          <caret line="13" column="72" selection-start-line="13" selection-start-column="72" selection-end-line="13" selection-end-column="72" />
           <folding>
             <element signature="e#1331#1362#0" expanded="true" />
           </folding>
@@ -1023,13 +1080,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/docs/_extensions/DocumentMember.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="496">
-          <caret line="31" column="41" selection-start-line="31" selection-start-column="41" selection-end-line="31" selection-end-column="41" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/docs/PoCSphinx.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="256">
@@ -1044,13 +1094,6 @@
           <folding>
             <element signature="e#1596#1684#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pyIPCMI/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="608">
-          <caret line="55" column="17" selection-start-line="55" selection-start-column="17" selection-end-line="55" selection-end-column="17" />
         </state>
       </provider>
     </entry>
@@ -1087,6 +1130,16 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/docs/conf.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2102">
+          <caret line="252" column="48" lean-forward="true" selection-start-line="252" selection-start-column="48" selection-end-line="252" selection-end-column="48" />
+          <folding>
+            <element signature="e#451#461#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/docs/index.rst">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="192">
@@ -1094,13 +1147,24 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/docs/conf.py">
+    <entry file="file://$PROJECT_DIR$/docs/_extensions/DocumentMember.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="710">
-          <caret line="105" column="3" selection-start-line="105" selection-start-column="3" selection-end-line="105" selection-end-column="3" />
-          <folding>
-            <element signature="e#451#461#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="496">
+          <caret line="31" column="41" selection-start-line="31" selection-start-column="41" selection-end-line="31" selection-end-column="41" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pyIPCMI/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="176">
+          <caret line="11" selection-start-line="11" selection-end-line="11" selection-end-column="58" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/docs/poc.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="128">
+          <caret line="8" column="16" lean-forward="true" selection-start-line="8" selection-start-column="16" selection-end-line="8" selection-end-column="16" />
         </state>
       </provider>
     </entry>

@@ -9,9 +9,9 @@
 #
 # License:
 # ==============================================================================
-# Copyright 2007-2016 Technische Universitaet Dresden - Germany
-#                     Chair of VLSI-Design, Diagnostics and Architecture
 # Copyright 2017-2018 Patrick Lehmann - Bötzingen, Germany
+# Copyright 2007-2016 Technische Universität Dresden - Germany
+#                     Chair of VLSI-Design, Diagnostics and Architecture
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -321,7 +321,7 @@ class ReplaceStatement(Statement):
 						break
 
 		# match for delimiter sign: \n or #
-		commentText = ""
+    commentText = ""
 		if (not isinstance(token, CharacterToken)): raise MismatchingParserResult("ReplaceParser: Expected end of line or comment")
 		if (token.Value == "\n"):
 			pass
