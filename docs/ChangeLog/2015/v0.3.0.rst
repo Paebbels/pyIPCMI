@@ -1,0 +1,14 @@
+.. :CHANGE:v0.3.0:
+
+New in v0.3.0 (31.03.20015)
+================================================================================================================================================================
+
+* Added Python infrastructure
+
+  * Added platform wrapper scripts (\*.sh, \*.ps1)
+  * Added IP-core compiler scripts Netlist.py
+
+* Added Tools
+
+  * Notepad++ syntax file for Xilinx UCF/XCF files
+  * Git configuration script to register global aliases
