@@ -10,15 +10,12 @@ __pycache__
 
 # ignore build directories
 /docs/_build/
-/docs/PyInfrastructure/*
-!/docs/PyInfrastructure/.gitempty
-!/docs/PyInfrastructure/.publish
-!/docs/PyInfrastructure/README.md
-!/docs/PyInfrastructure/index.rst
+/docs/pyIPCMI/*.rst
+!/docs/pyIPCMI/index.rst
 
 # ignore folders
-/py/Wrapper/Hooks/*
-!/py/Wrapper/Hooks/README.md
+/Wrapper/Hooks/*
+!/Wrapper/Hooks/README.md
 
 # general whitelist
 !.git*
