@@ -36,7 +36,7 @@ from shutil         import copy as shutil_copy
 from textwrap       import dedent
 
 
-__author__ =      "Patrick Lehmann\n" + \
+__author__ =      "Patrick Lehmann, " + \
                   "Martin Zabel"
 __copyright__ =   "Copyright 2017-2018 Patrick Lehmann - Bötzingen, Germany\n" + \
                   "Copyright 2007-2016 Technische Universität Dresden - Germany, Chair of VLSI-Design, Diagnostics and Architecture"
@@ -435,7 +435,7 @@ class IPCoreManagementInfrastructure(ILogable, ArgParseMixin):
 	@CommandAttribute("info", help="Display tool and version information.")
 	def HandleInfo(self, args):
 		self.PrintHeadline()
-		copyrights = __copyright__.split(", ", 1)
+		copyrights = __copyright__.split("\n", 1)
 		self.LogNormal("Copyright:  {0}".format(copyrights[0]))
 		self.LogNormal("            {0}".format(copyrights[1]))
 		self.LogNormal("License:    {0}".format(__license__))
