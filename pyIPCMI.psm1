@@ -129,6 +129,18 @@ $pyIPCMI_Environments =	@{
 				"PreHookFile" =		"GTKWave.pre.ps1";
 				"PostHookFile" =	"GTKWave.post.ps1"}
 		}};
+	"Intel" =						@{
+		"PreHookFile" =			"Intel.pre.ps1";
+		"PostHookFile" =		"Intel.post.ps1";
+		"Tools" =						@{
+			"Quartus" =				@{
+				"Load" =				$false;
+				"Commands" =		@("quartus");
+				"PSModule" =			"Intel.Quartus.psm1";
+				"PreHookFile" =		"Intel.Quartus.pre.ps1";
+				"PostHookFile" =	"Intel.Quartus.post.ps1"
+			}
+		}};
 	"Lattice" =						@{
 		"PreHookFile" =			"Lattice.pre.ps1";
 		"PostHookFile" =		"Lattice.post.ps1";

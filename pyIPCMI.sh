@@ -33,20 +33,29 @@
 # ==============================================================================
 
 # script settings
+pyIPCMI_RootDirectory="$Library_RootDirectory/$pyIPCMI_Dir"
+pyIPCMI_FrontEndPy="$pyIPCMI_RootDirectory/FrontEnd.py"
+pyIPCMI_ConfigDir=".pyIPCMI"
+pyIPCMI_HookDir="$pyIPCMI_ConfigDir/Hook"
+pyIPCMI_HookDirectory="$Library_RootDirectory/$pyIPCMI_HookDir"
+pyIPCMI_MinVersion="3.5"
+
+# publish pyIPCMI directories as environment variables
+export LibraryRootDirectory="$Library_RootDirectory"
+export Library="$Library"
+export pyIPCMIRootDirectory="$pyIPCMI_RootDirectory"
+export pyIPCMIConfigDirectory="$Library_RootDirectory/.pyIPCMI"
+export pyIPCMIFrontEnd="$pyIPCMI_FrontEndPy"
+
+# set default values
+pyIPCMI_Debug=0
 pyIPCMI_ExitCode=0
-pyIPCMI_WorkingDir=$(pwd)
-pyIPCMI_PythonScriptDir="py"
-pyIPCMI_FrontEnd="$pyIPCMI_RootDir/$pyIPCMI_PythonScriptDir/pyIPCMI.py"
-pyIPCMI_WrapperDirectory="$pyIPCMI_PythonScriptDir/Wrapper"
-pyIPCMI_HookDirectory="$pyIPCMI_WrapperDirectory/Hooks"
 
 # define color escape codes
 ANSI_RED='\e[0;31m'       # Red
 ANSI_YELLOW='\e[1;33m'    # Yellow
 ANSI_NOCOLOR='\e[0m'      # No Color
 
-# set default values
-PyWrapper_Debug=0
 
 # Aldec tools
 declare -A Env_Aldec=(
@@ -100,6 +109,19 @@ declare -A Env_GHDL_GTKWave=(
 	["BashModule"]="GTKWave.sh"
 	["PreHookFile"]="GTKWave.pre.sh"
 	["PostHookFile"]="GTKWave.post.sh"
+)
+# Intel tools
+declare -A Env_Intel=(
+	["PreHookFile"]="Intel.pre.sh"
+	["PostHookFile"]="Intel.post.sh"
+	["Tools"]="Quartus"
+)
+declare -A Env_Intel_Quartus=(
+	["Load"]=0
+	["Commands"]="quartus"
+	["BashModule"]="Intel.Quartus.sh"
+	["PreHookFile"]="Intel.Quartus.pre.sh"
+	["PostHookFile"]="Intel.Quartus.post.sh"
 )
 # Lattice tools
 declare -A Env_Lattice=(
@@ -181,8 +203,6 @@ declare -A Env_Xilinx_Vivado=(
 	["PreHookFile"]="Xilinx.Vivado.pre.sh"
 	["PostHookFile"]="Xilinx.Vivado.post.sh"
 )
-
-
 # Cocotb
 declare -A Env_Cocotb=(
 	["PreHookFile"]="Cocotb.pre.sh"
@@ -199,13 +219,13 @@ declare -A Env_Cocotb_QuestaSim=(
 
 
 # List all vendors
-Env_Vendors="Aldec Altera GHDL Lattice Mentor Sphinx Xilinx Cocotb"
+Env_Vendors="Aldec Altera GHDL Intel Lattice Mentor Sphinx Xilinx Cocotb"
 
 # search script parameters for known commands
 BreakIt=0
-for param in $PyWrapper_Parameters; do
+for param in $Wrapper_Parameters; do
 	if [ "$param" = "-D" ]; then
-		PyWrapper_Debug=1
+		pyIPCMI_Debug=1
 		continue
 	fi
 	# compare registered commands from all vendor tools
@@ -227,33 +247,13 @@ for param in $PyWrapper_Parameters; do
 done  # Parameters
 
 
-# publish pyIPCMI directories as environment variables
-export pyIPCMIRootDirectory=$pyIPCMI_RootDir
-export pyIPCMIWorkingDirectory=$pyIPCMI_WorkingDir
-
-if [ $PyWrapper_Debug -eq 1 ]; then
-	echo -e "${ANSI_YELLOW}This is the pyIPCMI Library script wrapper operating in debug mode.${ANSI_NOCOLOR}"
-	echo
-	echo -e "${ANSI_YELLOW}Directories:${ANSI_NOCOLOR}"
-	echo -e "${ANSI_YELLOW}  pyIPCMI root:        $pyIPCMI_RootDir${ANSI_NOCOLOR}"
-	echo -e "${ANSI_YELLOW}  working:         $pyIPCMI_WorkingDir${ANSI_NOCOLOR}"
-	echo -e "${ANSI_YELLOW}Script:${ANSI_NOCOLOR}"
-	echo -e "${ANSI_YELLOW}  Filename:        $PyWrapper_Script${ANSI_NOCOLOR}"
-	echo -e "${ANSI_YELLOW}  Solution:        $PyWrapper_Solution${ANSI_NOCOLOR}"
-	echo -e "${ANSI_YELLOW}  Parameters:      $PyWrapper_Parameters${ANSI_NOCOLOR}"
-	echo -e "${ANSI_YELLOW}Load Environment:  ${ANSI_NOCOLOR}"
-	echo -e "${ANSI_YELLOW}  Lattice Diamond: ${Env_Lattice_Diamond["Load"]}${ANSI_NOCOLOR}"
-	echo -e "${ANSI_YELLOW}  Xilinx ISE:      ${Env_Xilinx_ISE["Load"]}${ANSI_NOCOLOR}"
-	echo -e "${ANSI_YELLOW}  Xilinx VIVADO:   ${Env_Xilinx_Vivado["Load"]}${ANSI_NOCOLOR}"
-	echo
-fi
-
 # find suitable python version or abort execution
-Python_VersionTest='import sys; sys.exit(not (0x03040000 < sys.hexversion < 0x04000000))'
+Python_VersionTest="import sys; sys.exit(not (0x0${pyIPCMI_MinVersion:0:1}0${pyIPCMI_MinVersion:2:1}0000 < sys.hexversion < 0x04000000))"
+Python_Message=""
 python -c "$Python_VersionTest" 2>/dev/null
 if [ $? -eq 0 ]; then
 	Python_Interpreter=$(which python 2>/dev/null)
-	test $PyWrapper_Debug -eq 1 && echo -e "${ANSI_YELLOW}PythonInterpreter: use standard interpreter: '$Python_Interpreter'${ANSI_NOCOLOR}"
+	test $pyIPCMI_Debug -eq 1 && Python_Message=" (standard interpreter)"
 else
 	# standard python interpreter is not suitable, try to find a suitable version manually
 	for pyVersion in 3.9 3.8 3.7 3.6 3.5 3.4; do
@@ -265,56 +265,76 @@ else
 			if [ $? -eq 0 ]; then break; fi
 		fi
 	done
-	test $PyWrapper_Debug -eq 1 && echo -e "${ANSI_YELLOW}PythonInterpreter: use this interpreter: '$Python_Interpreter'${ANSI_NOCOLOR}"
 fi
 # if no interpreter was found => exit
 if [ -z "$Python_Interpreter" ]; then
 	echo 1>&2 -e "${ANSI_RED}No suitable Python interpreter found.${ANSI_NOCOLOR}"
-	echo 1>&2 -e "${ANSI_RED}The script requires Python >= $PyWrapper_MinVersion${ANSI_NOCOLOR}"
+	echo 1>&2 -e "${ANSI_RED}The script requires Python >= $pyIPCMI_MinVersion${ANSI_NOCOLOR}"
 	pyIPCMI_ExitCode=1
+fi
+
+if [[ ($pyIPCMI_ExitCode -eq 0) && ($pyIPCMI_Debug -eq 1) ]]; then
+	echo -e "${ANSI_YELLOW}This is the pyIPCMI Library script wrapper operating in debug mode.${ANSI_NOCOLOR}"
+	echo
+	echo -e "${ANSI_YELLOW}Directories:${ANSI_NOCOLOR}"
+	echo -e "${ANSI_YELLOW}  Library root:    $Library_RootDirectory${ANSI_NOCOLOR}"
+	echo -e "${ANSI_YELLOW}  pyIPCMI root:    $pyIPCMI_RootDirectory${ANSI_NOCOLOR}"
+	echo -e "${ANSI_YELLOW}  working:         $Wrapper_WorkingDirectory${ANSI_NOCOLOR}"
+	echo -e "${ANSI_YELLOW}Python:${ANSI_NOCOLOR}"
+	echo -e "${ANSI_YELLOW}  Interpreter:     $Python_Interpreter$Python_Message${ANSI_NOCOLOR}"
+	echo -e "${ANSI_YELLOW}Script:${ANSI_NOCOLOR}"
+	echo -e "${ANSI_YELLOW}  Filename:        $pyIPCMI_FrontEndPy${ANSI_NOCOLOR}"
+	echo -e "${ANSI_YELLOW}  Library:         $Library${ANSI_NOCOLOR}"
+	echo -e "${ANSI_YELLOW}  Solution:        $Solution${ANSI_NOCOLOR}"
+	echo -e "${ANSI_YELLOW}  Project:         $Project${ANSI_NOCOLOR}"
+	echo -e "${ANSI_YELLOW}  Parameters:      $Wrapper_Parameters${ANSI_NOCOLOR}"
+	echo -e "${ANSI_YELLOW}Load Environment:  ${ANSI_NOCOLOR}"
+	echo -e "${ANSI_YELLOW}  Lattice Diamond: ${Env_Lattice_Diamond["Load"]}${ANSI_NOCOLOR}"
+	echo -e "${ANSI_YELLOW}  Xilinx ISE:      ${Env_Xilinx_ISE["Load"]}${ANSI_NOCOLOR}"
+	echo -e "${ANSI_YELLOW}  Xilinx VIVADO:   ${Env_Xilinx_Vivado["Load"]}${ANSI_NOCOLOR}"
+	echo
 fi
 
 
 # execute vendor and tool pre-hook files if present
-for VendorName in $Env_Vendors; do
-	declare -n VendorIndex="Env_$VendorName"
-	for ToolName in ${VendorIndex["Tools"]}; do
-		declare -n ToolIndex="Env_${VendorName}_${ToolName}"
-		if [ ${ToolIndex["Load"]} -eq 1 ]; then
-			# if exists, source the vendor pre-hook file
-			VendorPreHookFile=$pyIPCMI_RootDir/$pyIPCMI_HookDirectory/${VendorIndex["PreHookFile"]}
-			test -f $VendorPreHookFile && source $VendorPreHookFile
+if [ $pyIPCMI_ExitCode -eq 0 ]; then
+	for VendorName in $Env_Vendors; do
+		declare -n VendorIndex="Env_$VendorName"
+		for ToolName in ${VendorIndex["Tools"]}; do
+			declare -n ToolIndex="Env_${VendorName}_${ToolName}"
+			if [ ${ToolIndex["Load"]} -eq 1 ]; then
+				# if exists, source the vendor pre-hook file
+				VendorPreHookFile=$pyIPCMIRootDirectory/$pyIPCMI_HookDirectory/${VendorIndex["PreHookFile"]}
+				test -f $VendorPreHookFile && source $VendorPreHookFile
 
-			# if exists, source the tool pre-hook file
-			ToolPreHookFile=$pyIPCMI_RootDir/$pyIPCMI_HookDirectory/${ToolIndex["PreHookFile"]}
-			test -f $ToolPreHookFile && source $ToolPreHookFile
+				# if exists, source the tool pre-hook file
+				ToolPreHookFile=$pyIPCMIRootDirectory/$pyIPCMI_HookDirectory/${ToolIndex["PreHookFile"]}
+				test -f $ToolPreHookFile && source $ToolPreHookFile
 
-			# if exists, source the BashModule file
-			ModuleFile=$pyIPCMI_RootDir/$pyIPCMI_WrapperDirectory/${ToolIndex["BashModule"]}
-			if [ -f $ModuleFile ]; then
-				source $ModuleFile
-				OpenEnvironment $Python_Interpreter $pyIPCMI_FrontEnd
-				pyIPCMI_ExitCode=$?
+				# if exists, source the BashModule file
+				ModuleFile=$pyIPCMIRootDirectory/$pyIPCMI_WrapperDirectory/${ToolIndex["BashModule"]}
+				if [ -f $ModuleFile ]; then
+					source $ModuleFile
+					OpenEnvironment $Python_Interpreter $pyIPCMI_FrontEnd
+					pyIPCMI_ExitCode=$?
+				fi
+
+				break 2
 			fi
-
-			break 2
-		fi
-	done  # ToolNames
-done  # VendorNames
-
+		done  # ToolNames
+	done  # VendorNames
+fi
 
 # execute script with appropriate python interpreter and all given parameters
 if [ $pyIPCMI_ExitCode -eq 0 ]; then
-	Python_Script="$pyIPCMI_RootDir/$pyIPCMI_PythonScriptDir/$PyWrapper_Script"
-
-	if [ -z $PyWrapper_Solution ]; then
-		Python_ScriptParameters=$PyWrapper_Parameters
+	if [ -z $Wrapper_Solution ]; then
+		Python_ScriptParameters=$Wrapper_Parameters
 	else
-		Python_ScriptParameters="--sln=$PyWrapper_Solution $PyWrapper_Parameters"
+		Python_ScriptParameters="--sln=$Wrapper_Solution $Wrapper_Parameters"
 	fi
 
-	if [ $PyWrapper_Debug -eq 1 ]; then
-		echo -e "${ANSI_YELLOW}Launching: '$Python_Interpreter $Python_Script $Python_ScriptParameters'${ANSI_NOCOLOR}"
+	if [ $pyIPCMI_Debug -eq 1 ]; then
+		echo -e "${ANSI_YELLOW}Launching: '$Python_Interpreter $pyIPCMI_FrontEndPy $Python_ScriptParameters'${ANSI_NOCOLOR}"
 		echo -e "${ANSI_YELLOW}------------------------------------------------------------${ANSI_NOCOLOR}"
 	fi
 
