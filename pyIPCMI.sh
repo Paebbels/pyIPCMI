@@ -340,7 +340,7 @@ if [ $pyIPCMI_ExitCode -eq 0 ]; then
 
 	# launching python script
 	set -f
-	"$Python_Interpreter" $Python_Script $Python_ScriptParameters
+	"$Python_Interpreter" $pyIPCMI_FrontEndPy $Python_ScriptParameters
 	pyIPCMI_ExitCode=$?
 fi
 
