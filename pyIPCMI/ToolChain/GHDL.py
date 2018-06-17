@@ -75,7 +75,7 @@ class Configuration(ToolConfiguration):
 	_template = {
 		"Windows": {
 			_section: {
-				"Version":                "0.34-dev",
+				"Version":                "0.36-dev",
 				"Backend":                "mcode",
 				"Runtime":                "gnatgpl32",
 				"SectionName":            ("%{PathWithRoot}#${Version}-${Runtime}-${Backend}",  None),
@@ -86,7 +86,7 @@ class Configuration(ToolConfiguration):
 		},
 		"Linux": {
 			_section: {
-				"Version":                "0.34-dev",
+				"Version":                "0.36-dev",
 				"Backend":                "llvm",
 				"SectionName":            ("%{PathWithRoot}#${Version}-${Backend}",   None),
 				"InstallationDirectory":  ("${${SectionName}:InstallationDirectory}", "/usr/local"),
@@ -96,10 +96,20 @@ class Configuration(ToolConfiguration):
 		},
 		"Darwin": {
 			_section: {
-				"Version":                "0.34-dev",
+				"Version":                "0.36-dev",
 				"Backend":                "llvm",
 				"SectionName":            ("%{PathWithRoot}#${Version}-${Backend}",   None),
 				"InstallationDirectory":  ("${${SectionName}:InstallationDirectory}", "/usr/local"),
+				"BinaryDirectory":        ("${${SectionName}:BinaryDirectory}",       "${InstallationDirectory}/bin"),
+				"ScriptDirectory":        ("${${SectionName}:ScriptDirectory}",       "${InstallationDirectory}/lib/ghdl/vendors")
+			}
+		},
+		"MinGW": {
+			_section: {
+				"Version":                "0.36-dev",
+				"Backend":                "llvm",
+				"SectionName":            ("%{PathWithRoot}#${Version}-${Backend}",   None),
+				"InstallationDirectory":  ("${${SectionName}:InstallationDirectory}", "/c/Tools/GHDL/${Version}-${Runtime}-${Backend}"),
 				"BinaryDirectory":        ("${${SectionName}:BinaryDirectory}",       "${InstallationDirectory}/bin"),
 				"ScriptDirectory":        ("${${SectionName}:ScriptDirectory}",       "${InstallationDirectory}/lib/ghdl/vendors")
 			}
@@ -189,10 +199,12 @@ class GHDL(OutputFilteredExecutable, ToolMixIn):
 	def __init__(self, platform, dryrun, binaryDirectoryPath, version, backend, logger=None):
 		ToolMixIn.__init__(self, platform, dryrun, binaryDirectoryPath, version, logger=logger)
 
-		if (platform == "Windows"):     executablePath = binaryDirectoryPath / "ghdl.exe"
-		elif (platform == "Linux"):     executablePath = binaryDirectoryPath / "ghdl"
-		elif (platform == "Darwin"):    executablePath = binaryDirectoryPath / "ghdl"
-		else:                           raise PlatformNotSupportedException(platform)
+		if (platform == "Windows"):             executablePath = binaryDirectoryPath / "ghdl.exe"
+		elif (platform.startswith("MINGW32")):  executablePath = binaryDirectoryPath / "ghdl.exe"
+		elif (platform.startswith("MINGW64")):  executablePath = binaryDirectoryPath / "ghdl.exe"
+		elif (platform == "Linux"):             executablePath = binaryDirectoryPath / "ghdl"
+		elif (platform == "Darwin"):            executablePath = binaryDirectoryPath / "ghdl"
+		else:                                   raise PlatformNotSupportedException(platform)
 		super().__init__(platform, dryrun, executablePath, logger=logger)
 
 		self.Executable = executablePath

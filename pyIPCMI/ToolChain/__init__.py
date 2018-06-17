@@ -168,7 +168,8 @@ class Configuration(ILogable, AskMixIn):    #(ISubClassRegistration):
 		"ALL":      {   _section: {}  },
 		"Darwin":   {   _section: {}  },
 		"Linux":    {   _section: {}  },
-		"Windows":  {   _section: {}  }
+		"Windows":  {   _section: {}  },
+		"MinGW":    {   _section: {}  }
 	}                                   #: The template for the configuration sections represented as nested dictionaries.
 
 	def __init__(self, host : IHost):
@@ -196,7 +197,15 @@ class Configuration(ILogable, AskMixIn):    #(ISubClassRegistration):
 
 	def IsSupportedPlatform(self):
 		"""Return true if the given platform is supported by this configuration routine."""
-		return ('ALL' in self._template) or (self._host.Platform in self._template)
+		if ('ALL' in self._template):
+			return True
+
+		platform = self._host.Platform.lower()
+		for key in self._template:
+			if (platform.startswith(key.lower())):
+				return True
+
+		return False
 
 	def IsConfigured(self):
 		"""Return true if the configurations section is configured"""
@@ -701,7 +710,7 @@ class Configurator(ILogable, AskMixIn):
 		self._host =              host
 		self._saveConfiguration = True
 
-		from .pyIPCMI                 import Configuration as pyIPCMI_Configuration
+		from .pyIPCMI             import Configuration as pyIPCMI_Configuration
 		from .Git                 import Configuration as Git_Configuration
 		from .Aldec               import Configuration as Aldec_Configuration
 		from .Aldec.ActiveHDL     import Configuration as ActiveHDL_Configuration

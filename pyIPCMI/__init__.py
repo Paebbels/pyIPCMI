@@ -33,7 +33,7 @@ from os             import environ
 from pathlib        import Path
 from platform       import system as platform_system
 from shutil         import copy as shutil_copy
-from textwrap       import dedent
+from textwrap       import dedent, wrap
 
 
 __author__ =      "Patrick Lehmann, " + \
@@ -70,6 +70,7 @@ try:
 	from lib.pyAttribute.ArgParseAttributes         import CommandAttribute, CommandGroupAttribute, ArgumentAttribute, SwitchArgumentAttribute, DefaultAttribute
 	from lib.pyAttribute.ArgParseAttributes         import CommonArgumentAttribute, CommonSwitchArgumentAttribute
 	from lib.ExtendedConfigParser                   import ExtendedConfigParser
+	from lib.Terminal                               import Terminal
 
 	from pyIPCMI.Compiler                           import CompilerException, CompileSteps
 	from pyIPCMI.Base.Exceptions                    import ExceptionBase, CommonException, PlatformNotSupportedException, EnvironmentException, NotConfiguredException
@@ -209,14 +210,24 @@ class IPCoreManagementInfrastructure(ILogable, ArgParseMixin):
 
 		# Call the constructor of the ArgParseMixin
 		# --------------------------------------------------------------------------
+		(terminalWidth, _) = Terminal.GetTerminalSize()
+		textWidth = min(terminalWidth, 160)
 		description = dedent("""\
-			This is the pyIPCMI Service Tool.
+			IP Core Management Infrastructure (IPCMI) front end for <LibraryName>.
 			""")
-		epilog = "Pile-of-Cores"
+		epilog = "\n".join(wrap(dedent("""\
+		  PoC - “Pile of Cores” provides implementations for often required hardware functions such as Arithmetic Units, Caches, Clock-Domain-Crossing Circuits, FIFOs, RAM wrappers, and I/O Controllers. The hardware modules are typically provided as VHDL or Verilog source code, so it can be easily re-used in a variety of hardware designs.
+
+		  All hardware modules use a common set of VHDL packages to share new VHDL types, sub-programs and constants. Additionally, a set of simulation helper packages eases the writing of testbenches. Because PoC hosts a huge amount of IP cores, all cores are grouped into sub-namespaces to build a better hierarchy.
+
+		  Various simulation and synthesis tool chains are supported to interoperate with PoC. To generalize all supported free and commercial vendor tool chains, PoC is shipped with a Python based infrastructure to offer a command line based frontend.
+		  """), textWidth, replace_whitespace=False))
+
 
 		class HelpFormatter(RawDescriptionHelpFormatter):
 			def __init__(self, *args, **kwargs):
 				kwargs['max_help_position'] = 25
+				kwargs['width'] =             textWidth
 				super().__init__(*args, **kwargs)
 
 		ArgParseMixin.__init__(self, description=description, epilog=epilog, formatter_class=HelpFormatter, add_help=False)
@@ -274,7 +285,10 @@ class IPCoreManagementInfrastructure(ILogable, ArgParseMixin):
 	def Repository(self):         return self.__repo
 
 	def __CheckEnvironment(self):
-		if (self.Platform not in ["Windows", "Linux", "Darwin"]):  raise PlatformNotSupportedException(self.Platform)
+		if not ((self.Platform in ["Windows", "Linux", "Darwin"]) or
+		        self.Platform.startswith("MINGW64_NT") or
+		        self.Platform.startswith("MINGW32_NT")):
+			raise PlatformNotSupportedException(self.Platform)
 
 		libraryName =             environ.get('Library')
 		libraryRootDirectory =    environ.get('LibraryRootDirectory')
@@ -317,8 +331,12 @@ class IPCoreManagementInfrastructure(ILogable, ArgParseMixin):
 			raise ConfigurationException("Error in configuration file '{0!s}'.".format(file)) from ex
 
 		# check pyIPCMI installation directory
-		if (self.Directories.Root != Path(self.Config[self.LibraryKey]['InstallationDirectory'])):
-			raise NotConfiguredException("There is a mismatch between pyIPCMIRoot and pyIPCMI's installation directory.")
+		installationDirectory = Path(self.Config[self.LibraryKey]['InstallationDirectory'])
+		# WORKAROUND: Bug in pathlib. It doesn't compare absolute paths of Windows and MinGW: 'C:\' vs. '/c/'.
+		if ((self.Directories.Root != installationDirectory) and not (self.Platform.startswith("MINGW"))):
+			raise NotConfiguredException("There is a mismatch between pyIPCMIRoot ('{0}') and pyIPCMI's installation directory ('{1}').".format(
+				self.Directories.Root, installationDirectory
+			))
 
 		# parsing values into class fields
 		configSection =                 self.Config['CONFIG.DirectoryNames']
@@ -1011,7 +1029,7 @@ class IPCoreManagementInfrastructure(ILogable, ArgParseMixin):
 		self._CheckGHDL()
 
 		config = GHDLConfiguration(self)
-		if (not config.IsSupportedPlatform()):    raise PlatformNotSupportedException()
+		if (not config.IsSupportedPlatform()):    raise PlatformNotSupportedException(self.Platform)
 		if (not config.IsConfigured()):           raise NotConfiguredException("GHDL is not configured on this system.")
 
 		fqnList =         self._ExtractFQNs(args.FQN)
