@@ -1,0 +1,13 @@
+.. :CHANGE:v0.4.0:
+
+New in v0.4 (29.04.2015)
+================================================================================================================================================================
+
+* New Python infrastructure
+
+  * Added simulators for:
+
+    * GHDL + GTKWave
+    * Mentor Graphic QuestaSim
+    * Xilinx ISE Simulator
+    * Xilinx Vivado Simulator
