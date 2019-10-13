@@ -5,6 +5,8 @@ pyExceptions
 pyAttributes
 pyCallBy
 pyExtendedConfigParser
+pyTokenizer
+pyExploringCodeDOMParser
 #pygenericPath
 #pyIPXACT
 SphinxExtensions
