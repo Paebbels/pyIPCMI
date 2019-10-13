@@ -10,3 +10,6 @@ pyExploringCodeDOMParser
 #pygenericPath
 #pyIPXACT
 SphinxExtensions
+
+pyIPCMI.Parser.Files
+pyIPCMI.Parser.Rules
