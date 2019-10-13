@@ -9,7 +9,7 @@
 #
 # License:
 # ==============================================================================
-# Copyright 2017-2018 Patrick Lehmann - Bötzingen, Germany
+# Copyright 2017-2019 Patrick Lehmann - Bötzingen, Germany
 # Copyright 2007-2016 Technische Universität Dresden - Germany
 #                     Chair of VLSI-Design, Diagnostics and Architecture
 #
@@ -35,10 +35,16 @@ from platform       import system as platform_system
 from shutil         import copy as shutil_copy
 from textwrap       import dedent, wrap
 
+from pyExceptions                     import ExceptionBase, PlatformNotSupportedException, EnvironmentException, NotConfiguredException
+from pyAttributes                     import Attribute
+from pyAttributes.ArgParseAttributes  import ArgParseMixin
+from pyAttributes.ArgParseAttributes  import CommandAttribute, CommandGroupAttribute, ArgumentAttribute, SwitchArgumentAttribute, DefaultAttribute
+from pyAttributes.ArgParseAttributes  import CommonArgumentAttribute, CommonSwitchArgumentAttribute
+from pyExtendedConfigParser           import ExtendedConfigParser
 
 __author__ =      "Patrick Lehmann, " + \
                   "Martin Zabel"
-__copyright__ =   "Copyright 2017-2018 Patrick Lehmann - Bötzingen, Germany\n" + \
+__copyright__ =   "Copyright 2017-2019 Patrick Lehmann - Bötzingen, Germany\n" + \
                   "Copyright 2007-2016 Technische Universität Dresden - Germany, Chair of VLSI-Design, Diagnostics and Architecture"
 __maintainer__ =  "Patrick Lehmann"
 __email__ =       "Patrick.Lehmann@plc2.de"
@@ -65,15 +71,9 @@ def printImportError(ex):
 
 try:
 	from lib.Functions                              import Init, Exit
-	from lib.pyAttribute                            import Attribute
-	from lib.pyAttribute.ArgParseAttributes         import ArgParseMixin
-	from lib.pyAttribute.ArgParseAttributes         import CommandAttribute, CommandGroupAttribute, ArgumentAttribute, SwitchArgumentAttribute, DefaultAttribute
-	from lib.pyAttribute.ArgParseAttributes         import CommonArgumentAttribute, CommonSwitchArgumentAttribute
-	from lib.ExtendedConfigParser                   import ExtendedConfigParser
 	from lib.Terminal                               import Terminal
-
 	from pyIPCMI.Compiler                           import CompilerException, CompileSteps
-	from pyIPCMI.Base.Exceptions                    import ExceptionBase, CommonException, PlatformNotSupportedException, EnvironmentException, NotConfiguredException
+	from pyIPCMI.Base.Exceptions                    import CommonException
 	from pyIPCMI.Base.Logging                       import ILogable, Logger, Severity
 	from pyIPCMI.Base.Project                       import VHDLVersion
 	from pyIPCMI.Compiler.LSECompiler               import Compiler as LSECompiler

@@ -9,7 +9,7 @@
 #
 # License:
 # ==============================================================================
-# Copyright 2017-2018 Patrick Lehmann - Bötzingen, Germany
+# Copyright 2017-2019 Patrick Lehmann - Bötzingen, Germany
 # Copyright 2007-2016 Technische Universität Dresden - Germany
 #                     Chair of VLSI-Design, Diagnostics and Architecture
 # 
@@ -27,11 +27,12 @@
 # ==============================================================================
 #
 # load dependencies
-from pathlib                 import Path
+from pathlib                  import Path
 
-from pyIPCMI.Base.Exceptions         import PlatformNotSupportedException
-from pyIPCMI.Base.Executable         import Executable, ExecutableArgument, CommandLineArgumentList, WindowsTupleArgument
-from pyIPCMI.ToolChain               import Environment, ToolChainException #, OutputFilteredExecutable
+from pyExceptions             import PlatformNotSupportedException
+
+from pyIPCMI.Base.Executable  import Executable, ExecutableArgument, CommandLineArgumentList, WindowsTupleArgument
+from pyIPCMI.ToolChain        import Environment, ToolChainException #, OutputFilteredExecutable
 
 
 __api__ = [

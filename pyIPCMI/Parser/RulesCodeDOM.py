@@ -9,7 +9,7 @@
 #
 # License:
 # ==============================================================================
-# Copyright 2017-2018 Patrick Lehmann - Bötzingen, Germany
+# Copyright 2017-2019 Patrick Lehmann - Bötzingen, Germany
 # Copyright 2007-2016 Technische Universität Dresden - Germany
 #                     Chair of VLSI-Design, Diagnostics and Architecture
 #
@@ -27,10 +27,10 @@
 # ==============================================================================
 #
 # load dependencies
-from lib.Parser     import MismatchingParserResult, MatchingParserResult, EmptyChoiseParserResult, StartOfDocumentToken
-from lib.Parser     import SpaceToken, CharacterToken, StringToken
-from lib.CodeDOM    import EmptyLine, CommentLine, BlockedStatement as BlockStatementBase, StringLiteral
-from lib.CodeDOM    import Statement, BlockStatement
+from pyTokenizer              import MismatchingParserResult, MatchingParserResult, EmptyChoiseParserResult, StartOfDocumentToken
+from pyTokenizer              import SpaceToken, CharacterToken, StringToken
+from pyExploringCodeDOMParser import EmptyLine, CommentLine, BlockedStatement as BlockStatementBase, StringLiteral
+from pyExploringCodeDOMParser import Statement, BlockStatement
 
 
 __api__ = [

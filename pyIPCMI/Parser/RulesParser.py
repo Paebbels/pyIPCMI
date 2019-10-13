@@ -9,7 +9,7 @@
 #
 # License:
 # ==============================================================================
-# Copyright 2017-2018 Patrick Lehmann - Bötzingen, Germany
+# Copyright 2017-2019 Patrick Lehmann - Bötzingen, Germany
 # Copyright 2007-2016 Technische Universität Dresden - Germany
 #                     Chair of VLSI-Design, Diagnostics and Architecture
 #
@@ -26,7 +26,7 @@
 # limitations under the License.
 # ==============================================================================
 #
-from lib.Parser           import ParserException
+from pyTokenizer                  import ParserException
 from pyIPCMI.Parser.RulesCodeDOM  import Document, PreProcessRulesStatement, PostProcessRulesStatement, CopyStatement, ReplaceStatement, FileStatement, DeleteStatement, AppendLineStatement
 
 

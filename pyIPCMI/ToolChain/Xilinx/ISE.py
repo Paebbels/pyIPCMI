@@ -10,7 +10,7 @@
 #
 # License:
 # ==============================================================================
-# Copyright 2017-2018 Patrick Lehmann - Bötzingen, Germany
+# Copyright 2017-2019 Patrick Lehmann - Bötzingen, Germany
 # Copyright 2007-2016 Technische Universität Dresden - Germany
 #                     Chair of VLSI-Design, Diagnostics and Architecture
 #
@@ -30,9 +30,10 @@
 # load dependencies
 from subprocess                 import check_output
 
+from pyExceptions               import PlatformNotSupportedException
+from pyCallBy                   import CallByRefParam
+
 from lib.Functions              import Init
-from lib.CallBy                 import CallByRefParam
-from pyIPCMI.Base.Exceptions    import PlatformNotSupportedException
 from pyIPCMI.Base.Executable    import ExecutableArgument, ShortFlagArgument, ShortTupleArgument, StringArgument, CommandLineArgumentList, DryRunException
 from pyIPCMI.Base.Logging       import LogEntry, Severity
 from pyIPCMI.Base.Project       import Project as BaseProject, ProjectFile, ConstraintFile, FileTypes

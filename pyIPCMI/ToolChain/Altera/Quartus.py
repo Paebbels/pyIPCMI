@@ -10,7 +10,7 @@
 #
 # License:
 # ==============================================================================
-# Copyright 2017-2018 Patrick Lehmann - Bötzingen, Germany
+# Copyright 2017-2019 Patrick Lehmann - Bötzingen, Germany
 # Copyright 2007-2016 Technische Universität Dresden - Germany
 #                     Chair of VLSI-Design, Diagnostics and Architecture
 #
@@ -32,8 +32,9 @@ from collections                import OrderedDict
 from enum                       import unique
 from subprocess                 import check_output, STDOUT
 
+from pyExceptions               import PlatformNotSupportedException
+
 from lib.Functions              import Init
-from pyIPCMI.Base.Exceptions            import PlatformNotSupportedException
 from pyIPCMI.Base.Logging               import Severity, LogEntry
 from pyIPCMI.Base.Executable            import Executable, CommandLineArgumentList, DryRunException
 from pyIPCMI.Base.Executable            import ExecutableArgument, ShortValuedFlagArgument, LongValuedFlagArgument, StringArgument, ShortFlagArgument

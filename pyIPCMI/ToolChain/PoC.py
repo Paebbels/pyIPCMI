@@ -10,7 +10,7 @@
 #
 # License:
 # ==============================================================================
-# Copyright 2017-2018 Patrick Lehmann - Bötzingen, Germany
+# Copyright 2017-2019 Patrick Lehmann - Bötzingen, Germany
 # Copyright 2007-2016 Technische Universität Dresden - Germany
 #                     Chair of VLSI-Design, Diagnostics and Architecture
 #
@@ -28,13 +28,14 @@
 # ==============================================================================
 #
 # load dependencies
-from os                   import environ
-from pathlib              import Path
-from subprocess           import CalledProcessError
+from os                     import environ
+from pathlib                import Path
+from subprocess             import CalledProcessError
 
-from pyIPCMI.Base.Exceptions      import EnvironmentException
-from pyIPCMI.ToolChain            import ToolConfiguration
-from pyIPCMI.ToolChain.Git        import Git
+from pyExceptions           import EnvironmentException
+
+from pyIPCMI.ToolChain      import ToolConfiguration
+from pyIPCMI.ToolChain.Git  import Git
 
 
 __api__ = [

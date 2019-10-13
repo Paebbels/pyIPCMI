@@ -18,7 +18,7 @@
 #
 # License:
 # ==============================================================================
-# Copyright 2017-2018 Patrick Lehmann - Bötzingen, Germany
+# Copyright 2017-2019 Patrick Lehmann - Bötzingen, Germany
 # Copyright 2007-2016 Technische Universität Dresden - Germany
 #                     Chair of VLSI-Design, Diagnostics and Architecture
 #
@@ -36,9 +36,12 @@
 # ==============================================================================
 #
 # load dependencies
-from configparser               import Error as ConfigParser_Error, DuplicateOptionError
-from sys                        import argv as sys_argv
-from platform                   import system as platform_system
+from configparser import Error as ConfigParser_Error, DuplicateOptionError
+from sys          import argv as sys_argv
+from platform     import system as platform_system
+
+from pyExceptions import EnvironmentException, NotConfiguredException, PlatformNotSupportedException, ExceptionBase
+from pyTokenizer  import ParserException
 
 def printImportError(ex):
 	platform = platform_system()
@@ -51,9 +54,8 @@ def printImportError(ex):
 
 try:
 	from lib.Functions            import Exit, Init
-	from lib.Parser               import ParserException
 	from pyIPCMI                  import IPCoreManagementInfrastructure
-	from pyIPCMI.Base.Exceptions  import CommonException, EnvironmentException, NotConfiguredException, PlatformNotSupportedException, ExceptionBase
+	from pyIPCMI.Base.Exceptions  import CommonException
 	from pyIPCMI.Compiler         import CompilerException
 	from pyIPCMI.Simulator        import SimulatorException
 	from pyIPCMI.ToolChain        import ConfigurationException, ToolChainException

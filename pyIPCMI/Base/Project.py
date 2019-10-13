@@ -10,7 +10,7 @@
 #
 # License:
 # ==============================================================================
-# Copyright 2017-2018 Patrick Lehmann - Bötzingen, Germany
+# Copyright 2017-2019 Patrick Lehmann - Bötzingen, Germany
 # Copyright 2007-2016 Technische Universität Dresden - Germany
 #                     Chair of VLSI-Design, Diagnostics and Architecture
 #
@@ -32,7 +32,7 @@ from enum               import Enum, unique
 from pathlib            import Path
 from flags              import Flags
 
-from lib.Functions      import merge
+from lib.Functions              import merge
 from pyIPCMI.Base.Exceptions    import CommonException
 from pyIPCMI.Parser.FilesParser import VHDLSourceFileMixIn, VerilogSourceFileMixIn, CocotbSourceFileMixIn
 from pyIPCMI.DataBase.Config    import Board, Device

@@ -9,7 +9,7 @@
 #
 # License:
 # ==============================================================================
-# Copyright 2017-2018 Patrick Lehmann - Bötzingen, Germany
+# Copyright 2017-2019 Patrick Lehmann - Bötzingen, Germany
 # Copyright 2007-2016 Technische Universität Dresden - Germany
 #                     Chair of VLSI-Design, Diagnostics and Architecture
 #
@@ -30,18 +30,20 @@
 from datetime           import datetime
 from enum               import Enum, unique
 
-from flags              import Flags
+from flags                      import Flags
+from pyExceptions               import ExceptionBase
+from SphinxExtensions           import DocumentMemberAttribute
 
+from lib.Functions              import Init
+from lib.Decorators             import MethodAlias
 from pyIPCMI.Base               import IHost
-from pyIPCMI.Base.Exceptions    import ExceptionBase, SkipableException
+from pyIPCMI.Base.Exceptions    import SkipableException
 from pyIPCMI.Base.Logging       import LogEntry
 from pyIPCMI.Base.Project       import Environment, VHDLVersion
 from pyIPCMI.Base.Shared        import Shared, to_time
 from pyIPCMI.DataBase.Entity    import WildCard, SimulationResult
 from pyIPCMI.DataBase.TestCase  import TestCase, SimulationStatus, TestSuite
-from lib.Decorators     import MethodAlias
-from lib.Functions      import Init
-from lib.SphinxExtensions import DocumentMemberAttribute
+
 
 
 __api__ = [

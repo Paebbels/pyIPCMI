@@ -10,7 +10,7 @@
 #
 # License:
 # ==============================================================================
-# Copyright 2017-2018 Patrick Lehmann - Bötzingen, Germany
+# Copyright 2017-2019 Patrick Lehmann - Bötzingen, Germany
 # Copyright 2007-2016 Technische Universität Dresden - Germany
 #                     Chair of VLSI-Design, Diagnostics and Architecture
 #
@@ -32,11 +32,12 @@ from pathlib                  import Path
 from re                       import compile as re_compile
 from subprocess               import check_output, CalledProcessError
 
+from pyExceptions             import PlatformNotSupportedException
+
 from lib.Functions            import Init
-from pyIPCMI.Base.Exceptions          import PlatformNotSupportedException
-from pyIPCMI.Base.Logging             import LogEntry, Severity
-from pyIPCMI.Base.Executable          import ExecutableArgument, LongValuedFlagArgument, CommandLineArgumentList, DryRunException
-from pyIPCMI.ToolChain                import ToolChainException, ConfigurationException, ToolConfiguration, OutputFilteredExecutable
+from pyIPCMI.Base.Logging     import LogEntry, Severity
+from pyIPCMI.Base.Executable  import ExecutableArgument, LongValuedFlagArgument, CommandLineArgumentList, DryRunException
+from pyIPCMI.ToolChain        import ToolChainException, ConfigurationException, ToolConfiguration, OutputFilteredExecutable
 
 
 __api__ = [

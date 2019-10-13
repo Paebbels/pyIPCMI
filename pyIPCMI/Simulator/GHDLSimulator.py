@@ -10,7 +10,7 @@
 #
 # License:
 # ==============================================================================
-# Copyright 2017-2018 Patrick Lehmann - Bötzingen, Germany
+# Copyright 2017-2019 Patrick Lehmann - Bötzingen, Germany
 # Copyright 2007-2016 Technische Universität Dresden - Germany
 #                     Chair of VLSI-Design, Diagnostics and Architecture
 #
@@ -28,16 +28,17 @@
 # ==============================================================================
 #
 # load dependencies
-from pathlib                import Path
+from pathlib                    import Path
 
-from pyIPCMI.Base.Exceptions        import NotConfiguredException
-from pyIPCMI.Base.Executable        import DryRunException
-from pyIPCMI.Base.Logging           import Severity
-from pyIPCMI.Base.Project           import FileTypes, VHDLVersion, ToolChain, Tool
-from pyIPCMI.Simulator              import VHDL_TESTBENCH_LIBRARY_NAME, SimulatorException, SkipableSimulatorException, SimulationSteps, Simulator as BaseSimulator
-from pyIPCMI.ToolChain.GHDL         import GHDL, GHDLException, GHDLReanalyzeException
-from pyIPCMI.ToolChain.GTKWave      import GTKWave
-from pyIPCMI.ToolChain.GNU          import LCov, GenHtml
+from pyExceptions               import NotConfiguredException
+
+from pyIPCMI.Base.Executable    import DryRunException
+from pyIPCMI.Base.Logging       import Severity
+from pyIPCMI.Base.Project       import FileTypes, VHDLVersion, ToolChain, Tool
+from pyIPCMI.Simulator          import VHDL_TESTBENCH_LIBRARY_NAME, SimulatorException, SkipableSimulatorException, SimulationSteps, Simulator as BaseSimulator
+from pyIPCMI.ToolChain.GHDL     import GHDL, GHDLException, GHDLReanalyzeException
+from pyIPCMI.ToolChain.GTKWave  import GTKWave
+from pyIPCMI.ToolChain.GNU      import LCov, GenHtml
 
 
 __api__ = [

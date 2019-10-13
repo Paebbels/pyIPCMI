@@ -9,7 +9,7 @@
 #
 # License:
 # ==============================================================================
-# Copyright 2017-2018 Patrick Lehmann - Bötzingen, Germany
+# Copyright 2017-2019 Patrick Lehmann - Bötzingen, Germany
 # Copyright 2007-2016 Technische Universität Dresden - Germany
 #                     Chair of VLSI-Design, Diagnostics and Architecture
 #
@@ -27,13 +27,15 @@
 # ==============================================================================
 #
 # load dependencies
-from pathlib                import Path
-from subprocess             import Popen				as Subprocess_Popen
-from subprocess             import PIPE					as Subprocess_Pipe
-from subprocess             import STDOUT				as Subprocess_StdOut
+from pathlib                  import Path
+from subprocess               import Popen				as Subprocess_Popen
+from subprocess               import PIPE					as Subprocess_Pipe
+from subprocess               import STDOUT				as Subprocess_StdOut
 
-from pyIPCMI.Base.Exceptions        import CommonException, ExceptionBase
-from pyIPCMI.Base.Logging           import ILogable, Logger
+from pyExceptions             import ExceptionBase
+
+from pyIPCMI.Base.Exceptions  import CommonException
+from pyIPCMI.Base.Logging     import ILogable, Logger
 
 
 __api__ = [

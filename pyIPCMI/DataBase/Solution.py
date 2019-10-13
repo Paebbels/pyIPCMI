@@ -9,7 +9,7 @@
 #
 # License:
 # ==============================================================================
-# Copyright 2017-2018 Patrick Lehmann - Bötzingen, Germany
+# Copyright 2017-2019 Patrick Lehmann - Bötzingen, Germany
 # Copyright 2007-2016 Technische Universität Dresden - Germany
 #                     Chair of VLSI-Design, Diagnostics and Architecture
 #
@@ -30,7 +30,7 @@
 from collections        import OrderedDict
 from textwrap           import dedent
 
-from lib.Decorators     import ILazyLoadable, LazyLoadTrigger
+from lib.Decorators             import ILazyLoadable, LazyLoadTrigger
 from pyIPCMI.Base.Exceptions    import CommonException
 from pyIPCMI.Base.Project       import Project as BaseProject, File, FileTypes, VHDLSourceFile, VerilogSourceFile, CocotbSourceFile  #, ProjectFile
 from pyIPCMI.Parser.FilesParser import FilesParserMixIn

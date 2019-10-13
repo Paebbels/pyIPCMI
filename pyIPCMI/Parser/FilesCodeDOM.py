@@ -10,7 +10,7 @@
 #
 # License:
 # ==============================================================================
-# Copyright 2017-2018 Patrick Lehmann - Bötzingen, Germany
+# Copyright 2017-2019 Patrick Lehmann - Bötzingen, Germany
 # Copyright 2007-2016 Technische Universität Dresden - Germany
 #                     Chair of VLSI-Design, Diagnostics and Architecture
 #
@@ -28,13 +28,13 @@
 # ==============================================================================
 #
 # load dependencies
-from lib.Parser     import MismatchingParserResult, MatchingParserResult, GreedyMatchingParserResult, StartOfDocumentToken
-from lib.Parser     import SpaceToken, CharacterToken, StringToken, NumberToken
-from lib.CodeDOM    import AndExpression, OrExpression, XorExpression, NotExpression, InExpression, NotInExpression, Literal, BinaryExpression
-from lib.CodeDOM    import EmptyLine, CommentLine, BlockedStatement as BlockedStatementBase, ExpressionChoice
-from lib.CodeDOM    import EqualExpression, UnequalExpression, LessThanExpression, LessThanEqualExpression, GreaterThanExpression, GreaterThanEqualExpression
-from lib.CodeDOM    import Statement, BlockStatement, ConditionalBlockStatement, Function, Expression, ListElement
-from lib.CodeDOM    import StringLiteral, IntegerLiteral, Identifier
+from pyTokenizer              import MismatchingParserResult, MatchingParserResult, GreedyMatchingParserResult, StartOfDocumentToken
+from pyTokenizer              import SpaceToken, CharacterToken, StringToken, NumberToken
+from pyExploringCodeDOMParser import AndExpression, OrExpression, XorExpression, NotExpression, InExpression, NotInExpression, Literal, BinaryExpression
+from pyExploringCodeDOMParser import EmptyLine, CommentLine, BlockedStatement as BlockedStatementBase, ExpressionChoice
+from pyExploringCodeDOMParser import EqualExpression, UnequalExpression, LessThanExpression, LessThanEqualExpression, GreaterThanExpression, GreaterThanEqualExpression
+from pyExploringCodeDOMParser import Statement, BlockStatement, ConditionalBlockStatement, Function, Expression, ListElement
+from pyExploringCodeDOMParser import StringLiteral, IntegerLiteral, Identifier
 
 
 __api__ = [

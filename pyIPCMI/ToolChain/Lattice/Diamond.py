@@ -10,7 +10,7 @@
 #
 # License:
 # ==============================================================================
-# Copyright 2017-2018 Patrick Lehmann - Bötzingen, Germany
+# Copyright 2017-2019 Patrick Lehmann - Bötzingen, Germany
 # Copyright 2007-2016 Technische Universität Dresden - Germany
 #                     Chair of VLSI-Design, Diagnostics and Architecture
 #
@@ -33,8 +33,9 @@ import time
 from pathlib                  import Path
 from subprocess               import check_output, CalledProcessError, STDOUT
 
+from pyExceptions             import PlatformNotSupportedException
+
 from lib.Functions            import Init
-from pyIPCMI.Base.Exceptions          import PlatformNotSupportedException
 from pyIPCMI.Base.Logging             import Severity, LogEntry
 from pyIPCMI.Base.Executable          import CommandLineArgumentList, ExecutableArgument, ShortTupleArgument, DryRunException
 from pyIPCMI.Base.Project             import File, FileTypes, VHDLVersion

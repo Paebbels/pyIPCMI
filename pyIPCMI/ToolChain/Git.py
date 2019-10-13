@@ -10,7 +10,7 @@
 #
 # License:
 # ==============================================================================
-# Copyright 2017-2018 Patrick Lehmann - Bötzingen, Germany
+# Copyright 2017-2019 Patrick Lehmann - Bötzingen, Germany
 # Copyright 2007-2016 Technische Universität Dresden - Germany
 #                     Chair of VLSI-Design, Diagnostics and Architecture
 #
@@ -34,8 +34,10 @@ from subprocess           import check_output, CalledProcessError
 from os                   import environ
 from shutil               import copy as shutil_copy
 
+from pyExceptions         import PlatformNotSupportedException
+
 from lib.Functions        import Init
-from pyIPCMI.Base.Exceptions      import PlatformNotSupportedException, CommonException
+from pyIPCMI.Base.Exceptions      import CommonException
 from pyIPCMI.Base.Executable      import Executable, ExecutableArgument, CommandLineArgumentList
 from pyIPCMI.Base.Executable      import CommandArgument, LongFlagArgument, ValuedFlagArgument, StringArgument, LongValuedFlagArgument, LongTupleArgument
 from pyIPCMI.ToolChain            import ToolMixIn, ToolChainException, ConfigurationException, SkipConfigurationException, ChangeState, ToolConfiguration

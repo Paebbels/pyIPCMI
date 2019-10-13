@@ -9,7 +9,7 @@
 #
 # License:
 # ==============================================================================
-# Copyright 2017-2018 Patrick Lehmann - Bötzingen, Germany
+# Copyright 2017-2019 Patrick Lehmann - Bötzingen, Germany
 # Copyright 2007-2016 Technische Universität Dresden - Germany
 #                     Chair of VLSI-Design, Diagnostics and Architecture
 #
@@ -31,9 +31,10 @@ import shutil
 from datetime           import datetime
 from os                 import chdir
 
-from pyIPCMI.Base import IHost
-from lib.Functions      import Init
-from lib.Parser         import ParserException
+from pyTokenizer        import ParserException
+
+from lib.Functions              import Init
+from pyIPCMI.Base               import IHost
 from pyIPCMI.Base.Exceptions    import CommonException, SkipableCommonException
 from pyIPCMI.Base.Logging       import ILogable
 from pyIPCMI.Base.Project       import ToolChain, Tool, VHDLVersion, Environment
