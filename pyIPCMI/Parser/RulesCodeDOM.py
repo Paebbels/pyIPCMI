@@ -27,10 +27,10 @@
 # ==============================================================================
 #
 # load dependencies
-from lib.Parser     import MismatchingParserResult, MatchingParserResult, EmptyChoiseParserResult, StartOfDocumentToken
-from lib.Parser     import SpaceToken, CharacterToken, StringToken
-from lib.CodeDOM    import EmptyLine, CommentLine, BlockedStatement as BlockStatementBase, StringLiteral
-from lib.CodeDOM    import Statement, BlockStatement
+from pyTokenizer              import MismatchingParserResult, MatchingParserResult, EmptyChoiseParserResult, StartOfDocumentToken
+from pyTokenizer              import SpaceToken, CharacterToken, StringToken
+from pyExploringCodeDOMParser import EmptyLine, CommentLine, BlockedStatement as BlockStatementBase, StringLiteral
+from pyExploringCodeDOMParser import Statement, BlockStatement
 
 
 __api__ = [

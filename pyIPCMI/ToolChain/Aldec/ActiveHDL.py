@@ -32,10 +32,10 @@ from collections                import OrderedDict
 from enum                       import unique
 from subprocess                 import check_output
 
+from pyExceptions               import PlatformNotSupportedException
 from pyCallBy                   import CallByRefParam
 
 from lib.Functions              import Init
-from pyIPCMI.Base.Exceptions    import PlatformNotSupportedException
 from pyIPCMI.Base.Logging       import LogEntry, Severity
 from pyIPCMI.Base.Executable    import Executable, DryRunException
 from pyIPCMI.Base.Executable    import ExecutableArgument, PathArgument, StringArgument

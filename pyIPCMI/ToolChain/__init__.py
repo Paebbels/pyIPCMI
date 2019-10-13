@@ -32,11 +32,11 @@ from collections              import OrderedDict, namedtuple
 from enum                     import unique, Enum
 from pathlib                  import Path
 
+from pyExceptions             import ExceptionBase
 from pyCallBy                 import CallByRefParam
 
 from lib.Functions            import Init
 from pyIPCMI.Base             import ILogable, IHost
-from pyIPCMI.Base.Exceptions  import ExceptionBase
 from pyIPCMI.Base.Executable  import Executable, Environment
 from pyIPCMI.Base.Logging     import Severity
 

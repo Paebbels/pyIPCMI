@@ -35,6 +35,7 @@ from platform       import system as platform_system
 from shutil         import copy as shutil_copy
 from textwrap       import dedent, wrap
 
+from pyExceptions                     import ExceptionBase, PlatformNotSupportedException, EnvironmentException, NotConfiguredException
 from pyAttributes                     import Attribute
 from pyAttributes.ArgParseAttributes  import ArgParseMixin
 from pyAttributes.ArgParseAttributes  import CommandAttribute, CommandGroupAttribute, ArgumentAttribute, SwitchArgumentAttribute, DefaultAttribute
@@ -72,7 +73,7 @@ try:
 	from lib.Functions                              import Init, Exit
 	from lib.Terminal                               import Terminal
 	from pyIPCMI.Compiler                           import CompilerException, CompileSteps
-	from pyIPCMI.Base.Exceptions                    import ExceptionBase, CommonException, PlatformNotSupportedException, EnvironmentException, NotConfiguredException
+	from pyIPCMI.Base.Exceptions                    import CommonException
 	from pyIPCMI.Base.Logging                       import ILogable, Logger, Severity
 	from pyIPCMI.Base.Project                       import VHDLVersion
 	from pyIPCMI.Compiler.LSECompiler               import Compiler as LSECompiler

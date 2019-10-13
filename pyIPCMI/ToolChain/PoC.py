@@ -28,13 +28,14 @@
 # ==============================================================================
 #
 # load dependencies
-from os                   import environ
-from pathlib              import Path
-from subprocess           import CalledProcessError
+from os                     import environ
+from pathlib                import Path
+from subprocess             import CalledProcessError
 
-from pyIPCMI.Base.Exceptions      import EnvironmentException
-from pyIPCMI.ToolChain            import ToolConfiguration
-from pyIPCMI.ToolChain.Git        import Git
+from pyExceptions           import EnvironmentException
+
+from pyIPCMI.ToolChain      import ToolConfiguration
+from pyIPCMI.ToolChain.Git  import Git
 
 
 __api__ = [

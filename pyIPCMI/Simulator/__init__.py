@@ -31,12 +31,13 @@ from datetime           import datetime
 from enum               import Enum, unique
 
 from flags                      import Flags
+from pyExceptions               import ExceptionBase
 from SphinxExtensions           import DocumentMemberAttribute
 
 from lib.Functions              import Init
 from lib.Decorators             import MethodAlias
 from pyIPCMI.Base               import IHost
-from pyIPCMI.Base.Exceptions    import ExceptionBase, SkipableException
+from pyIPCMI.Base.Exceptions    import SkipableException
 from pyIPCMI.Base.Logging       import LogEntry
 from pyIPCMI.Base.Project       import Environment, VHDLVersion
 from pyIPCMI.Base.Shared        import Shared, to_time

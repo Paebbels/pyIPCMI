@@ -30,9 +30,9 @@
 from subprocess                 import check_output
 
 from pyCallBy                   import CallByRefParam
+from pyExceptions               import PlatformNotSupportedException
 
 from lib.Functions              import Init
-from pyIPCMI.Base.Exceptions    import PlatformNotSupportedException
 from pyIPCMI.Base.Logging       import LogEntry, Severity
 from pyIPCMI.Base.Executable    import Executable, ShortFlagArgument, DryRunException
 from pyIPCMI.Base.Executable    import ExecutableArgument, PathArgument, StringArgument

@@ -28,11 +28,12 @@
 # ==============================================================================
 #
 # load dependencies
-from lib.Functions        import Init
-from lib.Parser           import ParserException
-from lib.CodeDOM          import AndExpression, OrExpression, XorExpression, NotExpression, InExpression, NotInExpression
-from lib.CodeDOM          import EqualExpression, UnequalExpression, LessThanExpression, LessThanEqualExpression, GreaterThanExpression, GreaterThanEqualExpression
-from lib.CodeDOM          import StringLiteral, IntegerLiteral, Identifier
+from pyTokenizer                  import ParserException
+from pyExploringCodeDOMParser     import AndExpression, OrExpression, XorExpression, NotExpression, InExpression, NotInExpression
+from pyExploringCodeDOMParser     import EqualExpression, UnequalExpression, LessThanExpression, LessThanEqualExpression, GreaterThanExpression, GreaterThanEqualExpression
+from pyExploringCodeDOMParser     import StringLiteral, IntegerLiteral, Identifier
+
+from lib.Functions                import Init
 from pyIPCMI.Parser.FilesCodeDOM  import Document, InterpolateLiteral, SubDirectoryExpression, ConcatenateExpression
 from pyIPCMI.Parser.FilesCodeDOM  import ExistsFunction, ListConstructorExpression, PathStatement
 from pyIPCMI.Parser.FilesCodeDOM  import IfElseIfElseStatement, ReportStatement

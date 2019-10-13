@@ -32,11 +32,12 @@ from re                           import compile as re_compile, subn as re_subn,
 from shutil                       import copy as shutil_copy
 
 from flags                        import Flags
+from pyExceptions                 import ExceptionBase
+from pyTokenizer                  import ParserException
 
 from lib.Functions                import Init
-from lib.Parser                   import ParserException
 from pyIPCMI.Base                 import IHost
-from pyIPCMI.Base.Exceptions      import ExceptionBase, SkipableException
+from pyIPCMI.Base.Exceptions      import SkipableException
 from pyIPCMI.Base.Project         import Environment, VHDLVersion, FileTypes
 from pyIPCMI.Base.Shared          import Shared, to_time
 from pyIPCMI.Parser.RulesParser   import CopyRuleMixIn, DeleteRuleMixIn, ReplaceRuleMixIn, AppendLineRuleMixIn

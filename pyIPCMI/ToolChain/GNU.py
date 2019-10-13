@@ -31,10 +31,10 @@
 from pathlib                  import Path
 from re                       import compile as re_compile
 
+from pyExceptions             import PlatformNotSupportedException
 from pyCallBy                 import CallByRefParam
 
 from lib.Functions            import Init
-from pyIPCMI.Base.Exceptions  import PlatformNotSupportedException
 from pyIPCMI.Base.Executable  import Environment, DryRunException, Executable, CommandLineArgumentList
 from pyIPCMI.Base.Executable  import ExecutableArgument, ValuedFlagArgument, ShortTupleArgument, LongTupleArgument, LongFlagArgument, StringListArgument
 from pyIPCMI.Base.Logging     import LogEntry, Severity

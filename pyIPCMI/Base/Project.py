@@ -32,7 +32,7 @@ from enum               import Enum, unique
 from pathlib            import Path
 from flags              import Flags
 
-from lib.Functions      import merge
+from lib.Functions              import merge
 from pyIPCMI.Base.Exceptions    import CommonException
 from pyIPCMI.Parser.FilesParser import VHDLSourceFileMixIn, VerilogSourceFileMixIn, CocotbSourceFileMixIn
 from pyIPCMI.DataBase.Config    import Board, Device

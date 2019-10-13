@@ -32,8 +32,9 @@ from collections                import OrderedDict
 from enum                       import unique
 from subprocess                 import check_output, STDOUT
 
+from pyExceptions               import PlatformNotSupportedException
+
 from lib.Functions              import Init
-from pyIPCMI.Base.Exceptions            import PlatformNotSupportedException
 from pyIPCMI.Base.Logging               import Severity, LogEntry
 from pyIPCMI.Base.Executable            import Executable, CommandLineArgumentList, DryRunException
 from pyIPCMI.Base.Executable            import ExecutableArgument, ShortValuedFlagArgument, LongValuedFlagArgument, StringArgument, ShortFlagArgument

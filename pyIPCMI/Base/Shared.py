@@ -31,9 +31,10 @@ import shutil
 from datetime           import datetime
 from os                 import chdir
 
-from pyIPCMI.Base import IHost
-from lib.Functions      import Init
-from lib.Parser         import ParserException
+from pyTokenizer        import ParserException
+
+from lib.Functions              import Init
+from pyIPCMI.Base               import IHost
 from pyIPCMI.Base.Exceptions    import CommonException, SkipableCommonException
 from pyIPCMI.Base.Logging       import ILogable
 from pyIPCMI.Base.Project       import ToolChain, Tool, VHDLVersion, Environment

@@ -31,7 +31,8 @@
 from datetime                   import datetime
 from pathlib                    import Path
 
-from pyIPCMI.Base.Exceptions            import PlatformNotSupportedException
+from pyExceptions                       import PlatformNotSupportedException
+
 from pyIPCMI.Base.Project               import ToolChain, Tool, VHDLVersion
 from pyIPCMI.DataBase.Entity            import WildCard
 from pyIPCMI.ToolChain.Lattice          import LatticeException

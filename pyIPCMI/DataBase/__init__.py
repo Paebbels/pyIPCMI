@@ -27,10 +27,11 @@
 # ==============================================================================
 #
 # load dependencies
-from pathlib              import Path
+from pathlib            import Path
 
-from pyIPCMI.Base.Exceptions      import NotConfiguredException, PlatformNotSupportedException
-from pyIPCMI.ToolChain            import ConfigurationException
+from pyExceptions       import NotConfiguredException, PlatformNotSupportedException
+
+from pyIPCMI.ToolChain  import ConfigurationException
 
 
 __api__ = [

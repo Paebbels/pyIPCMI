@@ -26,7 +26,7 @@
 # limitations under the License.
 # ==============================================================================
 #
-from lib.Parser           import ParserException
+from pyTokenizer                  import ParserException
 from pyIPCMI.Parser.RulesCodeDOM  import Document, PreProcessRulesStatement, PostProcessRulesStatement, CopyStatement, ReplaceStatement, FileStatement, DeleteStatement, AppendLineStatement
 
 

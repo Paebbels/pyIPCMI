@@ -34,8 +34,10 @@ from subprocess           import check_output, CalledProcessError
 from os                   import environ
 from shutil               import copy as shutil_copy
 
+from pyExceptions         import PlatformNotSupportedException
+
 from lib.Functions        import Init
-from pyIPCMI.Base.Exceptions      import PlatformNotSupportedException, CommonException
+from pyIPCMI.Base.Exceptions      import CommonException
 from pyIPCMI.Base.Executable      import Executable, ExecutableArgument, CommandLineArgumentList
 from pyIPCMI.Base.Executable      import CommandArgument, LongFlagArgument, ValuedFlagArgument, StringArgument, LongValuedFlagArgument, LongTupleArgument
 from pyIPCMI.ToolChain            import ToolMixIn, ToolChainException, ConfigurationException, SkipConfigurationException, ChangeState, ToolConfiguration

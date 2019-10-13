@@ -30,7 +30,7 @@
 from collections        import OrderedDict
 from textwrap           import dedent
 
-from lib.Decorators     import ILazyLoadable, LazyLoadTrigger
+from lib.Decorators             import ILazyLoadable, LazyLoadTrigger
 from pyIPCMI.Base.Exceptions    import CommonException
 from pyIPCMI.Base.Project       import Project as BaseProject, File, FileTypes, VHDLSourceFile, VerilogSourceFile, CocotbSourceFile  #, ProjectFile
 from pyIPCMI.Parser.FilesParser import FilesParserMixIn

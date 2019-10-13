@@ -35,10 +35,10 @@ from subprocess                 import check_output
 from textwrap                   import dedent
 
 from flags                      import Flags
+from pyExceptions               import PlatformNotSupportedException
 from pyCallBy                   import CallByRefParam
 
 from lib.Functions              import Init
-from pyIPCMI.Base.Exceptions    import PlatformNotSupportedException
 from pyIPCMI.Base.Executable    import ExecutableArgument, ShortFlagArgument, ShortTupleArgument, StringArgument, PathArgument, CommandLineArgumentList, DryRunException, OptionalValuedFlagArgument
 from pyIPCMI.Base.Logging       import Severity, LogEntry
 from pyIPCMI.DataBase.Entity    import SimulationResult
