@@ -9,7 +9,7 @@
 #
 # License:
 # ==============================================================================
-# Copyright 2017-2018 Patrick Lehmann - Bötzingen, Germany
+# Copyright 2017-2019 Patrick Lehmann - Bötzingen, Germany
 # Copyright 2007-2016 Technische Universität Dresden - Germany
 #                     Chair of VLSI-Design, Diagnostics and Architecture
 #
@@ -44,7 +44,7 @@ from pyIPCMI.DataBase.Solution    import RulesFile
 from pyIPCMI.DataBase.TestCase    import SynthesisSuite, CompileStatus, Synthesis
 
 # required for autoapi.sphinx
-from lib.SphinxExtensions         import DocumentMemberAttribute
+from SphinxExtensions             import DocumentMemberAttribute
 
 
 __api__ = [

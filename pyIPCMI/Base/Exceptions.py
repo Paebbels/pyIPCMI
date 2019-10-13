@@ -9,7 +9,7 @@
 #
 # License:
 # ==============================================================================
-# Copyright 2017-2018 Patrick Lehmann - Bötzingen, Germany
+# Copyright 2017-2019 Patrick Lehmann - Bötzingen, Germany
 # Copyright 2007-2016 Technische Universität Dresden - Germany
 #                     Chair of VLSI-Design, Diagnostics and Architecture
 #
@@ -26,62 +26,16 @@
 # limitations under the License.
 # ==============================================================================
 #
-from lib.SphinxExtensions import DocumentMemberAttribute
+from pyExceptions import ExceptionBase
 
 
 __api__ = [
-	'ExceptionBase',
-	'EnvironmentException',
-	'PlatformNotSupportedException',
-	'NotConfiguredException',
 	'SkipableException',
 	'CommonException',
 	'SkipableCommonException'
 ]
 __all__ = __api__
 
-
-class ExceptionBase(Exception):
-	"""Base exception derived from :py:exc:`Exception` for all
-	custom exceptions in pyIPCMI.
-	"""
-	@DocumentMemberAttribute()
-	def __init__(self, message=""):
-		"""Exception initializer
-
-		:type  message:   str
-		:param message:   The exception message.
-		"""
-		super().__init__()
-		self.message = message
-
-	@DocumentMemberAttribute()
-	def __str__(self):
-		"""Returns the exception's message text."""
-		return self.message
-
-	@DocumentMemberAttribute(False)
-	def with_traceback(self, tb):
-		super().with_traceback(tb)
-
-	# @DocumentMemberAttribute(False)
-	# @MethodAlias(Exception.with_traceback)
-	# def with_traceback(self): pass
-
-class EnvironmentException(ExceptionBase):
-	"""``EnvironmentException`` is raised when an expected environment variable is
-	missing for pyIPCMI.
-	"""
-
-class PlatformNotSupportedException(ExceptionBase):
-	"""``PlatformNotSupportedException`` is raise if the platform is not supported
-	by pyIPCMI, or the selected tool flow is not supported on the host system by pyIPCMI.
-	"""
-
-class NotConfiguredException(ExceptionBase):
-	"""``NotConfiguredException`` is raise if pyIPCMI or the requested tool chain
-	setting is not configured in pyIPCMI.
-	"""
 
 class SkipableException(ExceptionBase):
 	"""Base class for all skipable exceptions."""

@@ -10,7 +10,7 @@
 #
 # License:
 # ==============================================================================
-# Copyright 2017-2018 Patrick Lehmann - Bötzingen, Germany
+# Copyright 2017-2019 Patrick Lehmann - Bötzingen, Germany
 # Copyright 2007-2016 Technische Universität Dresden - Germany
 #                     Chair of VLSI-Design, Diagnostics and Architecture
 #
@@ -32,8 +32,9 @@ from collections              import OrderedDict, namedtuple
 from enum                     import unique, Enum
 from pathlib                  import Path
 
+from pyCallBy                 import CallByRefParam
+
 from lib.Functions            import Init
-from lib.CallBy               import CallByRefBoolParam
 from pyIPCMI.Base             import ILogable, IHost
 from pyIPCMI.Base.Exceptions  import ExceptionBase
 from pyIPCMI.Base.Executable  import Executable, Environment
