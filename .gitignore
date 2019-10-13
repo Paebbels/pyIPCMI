@@ -5,19 +5,25 @@
 *.o
 ~$*
 
-# ignore Python caches
-__pycache__
+# Python cache and object files
+__pycache__/
+*.py[cod]
 
-# ignore build directories
-/docs/_build/
+# Sphinx documentation
+docs/_build
+
+# Autogenerted content
 /docs/pyIPCMI/*.rst
 !/docs/pyIPCMI/index.rst
 
-# ignore folders
+# PyCharm project
+/.idea/workspace.xml
+
+# Ignore folders
 /Wrapper/Hooks/*
 !/Wrapper/Hooks/README.md
 
-# general whitelist
+# General whitelist
 !.git*
 !.publish
 !README.md
