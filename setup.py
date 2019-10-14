@@ -45,14 +45,15 @@ with open("requirements.txt") as file:
 	for line in file.readlines():
 		requirements.append(line)
 
-projectName = "pyIPCMI"
+namespace =   ["pyIPCMI"] #, "Parser", "Files"]
+projectName = ".".join(namespace)
 
 github_url =  "https://github.com/Paebbels/" + projectName
 rtd_url =     "https://" + projectName + ".readthedocs.io/en/latest/"
 
 setuptools.setup(
 	name=projectName,
-	version="1.1.5",
+	version="1.1.6",
 
 	author="Patrick Lehmann",
 	author_email="Paebbels@gmail.com",
@@ -71,7 +72,11 @@ setuptools.setup(
 	},
 	# download_url="",
 
-	packages=setuptools.find_packages(),
+	#packages=setuptools.find_packages(),
+	packages=setuptools.find_namespace_packages(
+		include=[".".join(namespace), ".".join(namespace) + ".*"]
+	),
+	namespace_packages=namespace[0:1],
 	classifiers=[
 		"License :: OSI Approved :: Apache Software License",
 		"Operating System :: OS Independent",

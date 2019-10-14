@@ -34,13 +34,13 @@ from shutil                       import copy as shutil_copy
 from flags                        import Flags
 from pyExceptions                 import ExceptionBase
 from pyTokenizer                  import ParserException
+from pyIPCMI.Parser.Rules         import CopyRuleMixIn, DeleteRuleMixIn, ReplaceRuleMixIn, AppendLineRuleMixIn
 
 from lib.Functions                import Init
 from pyIPCMI.Base                 import IHost
 from pyIPCMI.Base.Exceptions      import SkipableException
 from pyIPCMI.Base.Project         import Environment, VHDLVersion, FileTypes
 from pyIPCMI.Base.Shared          import Shared, to_time
-from pyIPCMI.Parser.RulesParser   import CopyRuleMixIn, DeleteRuleMixIn, ReplaceRuleMixIn, AppendLineRuleMixIn
 from pyIPCMI.DataBase.Solution    import RulesFile
 from pyIPCMI.DataBase.TestCase    import SynthesisSuite, CompileStatus, Synthesis
 
